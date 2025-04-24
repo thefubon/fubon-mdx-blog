@@ -1,3 +1,4 @@
+// src/app/search/page.tsx
 import Link from 'next/link'
 import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
@@ -19,7 +20,6 @@ export default async function SearchPage(
     ? allPosts.filter((post) => {
         const { title, description, content } = {
           title: post.frontmatter.title.toLowerCase(),
-          // Исправляем проблему с возможным undefined в description
           description: (post.frontmatter.description || '').toLowerCase(),
           content: post.content.toLowerCase(),
         }
@@ -36,22 +36,39 @@ export default async function SearchPage(
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-8">Поиск</h1>
+      <h1 className="text-4xl font-bold mb-8">
+        {searchQuery ? `Результаты поиска: "${searchQuery}"` : 'Поиск'}
+      </h1>
 
-      <SearchBar />
+      {/* SearchBar компонент уже содержит свой собственный Suspense */}
+      <div className="mb-8">
+        <SearchBar />
+      </div>
 
       {searchQuery && (
         <p className="text-gray-600 mb-8">
           {filteredPosts.length === 0
             ? `По запросу "${searchQuery}" ничего не найдено`
-            : `Найдено ${filteredPosts.length} статей по запросу "${searchQuery}"`}
+            : `Найдено ${filteredPosts.length} ${
+                filteredPosts.length === 1
+                  ? 'статья'
+                  : filteredPosts.length >= 2 && filteredPosts.length <= 4
+                  ? 'статьи'
+                  : 'статей'
+              }`}
+        </p>
+      )}
+
+      {!searchQuery && (
+        <p className="text-gray-600 mb-8">
+          Введите поисковый запрос в форму поиска вверху страницы
         </p>
       )}
 
       {filteredPosts.length > 0 && (
         <div className="space-y-8">
           {filteredPosts.map((post) => {
-            const { title, description, publishedAt, slug, readingTime } =
+            const { title, description, publishedAt, slug, readingTime, tags } =
               post.frontmatter
 
             return (
@@ -68,7 +85,22 @@ export default async function SearchPage(
                   <FormattedDate date={publishedAt} /> • {readingTime}
                 </div>
 
-                {/* Добавляем проверку на наличие description */}
+                {/* Показываем теги для статьи */}
+                {tags && tags.length > 0 && (
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-2">
+                      {tags.map((tag) => (
+                        <Link
+                          key={tag}
+                          href={`/tags/${tag}`}
+                          className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
+                          #{tag}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {description && <p className="text-gray-700">{description}</p>}
 
                 <Link

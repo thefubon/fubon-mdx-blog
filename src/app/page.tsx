@@ -1,62 +1,91 @@
+// src/app/blog/page.tsx
 import Link from 'next/link'
+import FormattedDate from '@/components/FormattedDate'
+import SearchBar from '@/components/SearchBar'
 import { getAllPosts } from '@/lib/mdx'
 
-export default function Home() {
-  const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста
+export default async function BlogPage() {
+  const posts = getAllPosts()
+
+  // Собираем все уникальные теги из всех постов
+  const allTags = Array.from(
+    new Set(
+      posts.flatMap((post) => post.frontmatter.tags || []).filter(Boolean)
+    )
+  ).sort()
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <section className="text-center mb-16">
-        <h1 className="text-5xl font-extrabold mb-4">
-          Добро пожаловать в MDX Блог
-        </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          Современный блог, созданный на Next.js 15 с использованием MDX для
-          удобного написания контента
-        </p>
-        <Link
-          href="/blog"
-          className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
-          Перейти к статьям
-        </Link>
-      </section>
+    <div className="max-w-3xl mx-auto py-10 px-4">
+      <h1 className="text-4xl font-bold mb-6">Блог</h1>
 
-      {posts.length > 0 && (
-        <section>
-          <h2 className="text-3xl font-bold mb-8 text-center">
-            Последние публикации
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <div
-                key={post.frontmatter.slug}
-                className="border rounded-lg overflow-hidden shadow-sm">
-                <div className="p-6">
-                  <h3 className="font-bold text-xl mb-2">
-                    {post.frontmatter.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    {post.frontmatter.description}
-                  </p>
-                  <Link
-                    href={`/blog/${post.frontmatter.slug}`}
-                    className="text-blue-600 hover:underline">
-                    Читать далее →
-                  </Link>
-                </div>
-              </div>
+      {/* Компонент поиска уже содержит свой собственный Suspense */}
+      <div className="mb-6">
+        <SearchBar />
+      </div>
+
+      {/* Список всех тегов */}
+      {allTags.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-3">Все теги</h2>
+          <div className="flex flex-wrap gap-2">
+            {allTags.map((tag) => (
+              <Link
+                key={tag}
+                href={`/tags/${tag}`}
+                className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors">
+                #{tag}
+              </Link>
             ))}
           </div>
-
-          <div className="text-center mt-8">
-            <Link
-              href="/blog"
-              className="inline-block text-blue-600 hover:underline">
-              Посмотреть все статьи →
-            </Link>
-          </div>
-        </section>
+        </div>
       )}
+
+      <div className="space-y-8">
+        {posts.map((post) => {
+          const { title, description, publishedAt, slug, readingTime, tags } =
+            post.frontmatter
+
+          return (
+            <article
+              key={slug}
+              className="border-b pb-6">
+              <Link href={`/blog/${slug}`}>
+                <h2 className="text-2xl font-bold hover:text-blue-600 transition-colors mb-2">
+                  {title}
+                </h2>
+              </Link>
+
+              <div className="text-sm text-gray-500 mb-3">
+                <FormattedDate date={publishedAt} /> • {readingTime}
+              </div>
+
+              {/* Показываем теги для каждой статьи */}
+              {tags && tags.length > 0 && (
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <Link
+                        key={tag}
+                        href={`/tags/${tag}`}
+                        className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
+                        #{tag}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {description && <p className="text-gray-700">{description}</p>}
+
+              <Link
+                href={`/blog/${slug}`}
+                className="mt-4 inline-block text-blue-600 hover:underline">
+                Читать далее →
+              </Link>
+            </article>
+          )
+        })}
+      </div>
     </div>
   )
 }

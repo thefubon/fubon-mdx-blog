@@ -1,10 +1,11 @@
 // src/components/SearchBar.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function SearchBar() {
+// Создаем клиентский компонент, который использует useSearchParams
+function SearchForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState('')
@@ -47,5 +48,22 @@ export default function SearchBar() {
         Найти
       </button>
     </form>
+  )
+}
+
+// Экспортируем компонент-обертку с Suspense
+export default function SearchBar() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex gap-2 mb-6">
+          <div className="flex-grow px-4 py-2 border rounded-md bg-gray-100 animate-pulse">
+            Загрузка...
+          </div>
+          <div className="px-4 py-2 bg-gray-300 rounded-md">Найти</div>
+        </div>
+      }>
+      <SearchForm />
+    </Suspense>
   )
 }
