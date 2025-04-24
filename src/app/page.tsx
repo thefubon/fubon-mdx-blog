@@ -27,7 +27,7 @@ export default function Home() {
             Последние публикации
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {posts.map((post: any) => (
+            {posts.map((post) => (
               <div
                 key={post.frontmatter.slug}
                 className="border rounded-lg overflow-hidden shadow-sm">

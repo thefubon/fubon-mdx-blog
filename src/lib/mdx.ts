@@ -21,6 +21,11 @@ export interface Post {
   content: string;
 }
 
+// Интерфейс для постов с оценкой релевантности
+interface PostWithRelevance extends Post {
+  relevance: number;
+}
+
 export function getAllPostSlugs() {
   const files = fs.readdirSync(path.join(contentDirectory, 'blog'));
   return files
@@ -113,11 +118,11 @@ export function getRelatedPosts(slug: string, tags: string[] = [], limit: number
       ...post,
       relevance: commonTags.length,
     };
-  });
+  }) as PostWithRelevance[];
 
   // Сортируем по релевантности и возвращаем лимит
   return relatedPosts
-    .sort((a: any, b: any) => b.relevance - a.relevance)
+    .sort((a, b) => b.relevance - a.relevance)
     .slice(0, limit);
 }
 

@@ -1,6 +1,6 @@
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { notFound } from 'next/navigation'
-import { getAllPostSlugs, getPostBySlug, PostMetadata } from '@/lib/mdx'
+import { getAllPostSlugs, getPostBySlug } from '@/lib/mdx'
 import MDXComponents from '@/components/MDXComponents'
 import FormattedDate from '@/components/FormattedDate'
 import Tags from '@/components/Tags'
