@@ -25,18 +25,153 @@ function Button() {
 <Button />
 ```
 
-## Until now, trying to style an article, document, or blog post with Tailwind has been a tedious task that required a keen eye for typography and a lot of complex custom CSS.
+<Callout>
+  MDX сочетает в себе мощь Markdown и возможности React.
+</Callout>
 
-By default, Tailwind removes all of the default browser styling from paragraphs, headings, lists and more. This ends up being really useful for building application UIs because you spend less time undoing user-agent styles, but when you really are just trying to style some content that came from a rich-text editor in a CMS or a markdown file, it can be surprising and unintuitive.
+<Callout type="warning" title="Внимание!">
+  Обратите внимание, что вы должны настроить Next.js для работы с MDX.
+</Callout>
 
-We get lots of complaints about it actually, with people regularly asking us things like:
+<Callout type="success" title="Совет">
+  Кастомные компоненты делают ваш блог более интерактивным и привлекательным.
+</Callout>
 
-Why is Tailwind removing the default styles on my h1 elements? How do I disable this? What do you mean I lose all the other base styles too?
+<Callout type="error" title="Ошибка">
+  Этот компонент не будет работать, если вы не зарегистрируете его в MDX провайдере.
+</Callout>
 
-We hear you, but we're not convinced that simply disabling our base styles is what you really want. You don't want to have to remove annoying margins every time you use a p element in a piece of your dashboard UI. And I doubt you really want your blog posts to use the user-agent styles either — you want them to look awesome, not awful.
+## Код с подсветкой
 
-The @tailwindcss/typography plugin is our attempt to give you what you actually want, without any of the downsides of doing something stupid like disabling our base styles.
+<CodeBlock language="typescript" filename="components/Button.tsx">
+{`
+export default function Button({ onClick, children }) {
+  return (
+    <button 
+      className="px-4 py-2 bg-blue-600 text-white rounded"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+`}
+</CodeBlock>
 
-It adds a new prose class that you can slap on any block of vanilla HTML content and turn it into a beautiful, well-formatted document:
+## Вкладки
 
+<Tabs>
+  <Tab label="JavaScript">
+    ```js
+    function greet() {
+      console.log("Привет, мир!");
+    }
+    greet();
+    ```
+  </Tab>
+  <Tab label="Python">
+    ```python
+    def greet():
+      print("Привет, мир!")
+    
+    greet()
+    ```
+  </Tab>
+  <Tab label="Rust">
+    ```rust
+    fn main() {
+      println!("Привет, мир!");
+    }
+    ```
+  </Tab>
+</Tabs>
 
+## Аккордеон
+
+<Accordion title="Что такое JSX?">
+  JSX (JavaScript XML) — это расширение синтаксиса JavaScript, которое позволяет
+  писать HTML-подобный код внутри JavaScript. Он используется в React для
+  описания того, как UI должен выглядеть.
+</Accordion>
+
+<Accordion title="Зачем использовать TypeScript?">
+  TypeScript добавляет статическую типизацию в JavaScript, что помогает
+  обнаруживать ошибки на этапе компиляции, улучшает инструментарий разработки
+  и делает код более поддерживаемым.
+</Accordion>
+
+## Изображение с подписью
+
+<ImageMdx 
+  src="/splash-n.jpg" 
+  alt="Архитектура Next.js" 
+  caption="Рис. 1: Схема работы рендеринга в Next.js" 
+  width={800} 
+  height={500}
+/>
+
+## Таблица с форматированием
+
+<Table caption="Популярные фреймворки" striped bordered>
+  <thead>
+    <tr>
+      <th>Название</th>
+      <th>GitHub Stars</th>
+      <th>Дата создания</th>
+      <th>Компания</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>React</td>
+      <td>200k+</td>
+      <td>2013</td>
+      <td>Meta (Facebook)</td>
+    </tr>
+    <tr>
+      <td>Angular</td>
+      <td>85k+</td>
+      <td>2010</td>
+      <td>Google</td>
+    </tr>
+    <tr>
+      <td>Vue</td>
+      <td>200k+</td>
+      <td>2014</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Svelte</td>
+      <td>60k+</td>
+      <td>2016</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</Table>
+
+## Скачать файл
+
+<FileDownload 
+  url="/files/example.pdf" 
+  filename="example.pdf" 
+  size="2.4 MB" 
+/>
+
+<FileDownload 
+  url="/files/sample-data.json" 
+  filename="sample-data.json" 
+  size="124 KB" 
+  variant="outline" 
+/>
+
+## Раскрываемый блок
+
+<Details summary="Показать дополнительную информацию">
+  Здесь находится дополнительная информация, которую можно скрыть, чтобы не
+  загромождать основной контент. Пользователь может раскрыть этот блок, если
+  захочет узнать больше деталей.
+
+  * Пункт 1
+  * Пункт 2
+  * Пункт 3
+</Details>

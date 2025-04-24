@@ -1,6 +1,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+// Импортируем компоненты
+import Callout from './mdx/Callout';
+import CodeBlock from './mdx/CodeBlock';
+import { Tabs, Tab } from './mdx/Tabs';
+import Accordion from './mdx/Accordion';
+import ImageMdx from './mdx/Image';
+import Table from './mdx/Table';
+import FileDownload from './mdx/FileDownload';
+import Details from './mdx/Details';
+
 const MDXComponents = {
   h1: ({ children }: { children: React.ReactNode }) => (
     <h1 className="text-3xl font-bold mb-6 mt-10">{children}</h1>
@@ -84,6 +94,17 @@ const MDXComponents = {
       {children}
     </blockquote>
   ),
+
+  // Кастомные компоненты
+  Callout,
+  CodeBlock,
+  Tabs,
+  Tab,
+  Accordion,
+  ImageMdx,
+  Table,
+  FileDownload,
+  Details,
 }
 
 export default MDXComponents
