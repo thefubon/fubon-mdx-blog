@@ -1,7 +1,7 @@
 // src/components/mdx/Image.tsx
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import NextImage from 'next/image'
 
 interface ImageProps {
@@ -20,6 +20,22 @@ export default function Image({
   height = 500,
 }: ImageProps) {
   const [isOpen, setIsOpen] = useState(false)
+
+  // Простой эффект для блокировки прокрутки
+  useEffect(() => {
+    if (isOpen) {
+      // Просто блокируем прокрутку
+      document.body.style.overflow = 'hidden'
+    } else {
+      // Восстанавливаем прокрутку
+      document.body.style.overflow = ''
+    }
+
+    // Очистка при размонтировании
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   return (
     <div className="my-6">
