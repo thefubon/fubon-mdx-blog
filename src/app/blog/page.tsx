@@ -2,15 +2,35 @@
 import Link from 'next/link'
 import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
-import { getAllPosts } from '@/lib/mdx'
+import Pagination from '@/components/Pagination'
+import { getAllPosts, getPaginatedPosts } from '@/lib/mdx'
 
-export default async function BlogPage() {
-  const posts = getAllPosts()
+// Константа для количества постов на странице
+const POSTS_PER_PAGE = 3
+
+// Функция для страницы блога с учетом номера страницы в параметрах
+interface PageProps {
+  searchParams?: Promise<{ page?: string }>
+}
+
+export default async function BlogPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  // Получаем номер текущей страницы из query параметров, если есть
+  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1
+
+  // Получаем посты для текущей страницы с пагинацией
+  const {
+    posts,
+    totalPages,
+    currentPage: validatedPage,
+  } = getPaginatedPosts(currentPage, POSTS_PER_PAGE)
 
   // Собираем все уникальные теги из всех постов
   const allTags = Array.from(
     new Set(
-      posts.flatMap((post) => post.frontmatter.tags || []).filter(Boolean)
+      getAllPosts()
+        .flatMap((post) => post.frontmatter.tags || [])
+        .filter(Boolean)
     )
   ).sort()
 
@@ -85,6 +105,15 @@ export default async function BlogPage() {
             </article>
           )
         })}
+      </div>
+
+      {/* Компонент пагинации */}
+      <div className="mt-12">
+        <Pagination
+          currentPage={validatedPage}
+          totalPages={totalPages}
+          basePath="/blog"
+        />
       </div>
     </div>
   )

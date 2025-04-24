@@ -26,6 +26,15 @@ interface PostWithRelevance extends Post {
   relevance: number;
 }
 
+// Интерфейс для результатов пагинации
+export interface PaginationResult {
+  posts: Post[];
+  totalPages: number;
+  currentPage: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
 export function getAllPostSlugs() {
   const files = fs.readdirSync(path.join(contentDirectory, 'blog'));
   return files
@@ -56,6 +65,12 @@ export function getPostBySlug(slug: string): Post {
     }
   }
 
+  // Если теги пришли как строка, превращаем их в массив
+  let tags = data.tags;
+  if (typeof tags === 'string') {
+    tags = tags.split(',').map((tag: string) => tag.trim());
+  }
+
   // Убеждаемся, что обязательные поля существуют
   const frontmatter: PostMetadata = {
     title: data.title || 'Без заголовка', // Значение по умолчанию для title
@@ -63,7 +78,7 @@ export function getPostBySlug(slug: string): Post {
     description: data.description, // Опциональное поле может быть undefined
     slug: slug,
     readingTime: readingTime(content).text,
-    tags: data.tags, // Опциональное поле для тегов
+    tags: tags, // Обработанные теги
     // Включаем все остальные поля из frontmatter
     ...Object.entries(data)
       .filter(([key]) => !['title', 'publishedAt', 'description', 'tags'].includes(key))
@@ -84,18 +99,44 @@ export function getAllPosts(): Post[] {
   return posts;
 }
 
-// Добавим функцию для пагинации записей блога
-export function getPaginatedPosts(page: number = 1, postsPerPage: number = 5) {
+// Улучшенная функция для пагинации записей блога
+export function getPaginatedPosts(page: number = 1, limit: number = 5): PaginationResult {
   const allPosts = getAllPosts();
-  const startIndex = (page - 1) * postsPerPage;
-  const endIndex = startIndex + postsPerPage;
+  const totalPosts = allPosts.length;
+
+  // Убедимся, что страница начинается с 1 и не превышает максимальное количество страниц
+  const totalPages = Math.ceil(totalPosts / limit);
+  const currentPage = Math.max(1, Math.min(page, totalPages));
+
+  const startIndex = (currentPage - 1) * limit;
+  const endIndex = Math.min(startIndex + limit, totalPosts);
+
   const posts = allPosts.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(allPosts.length / postsPerPage);
 
   return {
     posts,
     totalPages,
+    currentPage,
+    hasNextPage: currentPage < totalPages,
+    hasPrevPage: currentPage > 1
   };
+}
+
+// Функция для получения всех уникальных тегов
+export function getAllTags(): { tag: string; count: number }[] {
+  const posts = getAllPosts();
+  const tagsWithCount: Record<string, number> = {};
+
+  posts.forEach(post => {
+    const postTags = post.frontmatter.tags || [];
+    postTags.forEach(tag => {
+      tagsWithCount[tag] = (tagsWithCount[tag] || 0) + 1;
+    });
+  });
+
+  return Object.entries(tagsWithCount)
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
 }
 
 // Добавим функцию для получения похожих постов
