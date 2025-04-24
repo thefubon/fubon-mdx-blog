@@ -1,0 +1,91 @@
+// src/app/blog/page.tsx
+import Link from 'next/link'
+import FormattedDate from '@/components/FormattedDate'
+import SearchBar from '@/components/SearchBar'
+import { getAllPosts } from '@/lib/mdx'
+
+export default async function BlogPage() {
+  const posts = getAllPosts()
+
+  // Собираем все уникальные теги из всех постов
+  const allTags = Array.from(
+    new Set(
+      posts.flatMap((post) => post.frontmatter.tags || []).filter(Boolean)
+    )
+  ).sort()
+
+  return (
+    <div className="max-w-3xl mx-auto py-10 px-4">
+      <h1 className="text-4xl font-bold mb-6">Блог</h1>
+
+      {/* Добавляем компонент поиска */}
+      <div className="mb-6">
+        <SearchBar />
+      </div>
+
+      {/* Список всех тегов */}
+      {allTags.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-3">Все теги</h2>
+          <div className="flex flex-wrap gap-2">
+            {allTags.map((tag) => (
+              <Link
+                key={tag}
+                href={`/blog/tags/${tag}`}
+                className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors">
+                #{tag}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-8">
+        {posts.map((post) => {
+          const { title, description, publishedAt, slug, readingTime, tags } =
+            post.frontmatter
+
+          return (
+            <article
+              key={slug}
+              className="border-b pb-6">
+              <Link href={`/blog/${slug}`}>
+                <h2 className="text-2xl font-bold hover:text-blue-600 transition-colors mb-2">
+                  {title}
+                </h2>
+              </Link>
+
+              <div className="text-sm text-gray-500 mb-3">
+                <FormattedDate date={publishedAt} /> • {readingTime}
+              </div>
+
+              {/* Показываем теги для каждой статьи */}
+              {tags && tags.length > 0 && (
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <Link
+                        key={tag}
+                        href={`/tags/${tag}`}
+                        className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
+                        #{tag}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {description && <p className="text-gray-700">{description}</p>}
+
+              <Link
+                href={`/blog/${slug}`}
+                className="mt-4 inline-block text-blue-600 hover:underline">
+                Читать далее →
+              </Link>
+            </article>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
