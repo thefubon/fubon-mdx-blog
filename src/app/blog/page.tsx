@@ -18,7 +18,7 @@ export default async function BlogPage() {
     <div className="max-w-3xl mx-auto py-10 px-4">
       <h1 className="text-4xl font-bold mb-6">Блог</h1>
 
-      {/* Добавляем компонент поиска */}
+      {/* Компонент поиска уже содержит свой собственный Suspense */}
       <div className="mb-6">
         <SearchBar />
       </div>
@@ -31,7 +31,7 @@ export default async function BlogPage() {
             {allTags.map((tag) => (
               <Link
                 key={tag}
-                href={`/blog/tags/${tag}`}
+                href={`/tags/${tag}`}
                 className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors">
                 #{tag}
               </Link>
