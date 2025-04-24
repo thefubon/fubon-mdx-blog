@@ -1,9 +1,11 @@
+// src/app/blog/[slug]/page.tsx
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { notFound } from 'next/navigation'
-import { getAllPostSlugs, getPostBySlug } from '@/lib/mdx'
+import { getAllPostSlugs, getPostBySlug, getRelatedPosts } from '@/lib/mdx'
 import MDXComponents from '@/components/MDXComponents'
 import FormattedDate from '@/components/FormattedDate'
 import Tags from '@/components/Tags'
+import RelatedPosts from '@/components/RelatedPosts'
 
 export async function generateStaticParams() {
   const posts = getAllPostSlugs()
@@ -13,14 +15,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ slug: string }>
-  }
-) {
-  const params = await props.params;
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
   // Получаем slug из параметров
-  const slug = params.slug
+  const slug = (await props.params).slug
   const { frontmatter } = getPostBySlug(slug)
 
   return {
@@ -29,16 +26,14 @@ export async function generateMetadata(
   }
 }
 
-export default async function BlogPost(
-  props: {
-    params: Promise<{ slug: string }>
-  }
-) {
-  const params = await props.params;
+export default async function BlogPost(props: { params: Promise<{ slug: string }> }) {
   try {
     // Получаем slug из параметров
-    const slug = params.slug
+    const slug = (await props.params).slug
     const { frontmatter, content } = getPostBySlug(slug)
+
+    // Получаем похожие статьи на основе тегов
+    const relatedPosts = getRelatedPosts(slug, frontmatter.tags || [], 3)
 
     return (
       <div className="max-w-3xl mx-auto py-10 px-4">
@@ -70,6 +65,9 @@ export default async function BlogPost(
             components={MDXComponents}
           />
         </article>
+
+        {/* Добавляем компонент похожих статей */}
+        <RelatedPosts posts={relatedPosts} />
       </div>
     )
   } catch (error) {

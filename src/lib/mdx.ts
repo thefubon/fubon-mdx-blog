@@ -106,7 +106,7 @@ export function getPaginatedPosts(page: number = 1, limit: number = 5): Paginati
 
   // Убедимся, что страница начинается с 1 и не превышает максимальное количество страниц
   const totalPages = Math.ceil(totalPosts / limit);
-  const currentPage = Math.max(1, Math.min(page, totalPages));
+  const currentPage = Math.max(1, Math.min(page, totalPages || 1)); // Используем 1, если totalPages равно 0
 
   const startIndex = (currentPage - 1) * limit;
   const endIndex = Math.min(startIndex + limit, totalPosts);
@@ -115,7 +115,7 @@ export function getPaginatedPosts(page: number = 1, limit: number = 5): Paginati
 
   return {
     posts,
-    totalPages,
+    totalPages: totalPages || 1, // Минимум 1 страница
     currentPage,
     hasNextPage: currentPage < totalPages,
     hasPrevPage: currentPage > 1
@@ -137,6 +137,81 @@ export function getAllTags(): { tag: string; count: number }[] {
   return Object.entries(tagsWithCount)
     .map(([tag, count]) => ({ tag, count }))
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+// Функция для получения постов по тегу с пагинацией
+export function getPostsByTag(tag: string, page: number = 1, limit: number = 5): PaginationResult {
+  // Получаем все посты с указанным тегом
+  const postsWithTag = getAllPosts().filter(post => {
+    const postTags = post.frontmatter.tags || [];
+    return postTags.includes(tag);
+  });
+
+  const totalPosts = postsWithTag.length;
+
+  // Убедимся, что страница начинается с 1 и не превышает максимальное количество страниц
+  const totalPages = Math.ceil(totalPosts / limit) || 1; // Минимум 1 страница, даже если постов нет
+  const currentPage = Math.max(1, Math.min(page, totalPages));
+
+  const startIndex = (currentPage - 1) * limit;
+  const endIndex = Math.min(startIndex + limit, totalPosts);
+
+  const posts = postsWithTag.slice(startIndex, endIndex);
+
+  return {
+    posts,
+    totalPages,
+    currentPage,
+    hasNextPage: currentPage < totalPages,
+    hasPrevPage: currentPage > 1
+  };
+}
+
+// Функция для поиска постов с пагинацией
+export function searchPosts(query: string, page: number = 1, limit: number = 5): PaginationResult {
+  // Если запрос пустой, возвращаем пустой результат с одной страницей
+  if (!query || query.trim() === '') {
+    return {
+      posts: [],
+      totalPages: 1,
+      currentPage: 1,
+      hasNextPage: false,
+      hasPrevPage: false
+    };
+  }
+
+  const searchQuery = query.toLowerCase().trim();
+
+  // Фильтруем посты, содержащие поисковый запрос
+  const matchingPosts = getAllPosts().filter(post => {
+    const { title, description } = post.frontmatter;
+    const searchableContent = [
+      title.toLowerCase(),
+      (description || '').toLowerCase(),
+      post.content.toLowerCase()
+    ].join(' ');
+
+    return searchableContent.includes(searchQuery);
+  });
+
+  const totalPosts = matchingPosts.length;
+
+  // Убедимся, что страница начинается с 1 и не превышает максимальное количество страниц
+  const totalPages = Math.ceil(totalPosts / limit) || 1; // Минимум 1 страница, даже если постов нет
+  const currentPage = Math.max(1, Math.min(page, totalPages));
+
+  const startIndex = (currentPage - 1) * limit;
+  const endIndex = Math.min(startIndex + limit, totalPosts);
+
+  const posts = matchingPosts.slice(startIndex, endIndex);
+
+  return {
+    posts,
+    totalPages,
+    currentPage,
+    hasNextPage: currentPage < totalPages,
+    hasPrevPage: currentPage > 1
+  };
 }
 
 // Добавим функцию для получения похожих постов
@@ -165,6 +240,36 @@ export function getRelatedPosts(slug: string, tags: string[] = [], limit: number
   return relatedPosts
     .sort((a, b) => b.relevance - a.relevance)
     .slice(0, limit);
+}
+
+// Функция для получения архива постов по годам и месяцам
+export function getPostsArchive(): Record<string, Record<string, Post[]>> {
+  const posts = getAllPosts();
+  const archive: Record<string, Record<string, Post[]>> = {};
+
+  posts.forEach(post => {
+    const date = new Date(post.frontmatter.publishedAt);
+    const year = date.getFullYear().toString();
+    const month = date.toLocaleString('ru-RU', { month: 'long' });
+
+    if (!archive[year]) {
+      archive[year] = {};
+    }
+
+    if (!archive[year][month]) {
+      archive[year][month] = [];
+    }
+
+    archive[year][month].push(post);
+  });
+
+  // Сортируем годы и месяцы в обратном порядке (от новых к старым)
+  return Object.keys(archive)
+    .sort((a, b) => parseInt(b) - parseInt(a))
+    .reduce((sortedArchive, year) => {
+      sortedArchive[year] = archive[year];
+      return sortedArchive;
+    }, {} as Record<string, Record<string, Post[]>>);
 }
 
 // Вспомогательная функция для перемешивания массива
