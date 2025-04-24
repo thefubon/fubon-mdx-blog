@@ -31,7 +31,7 @@ export default async function BlogPage() {
             {allTags.map((tag) => (
               <Link
                 key={tag}
-                href={`/tags/${tag}`}
+                href={`/blog/tags/${tag}`}
                 className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors">
                 #{tag}
               </Link>
@@ -66,7 +66,7 @@ export default async function BlogPage() {
                     {tags.map((tag) => (
                       <Link
                         key={tag}
-                        href={`/tags/${tag}`}
+                        href={`/blog/tags/${tag}`}
                         className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
                         #{tag}
                       </Link>
