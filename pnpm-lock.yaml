@@ -29,9 +29,6 @@ importers:
       lucide-react:
         specifier: ^0.503.0
         version: 0.503.0(react@19.1.0)
-      mdast-util-to-string:
-        specifier: ^4.0.0
-        version: 4.0.0
       next:
         specifier: 15.3.1
         version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -59,9 +56,6 @@ importers:
       shiki:
         specifier: ^3.3.0
         version: 3.3.0
-      unist-util-visit:
-        specifier: ^5.0.0
-        version: 5.0.0
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
