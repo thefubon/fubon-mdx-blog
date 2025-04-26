@@ -1,15 +1,21 @@
 // src/components/Header.tsx или подобный компонент навигации
 import Link from 'next/link'
+import { Button } from './ui/button'
+import { ModeToggle } from './ModeToggle'
 
 export default function Header() {
   return (
-    <header className="bg-white shadow-sm">
+    <header className="bg-background shadow-sm">
       <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link
           href="/"
           className="font-bold text-xl">
           Мой блог
         </Link>
+
+        <Button>Click me</Button>
+
+        <ModeToggle />
 
         <nav>
           <ul className="flex gap-6">

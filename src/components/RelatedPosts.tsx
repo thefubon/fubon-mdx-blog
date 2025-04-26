@@ -41,7 +41,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
                     <Link
                       key={tag}
                       href={`/blog/tags/${tag}`}
-                      className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                      className="text-xs px-2 py-1 bg-secondary rounded-full transition-colors">
                       #{tag}
                     </Link>
                   ))}
