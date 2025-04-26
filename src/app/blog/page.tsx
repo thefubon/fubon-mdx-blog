@@ -6,7 +6,7 @@ import Pagination from '@/components/Pagination'
 import { getAllPosts, getPaginatedPosts } from '@/lib/mdx'
 
 // Константа для количества постов на странице
-const POSTS_PER_PAGE = 3
+const POSTS_PER_PAGE = 10
 
 // Функция для страницы блога с учетом номера страницы в параметрах
 interface PageProps {
