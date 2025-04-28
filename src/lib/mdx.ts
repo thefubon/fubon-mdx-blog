@@ -13,6 +13,7 @@ export interface PostMetadata {
   slug: string;
   readingTime: string;
   tags?: string[];
+  cover?: string; // Добавляем поле для обложки
 }
 
 // Определяем типы для результатов функций

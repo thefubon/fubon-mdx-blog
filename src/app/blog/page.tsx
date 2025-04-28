@@ -1,5 +1,6 @@
 // src/app/blog/page.tsx
 import Link from 'next/link'
+import Image from 'next/image'
 import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
 import Pagination from '@/components/Pagination'
@@ -62,13 +63,35 @@ export default async function BlogPage(props: PageProps) {
 
       <div className="space-y-8">
         {posts.map((post) => {
-          const { title, description, publishedAt, slug, readingTime, tags } =
-            post.frontmatter
+          const {
+            title,
+            description,
+            publishedAt,
+            slug,
+            readingTime,
+            tags,
+            cover,
+          } = post.frontmatter
 
           return (
             <article
               key={slug}
               className="border-b pb-6">
+              <Link href={`/blog/${slug}`}>
+                {cover && (
+                  <div className="mb-4 rounded-lg overflow-hidden">
+                    <Image
+                      src={cover}
+                      alt={title}
+                      width={800}
+                      height={450}
+                      className="w-full h-auto object-cover"
+                      priority={false} // или true для первого изображения
+                    />
+                  </div>
+                )}
+              </Link>
+              
               <Link href={`/blog/${slug}`}>
                 <h2 className="text-2xl font-bold hover:text-blue-600 transition-colors mb-2">
                   {title}
