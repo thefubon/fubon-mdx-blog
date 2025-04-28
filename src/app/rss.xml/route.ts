@@ -6,12 +6,12 @@ export async function GET() {
   const posts = getAllPosts();
 
   const feed = new Feed({
-    title: 'MDX Блог на Next.js 15',
-    description: 'Блог, созданный с использованием Next.js 15 и MDX',
+    title: 'Креативное агентство по дизайну и разработке. | Fubon',
+    description: 'Используя методы Data Science и лучшие практики UX-дизайна и проектирования продуктов, мы достигаем измеримых бизнес-результатов и создаем решения, которые отвечают потребностям пользователей и целям компании.',
     id: site_url,
     link: site_url,
     language: 'ru',
-    image: `${site_url}/images/logo.png`,
+    image: `${site_url}/splash-n.jpg`,
     favicon: `${site_url}/favicon.ico`,
     copyright: `Все права защищены ${new Date().getFullYear()}`,
     feedLinks: {

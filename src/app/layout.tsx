@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import '@/styles/globals.css'
 
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { LenisProvider } from '@/components/LenisProvider'
@@ -11,17 +11,18 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'MDX Блог на Next.js 15',
-  description: 'Блог создан с использованием Next.js 15 и MDX',
+  title: 'Креативное агентство по дизайну и разработке. | Fubon',
+  description:
+    'Используя методы Data Science и лучшие практики UX-дизайна и проектирования продуктов, мы достигаем измеримых бизнес-результатов и создаем решения, которые отвечают потребностям пользователей и целям компании.',
   // Добавляем метаданные для RSS-фида
-  authors: [{ name: 'Ваше имя' }],
+  authors: [{ name: 'Anthony Fubon' }],
   // Добавляем альтернативные ссылки в метаданных Next.js
   alternates: {
     types: {
       'application/rss+xml': [
         {
           url: '/rss.xml',
-          title: 'MDX Блог',
+          title: 'Креативное агентство по дизайну и разработке. | Fubon',
         },
       ],
     },

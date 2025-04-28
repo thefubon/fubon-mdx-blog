@@ -86,7 +86,7 @@ export default async function BlogPage(props: PageProps) {
                       width={800}
                       height={450}
                       className="w-full h-auto object-cover"
-                      priority={false} // или true для первого изображения
+                      priority={true} // или true для первого изображения
                     />
                   </div>
                 )}
