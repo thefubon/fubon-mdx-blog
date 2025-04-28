@@ -38,7 +38,8 @@ export default function RootLayout({
     <html
       lang="ru"
       suppressHydrationWarning>
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      <body
+        className={`${inter.className} flex flex-col min-h-screen`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -46,7 +47,7 @@ export default function RootLayout({
           disableTransitionOnChange>
           <Header />
           <LenisProvider>
-            <main className='flex-1'>{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </LenisProvider>
         </ThemeProvider>

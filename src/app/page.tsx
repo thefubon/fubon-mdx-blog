@@ -5,7 +5,7 @@ export default function Home() {
   const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="">
       <section className="text-center mb-16">
         <h1 className="text-5xl font-extrabold mb-4">
           Добро пожаловать в MDX Блог
