@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getAllPosts } from '@/lib/mdx'
 
 export default function Home() {
@@ -27,25 +28,43 @@ export default function Home() {
             Последние публикации
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <div
-                key={post.frontmatter.slug}
-                className="border rounded-lg overflow-hidden shadow-sm">
-                <div className="p-6">
-                  <h3 className="font-bold text-xl mb-2">
-                    {post.frontmatter.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    {post.frontmatter.description}
-                  </p>
-                  <Link
-                    href={`/blog/${post.frontmatter.slug}`}
-                    className="text-blue-600 hover:underline">
-                    Читать далее →
-                  </Link>
+            {posts.map((post) => {
+              const { title, description, slug, cover } = post.frontmatter
+
+              return (
+                <div
+                  key={slug}
+                  className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  {/* Добавляем обложку поста */}
+                  {cover && (
+                    <div className="relative aspect-video">
+                      <Image
+                        src={cover}
+                        alt={title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <h3 className="font-bold text-xl mb-2">
+                      <Link
+                        href={`/blog/${slug}`}
+                        className="hover:text-blue-600 transition-colors">
+                        {title}
+                      </Link>
+                    </h3>
+                    <p className="text-gray-600 mb-4">{description}</p>
+                    <Link
+                      href={`/blog/${slug}`}
+                      className="text-blue-600 hover:underline">
+                      Читать далее →
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           <div className="text-center mt-8">

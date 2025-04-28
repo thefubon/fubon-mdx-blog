@@ -1,11 +1,11 @@
 // src/app/blog/page.tsx
 import Link from 'next/link'
 import Image from 'next/image'
+import { getAllPosts, getPaginatedPosts } from '@/lib/mdx'
 import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
 import Pagination from '@/components/Pagination'
 import CustomCursor from '@/components/CustomCursor'
-import { getAllPosts, getPaginatedPosts } from '@/lib/mdx'
 
 // Константа для количества постов на странице
 const POSTS_PER_PAGE = 10
