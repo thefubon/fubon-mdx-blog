@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useLenis } from '@/components/LenisProvider' // Укажите правильный путь к вашему провайдеру
+import { useLenis } from './LenisProvider'
+import { ReactNode } from 'react'
 
 type NavLink = {
   label: string
   href: string
-  icon?: any
+  icon?: ReactNode // Используем ReactNode вместо any
 }
 
 type Props = {
@@ -16,21 +17,18 @@ type Props = {
 
 export default function Navbar({ navLinks }: Props) {
   const pathname = usePathname()
-  const lenis = useLenis() // Получаем экземпляр Lenis
+  const lenis = useLenis()
 
-  // Функция для плавного скролла к секциям
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
-    // Если это якорная ссылка на текущей странице
     if (href.startsWith('#')) {
       e.preventDefault()
       lenis?.scrollTo(href, {
-        offset: -100, // Отступ от верха, при необходимости
-        duration: 1.5, // Продолжительность анимации в секундах
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Функция плавности
-        immediate: false, // Плавная анимация
+        offset: -100,
+        duration: 1.5,
+        immediate: false,
       })
     }
   }

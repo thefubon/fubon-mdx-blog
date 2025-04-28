@@ -11,6 +11,20 @@ import Lenis from 'lenis'
 
 type LenisInstance = Lenis | null
 
+// Создаем типы для опций Lenis
+interface LenisOptions {
+  duration?: number
+  easing?: (t: number) => number
+  orientation?: 'vertical' | 'horizontal'
+  gestureOrientation?: 'vertical' | 'horizontal' | 'both'
+  smoothWheel?: boolean
+  wheelMultiplier?: number
+  smoothTouch?: boolean
+  touchMultiplier?: number
+  infinite?: boolean
+  [key: string]: unknown // Разрешаем дополнительные свойства
+}
+
 const LenisContext = createContext<LenisInstance>(null)
 
 interface LenisProviderProps {
@@ -21,13 +35,11 @@ export function LenisProvider({ children }: LenisProviderProps) {
   const [lenis, setLenis] = useState<LenisInstance>(null)
 
   useEffect(() => {
-    // Проверяем мобильное устройство
     const isMobile = /iPhone|iPad|iPod|Android/i.test(
       typeof navigator !== 'undefined' ? navigator.userAgent : ''
     )
 
-    // Используем any для обхода проблем с типизацией
-    const options: any = {
+    const options: LenisOptions = {
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
