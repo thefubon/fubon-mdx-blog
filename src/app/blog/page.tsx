@@ -4,6 +4,7 @@ import Image from 'next/image'
 import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
 import Pagination from '@/components/Pagination'
+import CustomCursor from '@/components/CustomCursor'
 import { getAllPosts, getPaginatedPosts } from '@/lib/mdx'
 
 // Константа для количества постов на странице
@@ -76,7 +77,8 @@ export default async function BlogPage(props: PageProps) {
           return (
             <article
               key={slug}
-              className="border-b pb-6">
+              className="border-b pb-6 hover-cursor">
+              <CustomCursor />
               <Link href={`/blog/${slug}`}>
                 {cover && (
                   <div className="mb-4 rounded-lg overflow-hidden">
@@ -91,7 +93,7 @@ export default async function BlogPage(props: PageProps) {
                   </div>
                 )}
               </Link>
-              
+
               <Link href={`/blog/${slug}`}>
                 <h2 className="text-2xl font-bold hover:text-blue-600 transition-colors mb-2">
                   {title}

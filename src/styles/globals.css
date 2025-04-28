@@ -120,3 +120,56 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*
+  Custom Hover Cursor
+*/
+
+.custom-cursor {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(209, 203, 191, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease, width 0.3s, height 0.3s, background-color 0.3s;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  line-height: 22px;
+  font-size: 16px;
+  opacity: 0;
+  /* Начальное состояние (скрыто) */
+}
+
+.hover-cursor {
+  cursor: none !important;
+  /* Убираем системный курсор при наведении */
+}
+
+.cursor-hover {
+  opacity: 1;
+  /* Плавно появляется */
+  width: 96px;
+  height: 96px;
+  background-color: rgba(209, 203, 191, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.custom-cursor svg {
+  width: 12px;
+  /* Исходный маленький размер */
+  height: 12px;
+  transition: transform 0.3s ease;
+  /* Плавный переход для иконки */
+}
+
+.cursor-hover svg {
+  transform: scale(6);
+  /* Увеличить иконку */
+}
