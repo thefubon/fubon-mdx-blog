@@ -5,7 +5,7 @@ export default function Home() {
   const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста
 
   return (
-    <div className="">
+    <div className="content-wrapper">
       <section className="text-center mb-16">
         <h1 className="text-5xl font-extrabold mb-4">
           Добро пожаловать в MDX Блог

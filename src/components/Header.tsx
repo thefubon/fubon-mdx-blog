@@ -5,36 +5,37 @@ import { ModeToggle } from './ModeToggle'
 import Navbar from './Navbar'
 import Logo from './Logo'
 import Player from './Player'
+import { LayoutDashboard } from 'lucide-react'
 
-const navItems = [
-  { label: 'Блог', href: '/blog' }
-]
+const navItems = [{ label: 'Блог', href: '/blog', icon: <LayoutDashboard /> }]
 
 export default function Header() {
   return (
-    <header className="bg-background shadow-sm sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-        <Link
-          href="/"
-          className="font-bold text-xl">
-          <Logo/>
+    <header className="header content-wrapper">
+      <div>
+        <Link href="/">
+          <Logo />
         </Link>
+      </div>
 
+      <div>
         <Navbar navLinks={navItems} />
+      </div>
 
-        <div className='flex justify-end gap-x-4'>
-          <Player/>
+      <div className="header__end">
+        <Player />
 
-          <Button asChild size="lg">
-            <Link
-              href="mailto:hello@fubon.ru"
-              aria-label="Отправить Email">
-              Lest&prime;s talk
-            </Link>
-          </Button>
+        <Button
+          asChild
+          size="lg">
+          <Link
+            href="mailto:hello@fubon.ru"
+            aria-label="Отправить Email">
+            Lest&prime;s talk
+          </Link>
+        </Button>
 
-          <ModeToggle />
-        </div>
+        <ModeToggle />
       </div>
     </header>
   )

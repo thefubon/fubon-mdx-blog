@@ -43,7 +43,7 @@ export default function Navbar({ navLinks }: Props) {
             key={link.label}
             href={link.href}
             onClick={(e) => handleClick(e, link.href)}
-            className={`${isActive && 'text-light-primary'} font-medium`}>
+            className={`${isActive && 'text-blue-600'} font-medium flex items-center gap-x-3`}>
             {link.icon}
             {link.label}
           </Link>
