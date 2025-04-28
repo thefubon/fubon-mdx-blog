@@ -2,7 +2,7 @@ import { Feed } from 'feed';
 import { getAllPosts } from '@/lib/mdx';
 
 export async function GET() {
-  const site_url = 'https://yourdomain.com';
+  const site_url = 'https://fubon.ru';
   const posts = getAllPosts();
 
   const feed = new Feed({
@@ -18,8 +18,8 @@ export async function GET() {
       rss: `${site_url}/rss.xml`,
     },
     author: {
-      name: 'Ваше имя',
-      email: 'email@example.com',
+      name: 'Anthony Fubon',
+      email: 'hello@fubon.ru',
       link: site_url,
     },
   });

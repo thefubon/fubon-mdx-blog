@@ -2,53 +2,39 @@
 import Link from 'next/link'
 import { Button } from './ui/button'
 import { ModeToggle } from './ModeToggle'
+import Navbar from './Navbar'
+import Logo from './Logo'
+import Player from './Player'
+
+const navItems = [
+  { label: 'Блог', href: '/blog' }
+]
 
 export default function Header() {
   return (
-    <header className="bg-background shadow-sm">
+    <header className="bg-background shadow-sm sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link
           href="/"
           className="font-bold text-xl">
-          Мой блог
+          <Logo/>
         </Link>
 
-        <Button>Click me</Button>
+        <Navbar navLinks={navItems} />
 
-        <ModeToggle />
+        <div className='flex justify-end gap-x-4'>
+          <Player/>
 
-        <nav>
-          <ul className="flex gap-6">
-            <li>
-              <Link
-                href="/"
-                className="hover:text-blue-600 transition-colors">
-                Главная
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/blog"
-                className="hover:text-blue-600 transition-colors">
-                Блог
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/blog/tags"
-                className="hover:text-blue-600 transition-colors">
-                Теги
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/blog/search"
-                className="hover:text-blue-600 transition-colors">
-                Поиск
-              </Link>
-            </li>
-          </ul>
-        </nav>
+          <Button asChild size="lg">
+            <Link
+              href="mailto:hello@fubon.ru"
+              aria-label="Отправить Email">
+              Lest&prime;s talk
+            </Link>
+          </Button>
+
+          <ModeToggle />
+        </div>
       </div>
     </header>
   )

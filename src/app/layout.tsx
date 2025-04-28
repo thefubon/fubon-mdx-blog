@@ -1,8 +1,12 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+
+import { ThemeProvider } from '@/components/ThemeProvider'
+import { LenisProvider } from '@/components/LenisProvider'
+
 import Header from '@/components/Header'
-import { ThemeProvider } from '@/components/theme-provider'
+import Footer from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -40,12 +44,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange>
           <Header />
-          <main>{children}</main>
-          <footer className="bg-muted mt-12 py-6">
-            <div className="max-w-7xl mx-auto px-4 text-center text-foreground">
-              &copy; {new Date().getFullYear()} MDX Блог на Next.js 15
-            </div>
-          </footer>
+          <LenisProvider>
+            <main>{children}</main>
+            <Footer />
+          </LenisProvider>
         </ThemeProvider>
       </body>
     </html>
