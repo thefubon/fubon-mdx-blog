@@ -5,8 +5,22 @@ import React, { useEffect, useState } from 'react'
 const CustomCursor: React.FC = () => {
   const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 })
   const [isHovering, setIsHovering] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    // Проверяем, является ли устройство мобильным
+    const checkIfMobile = () => {
+      return (
+        window.matchMedia('(pointer: coarse)').matches ||
+        window.innerWidth < 768
+      )
+    }
+
+    setIsMobile(checkIfMobile())
+
+    // Если это мобильное устройство, не инициализируем эффект курсора
+    if (checkIfMobile()) return
+
     const cursor = document.querySelector('.custom-cursor') as HTMLElement
     const hoverElements = document.querySelectorAll('.hover-cursor')
 
@@ -42,6 +56,9 @@ const CustomCursor: React.FC = () => {
     }
   }, [])
 
+  // Не рендерим компонент на мобильных устройствах
+  if (isMobile) return null
+
   return (
     <div
       className={`custom-cursor ${isHovering ? 'cursor-hover' : ''}`}
@@ -51,7 +68,7 @@ const CustomCursor: React.FC = () => {
       }}>
       <span className="cursor-text">
         <svg
-          className="stroke-1"
+          className="stroke-[0.5]"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"

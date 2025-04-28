@@ -11,7 +11,7 @@ const navItems = [{ label: 'Блог', href: '/blog', icon: <LayoutDashboard /> 
 
 export default function Header() {
   return (
-    <header className="header content-wrapper">
+    <header id='header'>
       <div>
         <Link href="/">
           <Logo />

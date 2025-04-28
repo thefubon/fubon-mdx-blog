@@ -50,11 +50,7 @@
   --breakpoint-xs: 30rem;
   --breakpoint-3xl: 120rem;
 
-  --padding-x: max(5vw, 48px);
-  --padding-y: clamp(16px, 4vw, 48px);
-
-  --header: clamp(60px, 10vw, 200px);
-  --logo: clamp(140px, 28vw, 256px);
+  --padding-x: max(5vw, 16px);
 }
 
 :root {
@@ -135,38 +131,28 @@
   }
 }
 
-/* CONTENT WRAPPER
+/* GLOBAL
 ==================================== */
 
-.content-wrapper {
-  @apply px-6 sm:px-[var(--padding-x)] overflow-x-clip;
+@utility container-fluid {
+  @apply px-[var(--padding-x)];
 }
 
 /* HEADER
 ==================================== */
 
-.header {
-  @apply flex justify-between items-center gap-x-4 py-6 sm:h-[var(--header)] sticky top-0 z-50;
+#header {
+  @apply px-[var(--padding-x)] py-[clamp(16px,3vw,48px)] flex justify-between items-center sticky top-0 z-50;
 }
 
-.header__end {
-  @apply inline-flex justify-end gap-x-5 static sm:relative;
-}
-
-/* LOGO
-==================================== */
-
+/* Logo */
 .logo {
-  @apply text-foreground transition delay-500 -mt-2 relative z-10 h-auto w-[var(--logo)];
+  @apply w-[clamp(140px,15vw,240px)] h-auto;
 }
 
-.logo.active {
-  @apply text-white delay-0;
-}
 
-/* =======================
-  Custom Hover Cursor
-========================== */
+/* Custom Hover Cursor
+==================================== */
 
 .custom-cursor {
   position: fixed;
