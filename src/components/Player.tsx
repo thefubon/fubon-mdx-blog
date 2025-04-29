@@ -1,7 +1,7 @@
-// Player.tsx
+// src/components/Player.tsx
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { Howl } from 'howler'
 import { Button } from './ui/button'
 
@@ -10,11 +10,11 @@ const VOLUME = 1
 
 export default function Player() {
   const soundRef = useRef<Howl | null>(null)
-  const isWaveActiveRef = useRef<boolean>(false)
+  const isWaveActiveRef = useRef(false)
   const animationFrameIdRef = useRef<number | null>(null)
-  const wavePhaseRef = useRef<number>(0)
-  const currentAmplitudeRef = useRef<number>(0)
-  const lastTimeRef = useRef<number>(0)
+  const wavePhaseRef = useRef(0)
+  const currentAmplitudeRef = useRef(0)
+  const lastTimeRef = useRef(0)
   const wavePathRef = useRef<SVGPathElement | null>(null)
 
   const waveAmplitude = 16
@@ -25,8 +25,9 @@ export default function Player() {
     typeof navigator !== 'undefined' &&
     /Mobi|Android/i.test(navigator.userAgent)
 
-  function createWave(timestamp: number) {
-    if (!wavePathRef.current) return
+  const createWave = useCallback((timestamp: number) => {
+    const pathEl = wavePathRef.current
+    if (!pathEl) return
 
     const deltaTime = timestamp - (lastTimeRef.current || timestamp)
     lastTimeRef.current = timestamp
@@ -40,7 +41,7 @@ export default function Player() {
           Math.sin(waveFrequency * x + wavePhaseRef.current)
       points.push(`${x} ${y}`)
     }
-    wavePathRef.current.setAttribute('d', `M${points.join(' L')}`)
+    pathEl.setAttribute('d', `M${points.join(' L')}`)
 
     wavePhaseRef.current += (safeDeltaTime / 16) * waveFrequency
 
@@ -64,11 +65,11 @@ export default function Player() {
         cancelAnimationFrame(animationFrameIdRef.current)
         animationFrameIdRef.current = null
       }
-      wavePathRef.current.setAttribute('d', 'M0 10 L100 10')
+      pathEl.setAttribute('d', 'M0 10 L100 10')
     }
-  }
+  }, [])
 
-  function startPlayback() {
+  const startPlayback = useCallback(() => {
     const sound = soundRef.current
     if (!sound || sound.playing()) return
 
@@ -78,9 +79,9 @@ export default function Player() {
     if (!animationFrameIdRef.current) {
       createWave(performance.now())
     }
-  }
+  }, [createWave])
 
-  function handleClick() {
+  const handleClick = () => {
     const sound = soundRef.current
     if (!sound) return
 
@@ -100,8 +101,7 @@ export default function Player() {
       volume: 0,
     })
 
-    wavePathRef.current =
-      document.querySelector<SVGPathElement>('#wavePath') || null
+    wavePathRef.current = document.querySelector<SVGPathElement>('#wavePath')
 
     if (!isDev && !isMobile) {
       const onFirstInteraction = () => {
@@ -110,9 +110,7 @@ export default function Player() {
         document.removeEventListener('click', onFirstInteraction)
         document.removeEventListener('touchstart', onFirstInteraction)
       }
-      document.addEventListener('mousemove', onFirstInteraction, {
-        once: true,
-      })
+      document.addEventListener('mousemove', onFirstInteraction, { once: true })
       document.addEventListener('click', onFirstInteraction, { once: true })
       document.addEventListener('touchstart', onFirstInteraction, {
         once: true,
@@ -123,11 +121,9 @@ export default function Player() {
       if (animationFrameIdRef.current) {
         cancelAnimationFrame(animationFrameIdRef.current)
       }
-      if (soundRef.current) {
-        soundRef.current.unload()
-      }
+      soundRef.current?.unload()
     }
-  }, [isDev, isMobile])
+  }, [isDev, isMobile, startPlayback])
 
   return (
     <Button
