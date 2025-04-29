@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { tracks } from '@/data/player'
 import AudioManager from '@/utils/audioManager'
 import Image from 'next/image'
+import { ArrowLeftFromLine, ArrowRightFromLine, Pause, Play } from 'lucide-react'
 
 export default function AudioPlayer() {
   // Состояния UI
@@ -246,7 +247,7 @@ export default function AudioPlayer() {
   const currentTrack = tracks[currentTrackIndex] || tracks[0]
 
   return (
-    <div className="flex flex-col gap-6 p-5 border rounded-xl shadow-lg bg-white w-full max-w-md">
+    <div className="flex flex-col gap-6 p-5 border rounded-xl shadow-lg bg-secondary w-full max-w-md">
       {/* Главный плеер */}
       <div className="flex flex-col items-center gap-4 w-full">
         {/* Обложка */}
@@ -259,7 +260,7 @@ export default function AudioPlayer() {
             height={288}
           />
         ) : (
-          <div className="w-36 h-36 bg-gray-200 rounded flex items-center justify-center text-gray-500">
+          <div className="w-36 h-36 bg-muted rounded flex items-center justify-center text-gray-500">
             No Cover
           </div>
         )}
@@ -276,7 +277,7 @@ export default function AudioPlayer() {
           </div>
           <div
             ref={progressBarRef}
-            className="w-full h-3 bg-gray-200 rounded-full cursor-pointer relative overflow-hidden hover:h-4 transition-all"
+            className="w-full h-4 bg-gray-200 rounded-full cursor-pointer relative overflow-hidden hover:h-6 transition-all"
             onClick={handleProgressClick}>
             {/* Линия прогресса с анимацией */}
             <div
@@ -285,7 +286,7 @@ export default function AudioPlayer() {
 
             {/* Индикатор текущей позиции */}
             <div
-              className="absolute top-1/2 -translate-y-1/2 h-5 w-5 bg-white border-2 border-blue-700 rounded-full shadow-md transition-all duration-100 hidden md:block"
+              className="absolute top-1/2 z-10 -translate-x-1/2 h-5 w-5 bg-white border-2 border-blue-700 rounded-full shadow-md transition-all duration-100 hidden md:block"
               style={{
                 left: `${Math.min(Math.max(progress, 1), 99)}%`,
                 transform: 'translate(-50%, -50%)',
@@ -298,21 +299,21 @@ export default function AudioPlayer() {
         <div className="flex justify-between w-full mt-4">
           <button
             onClick={prevTrack}
-            className="text-xl px-4 py-2 rounded-full hover:bg-gray-200"
+            className="text-xl px-4 py-2 rounded-full "
             aria-label="Предыдущий трек">
-            ⏪
+            <ArrowLeftFromLine />
           </button>
           <button
             onClick={() => togglePlayPause()}
-            className="text-3xl px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+            className="text-3xl px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
             aria-label={isPlaying ? 'Пауза' : 'Воспроизвести'}>
-            {isPlaying ? '⏸️' : '▶️'}
+            {isPlaying ? <Pause /> : <Play />}
           </button>
           <button
             onClick={nextTrack}
-            className="text-xl px-4 py-2 rounded-full hover:bg-gray-200"
+            className="text-xl px-4 py-2 rounded-full"
             aria-label="Следующий трек">
-            ⏩
+            <ArrowRightFromLine />
           </button>
         </div>
       </div>
@@ -326,8 +327,8 @@ export default function AudioPlayer() {
               key={index}
               className={`p-3 rounded-lg flex items-center gap-3 relative ${
                 currentTrackIndex === index
-                  ? 'bg-blue-50 border border-blue-200'
-                  : 'bg-gray-50 hover:bg-gray-100'
+                  ? 'bg-blue-50 dark:bg-zinc-600/30 border border-blue-200 dark:border-zinc-600'
+                  : 'bg-gray-50 dark:bg-zinc-600/30 border border-transparent  hover:bg-gray-100'
               } cursor-pointer overflow-hidden`}
               onClick={() => togglePlayPause(index)}>
               {/* Миниатюра трека */}
