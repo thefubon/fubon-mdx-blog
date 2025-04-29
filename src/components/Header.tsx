@@ -5,10 +5,11 @@ import { ModeToggle } from './ModeToggle'
 import Navbar from './Navbar'
 import Logo from './Logo'
 import Player from './Player'
-import { FileMusic, LayoutDashboard } from 'lucide-react'
+import { FileMusic, LayoutDashboard, Rabbit } from 'lucide-react'
 
 
 const navItems = [
+  { label: 'Работа', href: '/work', icon: <Rabbit /> },
   { label: 'Блог', href: '/blog', icon: <LayoutDashboard /> },
   { label: 'Музка', href: '/music', icon: <FileMusic /> },
 ]
