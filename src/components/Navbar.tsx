@@ -34,7 +34,7 @@ export default function Navbar({ navLinks }: Props) {
   }
 
   return (
-    <nav className="grid gap-2">
+    <nav className="flex items-center gap-x-5">
       {navLinks.map((link) => {
         const isActive = pathname === link.href
 
@@ -43,7 +43,7 @@ export default function Navbar({ navLinks }: Props) {
             key={link.label}
             href={link.href}
             onClick={(e) => handleClick(e, link.href)}
-            className={`${isActive && 'text-blue-600'} font-medium flex items-center gap-x-3`}>
+            className={`${isActive && 'text-blue-600'} font-medium flex items-center gap-x-2`}>
             {link.icon}
             {link.label}
           </Link>
