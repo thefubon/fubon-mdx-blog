@@ -4,7 +4,6 @@ import { Button } from './ui/button'
 import { ModeToggle } from './ModeToggle'
 import Navbar from './Navbar'
 import Logo from './Logo'
-import Player from './Player'
 import { FileMusic, LayoutDashboard, Rabbit } from 'lucide-react'
 
 
@@ -28,8 +27,6 @@ export default function Header() {
       </div>
 
       <div className="header__end">
-        <Player />
-
         <Button
           asChild
           size="lg">

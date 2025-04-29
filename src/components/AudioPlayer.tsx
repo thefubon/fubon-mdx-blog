@@ -1,11 +1,11 @@
 // src/components/AudioPlayer.tsx
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { tracks } from '@/data/player'
 import AudioManager from '@/utils/audioManager'
 import Image from 'next/image'
-import { ArrowLeftFromLine, ArrowRightFromLine, Pause, Play } from 'lucide-react'
+import { Button } from './ui/button'
 
 export default function AudioPlayer() {
   // Состояния UI
@@ -22,12 +22,79 @@ export default function AudioPlayer() {
   // Получаем инстанс менеджера аудио
   const audioManagerRef = useRef<AudioManager | null>(null)
 
+  // Refs для анимации волны
+  const isWaveActiveRef = useRef(false)
+  const animationFrameIdRef = useRef<number | null>(null)
+  const wavePhaseRef = useRef(0)
+  const currentAmplitudeRef = useRef(0)
+  const lastTimeRef = useRef(0)
+  const wavePathRef = useRef<SVGPathElement | null>(null)
+
+  // Константы анимации волны
+  const waveAmplitude = 16
+  const waveFrequency = 0.08
+
   // Функция сброса прогресса - вынесем для переиспользования
   const resetProgress = () => {
     setProgress(0)
     setCurrentTime(0)
     setDuration(0)
   }
+
+  // Функция создания волны - перенесена из вашего компонента
+  const createWave = useCallback((timestamp: number) => {
+    const pathEl = wavePathRef.current
+    if (!pathEl) return
+
+    const deltaTime = timestamp - (lastTimeRef.current || timestamp)
+    lastTimeRef.current = timestamp
+    const safeDeltaTime = Math.min(deltaTime, 32)
+
+    const points: string[] = []
+    for (let x = 0; x <= 100; x += 5) {
+      const y =
+        10 +
+        currentAmplitudeRef.current *
+          Math.sin(waveFrequency * x + wavePhaseRef.current)
+      points.push(`${x} ${y}`)
+    }
+    pathEl.setAttribute('d', `M${points.join(' L')}`)
+
+    wavePhaseRef.current += (safeDeltaTime / 16) * waveFrequency
+
+    if (
+      isWaveActiveRef.current &&
+      currentAmplitudeRef.current < waveAmplitude
+    ) {
+      currentAmplitudeRef.current += 0.1 * (safeDeltaTime / 16)
+    } else if (!isWaveActiveRef.current && currentAmplitudeRef.current > 0) {
+      currentAmplitudeRef.current -= 0.1 * (safeDeltaTime / 16)
+    }
+    currentAmplitudeRef.current = Math.min(
+      currentAmplitudeRef.current,
+      waveAmplitude
+    )
+
+    if (isWaveActiveRef.current || currentAmplitudeRef.current > 0) {
+      animationFrameIdRef.current = requestAnimationFrame(createWave)
+    } else {
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current)
+        animationFrameIdRef.current = null
+      }
+      pathEl.setAttribute('d', 'M0 10 L100 10')
+    }
+  }, [])
+
+  // Обновляем ref состояния волны при изменении статуса воспроизведения
+  useEffect(() => {
+    isWaveActiveRef.current = isPlaying
+
+    // Запускаем или останавливаем анимацию в зависимости от состояния
+    if (isPlaying && !animationFrameIdRef.current) {
+      createWave(performance.now())
+    }
+  }, [isPlaying, createWave])
 
   // Инициализируем AudioManager при первом рендере
   useEffect(() => {
@@ -93,7 +160,7 @@ export default function AudioPlayer() {
         if (position >= 0 && trackDuration > 0) {
           const newProgress = (position / trackDuration) * 100
 
-          // Логгируем только в режиме отладки, чтобы не замусоривать консоль
+          // Логируем только в режиме отладки
           if (debugMode) {
             console.log(
               `[Player] Progress update: ${position.toFixed(
@@ -136,12 +203,23 @@ export default function AudioPlayer() {
       }
     }, 1000) // Проверяем каждую секунду
 
+    // Устанавливаем ссылку на SVG path для волны
+    wavePathRef.current = document.querySelector<SVGPathElement>('#wavePath')
+
     // Очистка при размонтировании компонента
     return () => {
       clearInterval(updateInterval)
+
+      // Останавливаем анимацию волны
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current)
+        animationFrameIdRef.current = null
+      }
+
+      // Очищаем аудио-менеджер
       audioManager.destroy()
     }
-  }, [debugMode])
+  }, [debugMode, createWave])
 
   // Добавим новый эффект для ручного обновления прогресса
   // при изменении продолжительности трека
@@ -247,18 +325,45 @@ export default function AudioPlayer() {
   const currentTrack = tracks[currentTrackIndex] || tracks[0]
 
   return (
-    <div className="flex flex-col gap-6 p-5 border rounded-xl shadow-lg bg-secondary w-full max-w-md">
+    <div className="flex flex-col gap-6 p-5 border rounded-xl shadow-lg bg-white w-full max-w-md">
       {/* Главный плеер */}
       <div className="flex flex-col items-center gap-4 w-full">
         {/* Обложка */}
         {currentTrack.cover ? (
-          <Image
-            src={currentTrack.cover}
-            alt={`Обложка ${currentTrack.title}`}
-            className="w-36 h-36 rounded object-cover"
-            width={288}
-            height={288}
-          />
+          <div className="relative">
+            <Image
+              src={currentTrack.cover}
+              alt={`Обложка ${currentTrack.title}`}
+              className="w-36 h-36 rounded object-cover"
+              width={288}
+              height={288}
+            />
+
+            {/* Кнопка волны под обложкой (в точном соответствии с оригиналом) */}
+            <div className="absolute -bottom-6 left-0 w-full flex justify-center">
+              <Button
+                className="animation-trigger relative size-12 cursor-pointer rounded-full"
+                aria-label="Кнопка управления музыкой"
+                onClick={() => togglePlayPause()}
+                size="icon">
+                <svg
+                  viewBox="-10 -10 120 30"
+                  preserveAspectRatio="xMidYMid meet"
+                  className="!h-4 !w-7">
+                  <path
+                    id="wavePath"
+                    className="fill-none"
+                    d="M0 10 L100 10"
+                    stroke="currentColor"
+                    strokeWidth="12"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="currentColor"
+                  />
+                </svg>
+              </Button>
+            </div>
+          </div>
         ) : (
           <div className="w-36 h-36 bg-muted rounded flex items-center justify-center text-gray-500">
             No Cover
@@ -266,7 +371,7 @@ export default function AudioPlayer() {
         )}
 
         {/* Информация о треке */}
-        <h3 className="text-xl font-semibold">{currentTrack.title}</h3>
+        <h3 className="text-xl font-semibold mt-6">{currentTrack.title}</h3>
         <p className="text-gray-600">{currentTrack.artist}</p>
 
         {/* Прогресс-бар с улучшенным визуальным индикатором */}
@@ -286,7 +391,7 @@ export default function AudioPlayer() {
 
             {/* Индикатор текущей позиции */}
             <div
-              className="absolute top-1/2 z-10 -translate-x-1/2 h-5 w-5 bg-white border-2 border-blue-700 rounded-full shadow-md transition-all duration-100 hidden md:block"
+              className="absolute top-1/2 -translate-x-1/2 h-5 w-5 bg-white border-2 border-blue-700 rounded-full shadow-md transition-all duration-100 hidden md:block"
               style={{
                 left: `${Math.min(Math.max(progress, 1), 99)}%`,
                 transform: 'translate(-50%, -50%)',
@@ -299,21 +404,21 @@ export default function AudioPlayer() {
         <div className="flex justify-between w-full mt-4">
           <button
             onClick={prevTrack}
-            className="text-xl px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white cursor-pointer"
+            className="text-xl px-4 py-2 rounded-full hover:bg-gray-200"
             aria-label="Предыдущий трек">
-            <ArrowLeftFromLine />
+            ⏪
           </button>
           <button
             onClick={() => togglePlayPause()}
-            className="text-3xl px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+            className="text-3xl px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700"
             aria-label={isPlaying ? 'Пауза' : 'Воспроизвести'}>
-            {isPlaying ? <Pause /> : <Play />}
+            {isPlaying ? '⏸️' : '▶️'}
           </button>
           <button
             onClick={nextTrack}
-            className="text-xl px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white cursor-pointer"
+            className="text-xl px-4 py-2 rounded-full hover:bg-gray-200"
             aria-label="Следующий трек">
-            <ArrowRightFromLine />
+            ⏩
           </button>
         </div>
       </div>
@@ -327,8 +432,8 @@ export default function AudioPlayer() {
               key={index}
               className={`p-3 rounded-lg flex items-center gap-3 relative ${
                 currentTrackIndex === index
-                  ? 'bg-blue-50 dark:bg-zinc-600/30 border border-blue-200 dark:border-zinc-600'
-                  : 'bg-gray-50 dark:bg-zinc-600/30 border border-transparent  hover:bg-gray-100'
+                  ? 'bg-blue-50 border border-blue-200'
+                  : 'bg-gray-50 hover:bg-gray-100'
               } cursor-pointer overflow-hidden`}
               onClick={() => togglePlayPause(index)}>
               {/* Миниатюра трека */}
@@ -337,8 +442,8 @@ export default function AudioPlayer() {
                   src={track.cover}
                   alt={`Миниатюра ${track.title}`}
                   className="w-12 h-12 rounded object-cover"
-                  width={96}
-                  height={96}
+                  width={48}
+                  height={48}
                 />
               ) : (
                 <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-500">
@@ -355,17 +460,11 @@ export default function AudioPlayer() {
               {/* Индикатор воспроизведения */}
               <div className="w-8 flex justify-center">
                 {currentTrackIndex === index && isPlaying ? (
-                  <span className="text-blue-600 animate-pulse">
-                    <Play />
-                  </span>
+                  <span className="text-blue-600 animate-pulse">▶️</span>
                 ) : currentTrackIndex === index ? (
-                  <span className="text-gray-400">
-                    <Pause />
-                  </span>
+                  <span className="text-gray-400">⏸️</span>
                 ) : (
-                  <span className="text-gray-400">
-                    <Play />
-                  </span>
+                  <span className="text-gray-400">▶️</span>
                 )}
               </div>
 
@@ -386,6 +485,7 @@ export default function AudioPlayer() {
           <h4 className="font-bold mb-1">Debug Info:</h4>
           <div>Current Track: {currentTrackIndex}</div>
           <div>Playing: {isPlaying ? 'Yes' : 'No'}</div>
+          <div>Wave Active: {isWaveActiveRef.current ? 'Yes' : 'No'}</div>
           <div>Progress: {progress.toFixed(1)}%</div>
           <div>Current Time: {currentTime.toFixed(2)}s</div>
           <div>Duration: {duration.toFixed(2)}s</div>
