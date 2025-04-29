@@ -299,19 +299,19 @@ export default function AudioPlayer() {
         <div className="flex justify-between w-full mt-4">
           <button
             onClick={prevTrack}
-            className="text-xl px-4 py-2 rounded-full "
+            className="text-xl px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white cursor-pointer"
             aria-label="Предыдущий трек">
             <ArrowLeftFromLine />
           </button>
           <button
             onClick={() => togglePlayPause()}
-            className="text-3xl px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+            className="text-3xl px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
             aria-label={isPlaying ? 'Пауза' : 'Воспроизвести'}>
             {isPlaying ? <Pause /> : <Play />}
           </button>
           <button
             onClick={nextTrack}
-            className="text-xl px-4 py-2 rounded-full"
+            className="text-xl px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white cursor-pointer"
             aria-label="Следующий трек">
             <ArrowRightFromLine />
           </button>
@@ -355,11 +355,17 @@ export default function AudioPlayer() {
               {/* Индикатор воспроизведения */}
               <div className="w-8 flex justify-center">
                 {currentTrackIndex === index && isPlaying ? (
-                  <span className="text-blue-600 animate-pulse">▶️</span>
+                  <span className="text-blue-600 animate-pulse">
+                    <Play />
+                  </span>
                 ) : currentTrackIndex === index ? (
-                  <span className="text-gray-400">⏸️</span>
+                  <span className="text-gray-400">
+                    <Pause />
+                  </span>
                 ) : (
-                  <span className="text-gray-400">▶️</span>
+                  <span className="text-gray-400">
+                    <Play />
+                  </span>
                 )}
               </div>
 
