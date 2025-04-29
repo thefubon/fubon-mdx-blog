@@ -18,9 +18,9 @@ export const tracks: Track[] = [
   },
   {
     id: 2,
-    title: "Песня 2",
-    artist: "Артист 2",
+    title: "Deepe House",
+    artist: "TheTubon",
     src: "/audio/thefubon-deeper-house.mp3",
-    cover: "/splash-n.jpg",
+    cover: "/cover/deeper-house.png",
   },
 ];
