@@ -1,5 +1,5 @@
 // src/components/RelatedPosts.tsx
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import FormattedDate from './FormattedDate'
 import { Post } from '@/lib/mdx'
 

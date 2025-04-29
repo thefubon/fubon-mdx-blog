@@ -1,5 +1,5 @@
 // src/app/search/page.tsx
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
 import { getAllPosts } from '@/lib/mdx'

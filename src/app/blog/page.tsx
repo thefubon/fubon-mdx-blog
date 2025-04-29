@@ -1,5 +1,5 @@
 // src/app/blog/page.tsx
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import Image from 'next/image'
 import { getAllPosts, getPaginatedPosts } from '@/lib/mdx'
 import FormattedDate from '@/components/FormattedDate'

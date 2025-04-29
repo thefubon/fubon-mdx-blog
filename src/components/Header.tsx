@@ -1,11 +1,12 @@
 // src/components/Header.tsx или подобный компонент навигации
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { Button } from './ui/button'
 import { ModeToggle } from './ModeToggle'
 import Navbar from './Navbar'
 import Logo from './Logo'
 import Player from './Player'
 import { LayoutDashboard } from 'lucide-react'
+
 
 const navItems = [{ label: 'Блог', href: '/blog', icon: <LayoutDashboard /> }]
 
