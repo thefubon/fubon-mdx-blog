@@ -41,7 +41,7 @@ export default function Home() {
                   href={`/blog/${slug}`}
                   className="hover:text-blue-600 transition-colors hover-cursor">
                   <CustomCursor />
-                  <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="rounded-lg overflow-hidden">
                     {/* Добавляем обложку поста */}
                     {cover && (
                       <div className="relative aspect-video">
@@ -56,7 +56,7 @@ export default function Home() {
                       </div>
                     )}
 
-                    <div className="p-6">
+                    <div className="p-6 bg-background">
                       <h3 className="font-bold text-xl mb-2">{title}</h3>
                       <p className="text-gray-600 mb-4">{description}</p>
                     </div>
