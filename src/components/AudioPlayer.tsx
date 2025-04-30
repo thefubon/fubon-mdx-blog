@@ -383,7 +383,7 @@ export default function AudioPlayer() {
           </div>
           <div
             ref={progressBarRef}
-            className="w-full h-4 bg-gray-200 dark:bg-zinc-600 rounded-full cursor-pointer relative overflow-hidden  transition-all"
+            className="w-full h-5 bg-gray-200 dark:bg-zinc-600 rounded-full cursor-pointer relative overflow-hidden  transition-all"
             onClick={handleProgressClick}>
             {/* Линия прогресса с анимацией */}
             <div
