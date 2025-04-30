@@ -266,7 +266,7 @@
 
 /* Dropdown_Section_3 */
 .dropdown-section-3 {
-  @apply bg-[#050505] text-background p-6 rounded-lg text-2xl transition duration-500 uppercase flex justify-between items-center;
+  @apply bg-background text-foreground p-6 rounded-lg text-2xl transition duration-500 uppercase flex justify-between items-center;
 }
 
 .dropdown-section-3--closed {
