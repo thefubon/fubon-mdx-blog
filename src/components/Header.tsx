@@ -30,7 +30,8 @@ export default function Header() {
       <div className="header__end">
         <Button
           asChild
-          size="default">
+          size="default"
+          className='hidden md:inline-block'>
           <Link
             href="mailto:hello@fubon.ru"
             aria-label="Отправить Email">
