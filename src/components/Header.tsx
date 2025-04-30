@@ -5,6 +5,7 @@ import { ModeToggle } from './ModeToggle'
 import Navbar from './Navbar'
 import Logo from './Logo'
 import { FileMusic, LayoutDashboard, Rabbit } from 'lucide-react'
+import Dropdown from './Dropdown'
 
 
 const navItems = [
@@ -15,14 +16,14 @@ const navItems = [
 
 export default function Header() {
   return (
-    <header id='header'>
+    <header id="header">
       <div>
         <Link href="/">
           <Logo />
         </Link>
       </div>
 
-      <div>
+      <div className="hidden md:inline-block">
         <Navbar navLinks={navItems} />
       </div>
 
@@ -38,6 +39,8 @@ export default function Header() {
         </Button>
 
         <ModeToggle />
+
+        <Dropdown />
       </div>
     </header>
   )

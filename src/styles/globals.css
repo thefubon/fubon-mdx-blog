@@ -127,7 +127,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-secondary text-foreground;
   }
 }
 
@@ -146,7 +146,7 @@
 }
 
 .header__end {
-  @apply flex items-center gap-x-4;
+  @apply inline-flex justify-end gap-x-3 static sm:relative;
 }
 
 /* Logo */
@@ -154,6 +154,128 @@
   @apply w-[clamp(140px,15vw,240px)] h-auto;
 }
 
+/* HEADER__DROPDOWN
+==================================== */
+
+/* Dropdown_Background */
+.dropdown--background {
+  @apply bg-primary fixed inset-0;
+}
+
+/* Dropdown_Button */
+.dropdown-button {
+  @apply bg-muted hover:bg-white relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 sm:w-auto sm:px-[var(--button-x)] sm:h-[var(--button-h)];
+}
+
+.dropdown-button.open {
+  @apply bg-white;
+}
+
+/* Dropdown_Button_Text */
+.dropdown-button__text--container {
+  @apply hidden relative w-full overflow-hidden sm:inline-flex font-medium;
+  font-size: var(--button-text);
+}
+
+.dropdown-button__text {
+  @apply uppercase whitespace-nowrap transition-transform duration-500;
+}
+
+.dropdown-button__text.open {
+  @apply absolute top-full;
+}
+
+/* Dropdown_Button_Dots */
+.dropdown-button__dots {
+  @apply flex items-center gap-x-1 group-hover:rotate-90 transition-transform duration-300;
+}
+
+.dropdown-button__dots--item {
+  @apply w-1.5 h-1.5 bg-background rounded-full block;
+}
+
+.dropdown-button__dots.open {
+  @apply rotate-90;
+}
+
+.dropdown-menu {
+  @apply absolute inset-x-0 space-y-4 mt-6 sm:mt-4 px-6 sm:px-0 overflow-x-clip;
+}
+
+/* Dropdown_List */
+.dropdown-list {
+  @apply bg-white sm:mt-4 py-6 space-y-0.5 rounded-lg transition-all duration-300 uppercase;
+}
+
+.dropdown-list--closed {
+  @apply opacity-0 translate-y-[5.5em] rotate-[3.5deg] delay-150;
+}
+
+.dropdown-list--open {
+  @apply opacity-100 translate-z-0;
+}
+
+.dropdown-list__item {
+  @apply py-2 px-8 sm:px-10 relative hover:bg-[#EAE5FD] transition-all duration-300 flex justify-between items-center;
+  font-size: var(--dropdown-text);
+}
+
+.dropdown-list__item>a {
+  @apply absolute z-10 inset-0;
+}
+
+.dropdown-list__item.active {
+  @apply flex justify-between items-center hover:bg-transparent;
+}
+
+/* Dropdown_List_Dots */
+.dropdown-list__item--dot {
+  @apply w-3 h-3 bg-black rounded-full block;
+}
+
+/* Dropdown_List_Dots */
+.dropdown-list__item-arrow--icon {
+  @apply opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none -translate-x-4 group-hover:translate-x-0;
+}
+
+/* Dropdown_List_Text */
+.dropdown-list__text--container {
+  @apply relative w-full overflow-hidden sm:inline-flex cursor-pointer;
+}
+
+.dropdown-list__text {
+  @apply whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full;
+}
+
+.dropdown-list__text.open {
+  @apply hidden sm:block absolute top-full group-hover:-translate-y-full;
+}
+
+/* Dropdown_Section_2 */
+.dropdown-section-2 {
+  @apply bg-white p-6 rounded-lg transition duration-[400ms] text-2xl uppercase flex justify-between items-center;
+}
+
+.dropdown-section-2--closed {
+  @apply opacity-0 translate-y-[5.75em] rotate-[-3.5deg] delay-100;
+}
+
+.dropdown-section-2--open {
+  @apply opacity-100 translate-z-0;
+}
+
+/* Dropdown_Section_3 */
+.dropdown-section-3 {
+  @apply bg-[#050505] text-white p-6 rounded-lg text-2xl transition duration-500 uppercase flex justify-between items-center;
+}
+
+.dropdown-section-3--closed {
+  @apply opacity-0 translate-y-[6.75em] rotate-[-3.5deg] delay-75;
+}
+
+.dropdown-section-3-open {
+  @apply opacity-100 translate-z-0;
+}
 
 /* Custom Hover Cursor
 ==================================== */
