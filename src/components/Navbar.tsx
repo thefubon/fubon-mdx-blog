@@ -8,7 +8,7 @@ import { ReactNode } from 'react'
 type NavLink = {
   label: string
   href: string
-  icon?: ReactNode // Используем ReactNode вместо any
+  icon?: ReactNode
 }
 
 type Props = {
@@ -43,7 +43,9 @@ export default function Navbar({ navLinks }: Props) {
             key={link.label}
             href={link.href}
             onClick={(e) => handleClick(e, link.href)}
-            className={`${isActive && 'text-blue-600'} font-medium flex items-center gap-x-2`}>
+            className={`${
+              isActive && 'text-blue-600'
+            } font-medium flex items-center gap-x-2`}>
             {link.icon}
             {link.label}
           </Link>

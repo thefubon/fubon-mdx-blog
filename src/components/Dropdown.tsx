@@ -1,14 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { usePathname } from 'next/navigation'
 import { Button } from './ui/button'
-
-type MenuItem = {
-  name: string
-  link: string
-}
+import { menuItems, MenuItem } from '@/data/navbar'
+import { ModeToggle } from './ModeToggle'
 
 const Dropdown = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -17,13 +14,6 @@ const Dropdown = () => {
   const buttonElement = useRef<HTMLButtonElement>(null)
   const menuButton = 'Menu'
   const currentUrl = usePathname()
-
-  const menu: MenuItem[] = [
-    { name: 'About Us', link: '/about' },
-    { name: 'Projects', link: '/projects' },
-    { name: 'Music', link: '/music' },
-    { name: 'Blog', link: '/blog' },
-  ]
 
   const toggleMenu = () => {
     setIsMenuOpen((prevValue) => {
@@ -80,9 +70,7 @@ const Dropdown = () => {
 
       <Button
         ref={buttonElement}
-        className={`group animation-trigger ${
-          isMenuOpen ? 'open' : ''
-        }`}
+        className={`group animation-trigger ${isMenuOpen ? 'open' : ''}`}
         aria-label="Кнопка открытия выпадающего меню"
         onClick={toggleMenu}>
         <div className="dropdown-button__text--container">
@@ -116,7 +104,7 @@ const Dropdown = () => {
           className={`dropdown-list ${
             isMenuOpen ? 'dropdown-list--open' : 'dropdown-list--closed'
           }`}>
-          {menu.map((item) =>
+          {menuItems.map((item) =>
             currentUrl === item.link ? (
               <li
                 key={item.link}
@@ -166,8 +154,7 @@ const Dropdown = () => {
               ? 'dropdown-section-2--open'
               : 'dropdown-section-2--closed'
           }`}>
-          <span>Lets Talk</span>
-          <span>Icon</span>
+         <ModeToggle />
         </div>
 
         <div

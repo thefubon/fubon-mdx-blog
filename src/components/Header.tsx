@@ -1,18 +1,25 @@
-// src/components/Header.tsx или подобный компонент навигации
+// src/components/Header.tsx
 import { Link } from 'next-view-transitions'
 import { Button } from './ui/button'
-import { ModeToggle } from './ModeToggle'
 import Navbar from './Navbar'
 import Logo from './Logo'
 import { FileMusic, LayoutDashboard, Rabbit } from 'lucide-react'
 import Dropdown from './Dropdown'
+import { menuItems } from '@/data/navbar'
 
+// Карта иконок
+const iconComponents = {
+  'Rabbit': <Rabbit />,
+  'LayoutDashboard': <LayoutDashboard />,
+  'FileMusic': <FileMusic />
+}
 
-const navItems = [
-  { label: 'Работа', href: '/work', icon: <Rabbit /> },
-  { label: 'Блог', href: '/blog', icon: <LayoutDashboard /> },
-  { label: 'Музка', href: '/music', icon: <FileMusic /> },
-]
+// Преобразование данных из menuItems в формат, необходимый для Navbar
+const navItems = menuItems.map(item => ({
+  label: item.name,
+  href: item.link,
+  icon: item.iconName ? iconComponents[item.iconName as keyof typeof iconComponents] : undefined
+}))
 
 export default function Header() {
   return (
@@ -31,15 +38,13 @@ export default function Header() {
         <Button
           asChild
           size="default"
-          className='hidden md:inline-block'>
+          className="hidden md:inline-block">
           <Link
             href="mailto:hello@fubon.ru"
             aria-label="Отправить Email">
-            Lest&prime;s talk
+            Let&prime;s talk
           </Link>
         </Button>
-
-        <ModeToggle />
 
         <Dropdown />
       </div>
