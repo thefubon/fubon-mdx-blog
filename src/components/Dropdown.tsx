@@ -166,7 +166,7 @@ const Dropdown = () => {
               ? 'dropdown-section-2--open'
               : 'dropdown-section-2--closed'
           }`}>
-          <span>Let's Talk</span>
+          <span>Lets Talk</span>
           <span>Icon</span>
         </div>
 
