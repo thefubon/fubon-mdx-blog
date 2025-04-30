@@ -64,6 +64,11 @@
   /* Для заголовков и описаний компонентов */
   --font-size-heading: clamp(24px, 2.5vw + 10px, 36px);
   --font-size-description: clamp(16px, 0.7vw + 13px, 20px);
+
+  /* BUTTON */
+  --button-padding-x: clamp(16px, 2vw + 8px, 32px);
+  --button-height: clamp(40px, 3vw + 24px, 56px);
+  --button-font-size: clamp(16px, 0.5vw+14px, 18px);
 }
 
 :root {
@@ -187,7 +192,14 @@
 
 /* Logo */
 .logo {
-  @apply w-[clamp(140px,15vw,240px)] h-auto;
+  @apply w-[clamp(140px,15vw,256px)] h-auto;
+}
+
+/* BUTTON
+==================================== */
+
+.button-animation {
+  font-size: var(--button-font-size) !important;
 }
 
 /* HEADER__DROPDOWN
@@ -195,22 +207,23 @@
 
 /* Dropdown_Background */
 .dropdown--background {
-  @apply bg-primary fixed inset-0;
+  @apply bg-foreground/75 fixed inset-0;
 }
 
 /* Dropdown_Button */
 .dropdown-button {
-  @apply bg-muted hover:bg-white relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:px-[var(--button-x)] md:h-[var(--button-h)];
+  @apply bg-foreground hover:bg-blue-600 text-background relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)];
+
+  font-size: var(--button-font-size) !important;
 }
 
 .dropdown-button.open {
-  @apply bg-background;
+  @apply bg-blue-600;
 }
 
 /* Dropdown_Button_Text */
 .dropdown-button__text--container {
-  @apply hidden relative w-full overflow-hidden md:inline-flex font-medium;
-  font-size: var(--button-text);
+  @apply hidden relative w-full overflow-hidden md:inline-flex;
 }
 
 .dropdown-button__text {

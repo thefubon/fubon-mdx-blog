@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Button } from './ui/button'
 import Logo from './Logo'
 import Dropdown from './Dropdown'
+import ButtonAnimation from './ButtonAnimation'
 
 export default function Header() {
   return (
@@ -13,17 +14,12 @@ export default function Header() {
         </Link>
       </div>
 
-      <div className="inline-flex justify-end gap-x-3 static md:relative">
-        <Button
-          asChild
-          size="default"
+      <div className="inline-flex justify-end items-center gap-x-3 static md:relative">
+        <ButtonAnimation
+          href="mailto:hello@fubon.ru"
           className="hidden md:inline-block">
-          <Link
-            href="mailto:hello@fubon.ru"
-            aria-label="Отправить Email">
-            Let&prime;s talk
-          </Link>
-        </Button>
+          Контакты
+        </ButtonAnimation>
 
         <Dropdown />
       </div>

@@ -68,9 +68,11 @@ const Dropdown = () => {
           }}></div>
       )}
 
-      <Button
+      <button
         ref={buttonElement}
-        className={`group animation-trigger ${isMenuOpen ? 'open' : ''}`}
+        className={`group animation-trigger dropdown-button ${
+          isMenuOpen ? 'open' : ''
+        }`}
         aria-label="Кнопка открытия выпадающего меню"
         onClick={toggleMenu}>
         <div className="dropdown-button__text--container">
@@ -92,7 +94,7 @@ const Dropdown = () => {
           <span className="dropdown-button__dots--item"></span>
           <span className="dropdown-button__dots--item"></span>
         </div>
-      </Button>
+      </button>
 
       <div
         ref={menuElement}
@@ -154,7 +156,7 @@ const Dropdown = () => {
               ? 'dropdown-section-2--open'
               : 'dropdown-section-2--closed'
           }`}>
-         <ModeToggle />
+          <ModeToggle />
         </div>
 
         <div
