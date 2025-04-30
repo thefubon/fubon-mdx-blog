@@ -50,7 +50,21 @@
   --breakpoint-xs: 30rem;
   --breakpoint-3xl: 120rem;
 
+  /* SIZE */
   --padding-x: max(5vw, 16px);
+
+  /* TYPOGRAPHY */
+  --font-size-h1: clamp(32px, 3.2vw + 16px, 64px);
+  --font-size-h2: clamp(28px, 4vw + 12px, 48px);
+  --font-size-h3: clamp(24px, 3vw + 10px, 40px);
+  --font-size-h4: clamp(22px, 2.5vw + 8px, 32px);
+  --font-size-h5: clamp(20px, 2vw + 7px, 28px);
+  --font-size-h6: clamp(18px, 1.5vw + 6px, 24px);
+  --font-size-body: clamp(14px, 0.5vw + 12px, 16px);
+  
+  /* Для заголовков и описаний компонентов */
+  --font-size-heading: clamp(24px, 2.5vw + 10px, 36px);
+  --font-size-description: clamp(16px, 0.7vw + 13px, 20px);
 }
 
 :root {
@@ -127,27 +141,52 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-secondary text-foreground;
+    @apply bg-secondary text-foreground text-body;
   }
+
+  h1 {font-size: var(--font-size-h1)}
+  h2 {font-size: var(--font-size-h2)}
+  h3 {font-size: var(--font-size-h3)}
+  h4 {font-size: var(--font-size-h4)}
+  h5 {font-size: var(--font-size-h5)}
+  h6 {font-size: var(--font-size-h6)}
+  p {font-size: var(--font-size-body)}
 }
 
-/* GLOBAL
+/* CONTAINER
 ==================================== */
 
 @utility container-fluid {
   @apply px-[var(--padding-x)];
 }
 
-/* HEADER
+/* COMPONENT TEXT
 ==================================== */
 
-#header {
-  @apply px-[var(--padding-x)] py-[clamp(16px,3vw,48px)] flex justify-between items-center sticky top-0 z-50;
+@utility text-h1 {font-size: var(--font-size-h1);}
+@utility text-h2 {font-size: var(--font-size-h2);}
+@utility text-h3 {font-size: var(--font-size-h3);}
+@utility text-h4 {font-size: var(--font-size-h4);}
+@utility text-h5 {font-size: var(--font-size-h5);}
+@utility text-h6 {font-size: var(--font-size-h6);}
+@utility text-body {font-size: var(--font-size-body);}
+
+/* COMPONENT HEADING
+==================================== */
+
+@utility heading {font-size: var(--font-size-heading);}
+@utility description {font-size: var(--font-size-description);}
+
+.heading-wrapper {
+  @apply px-[var(--padding-x)];
 }
 
-.header__end {
-  @apply inline-flex justify-end gap-x-3 static md:relative;
+.heading-title {
+  @apply text-2xl font-bold leading-tight tracking-tight text-gray-900 mb-4 sm:text-3xl sm:leading-snug sm:mb-5 md:text-4xl md:mb-6 lg:text-5xl lg:leading-tight lg:tracking-normal lg:mb-8 dark:text-gray-100;
 }
+
+/* HEADER
+==================================== */
 
 /* Logo */
 .logo {

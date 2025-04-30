@@ -6,14 +6,14 @@ import Dropdown from './Dropdown'
 
 export default function Header() {
   return (
-    <header id="header">
+    <header className="px-[var(--padding-x)] py-[clamp(16px,3vw,48px)] flex justify-between items-center sticky top-0 z-50">
       <div>
         <Link href="/">
           <Logo />
         </Link>
       </div>
 
-      <div className="header__end">
+      <div className="inline-flex justify-end gap-x-3 static md:relative">
         <Button
           asChild
           size="default"

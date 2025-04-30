@@ -6,6 +6,7 @@ import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
 import Pagination from '@/components/Pagination'
 import CustomCursor from '@/components/CustomCursor'
+import PageWrapper from '@/components/PageWrapper'
 
 // Константа для количества постов на странице
 const POSTS_PER_PAGE = 10
@@ -37,109 +38,112 @@ export default async function BlogPage(props: PageProps) {
   ).sort()
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-6">Блог</h1>
+    <PageWrapper
+      title="Блог"
+      description="Описание страницы или какой-то вводный текст.">
 
-      {/* Компонент поиска уже содержит свой собственный Suspense */}
-      <div className="mb-6">
-        <SearchBar />
-      </div>
-
-      {/* Список всех тегов */}
-      {allTags.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-3">Все теги</h2>
-          <div className="flex flex-wrap gap-2">
-            {allTags.map((tag) => (
-              <Link
-                key={tag}
-                href={`/blog/tags/${tag}`}
-                className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors">
-                #{tag}
-              </Link>
-            ))}
-          </div>
+      <div className="max-w-3xl mx-auto px-4">
+        {/* Компонент поиска уже содержит свой собственный Suspense */}
+        <div className="mb-6">
+          <SearchBar />
         </div>
-      )}
 
-      <div className="space-y-8">
-        {posts.map((post) => {
-          const {
-            title,
-            description,
-            publishedAt,
-            slug,
-            readingTime,
-            tags,
-            cover,
-          } = post.frontmatter
+        {/* Список всех тегов */}
+        {allTags.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-3">Все теги</h2>
+            <div className="flex flex-wrap gap-2">
+              {allTags.map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/blog/tags/${tag}`}
+                  className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors">
+                  #{tag}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
-          return (
-            <article
-              key={slug}
-              className="border-b pb-6 hover-cursor">
-              <CustomCursor />
-              <Link href={`/blog/${slug}`}>
-                {cover && (
-                  <div className="mb-4 rounded-lg overflow-hidden">
-                    <Image
-                      src={cover}
-                      alt={title}
-                      width={800}
-                      height={450}
-                      className="w-full h-auto object-cover"
-                      priority={true} // или true для первого изображения
-                    />
+        <div className="space-y-8">
+          {posts.map((post) => {
+            const {
+              title,
+              description,
+              publishedAt,
+              slug,
+              readingTime,
+              tags,
+              cover,
+            } = post.frontmatter
+
+            return (
+              <article
+                key={slug}
+                className="border-b pb-6 hover-cursor">
+                <CustomCursor />
+                <Link href={`/blog/${slug}`}>
+                  {cover && (
+                    <div className="mb-4 rounded-lg overflow-hidden">
+                      <Image
+                        src={cover}
+                        alt={title}
+                        width={800}
+                        height={450}
+                        className="w-full h-auto object-cover"
+                        priority={true} // или true для первого изображения
+                      />
+                    </div>
+                  )}
+                </Link>
+
+                <Link href={`/blog/${slug}`}>
+                  <h2 className="text-2xl font-bold hover:text-blue-600 transition-colors mb-2">
+                    {title}
+                  </h2>
+                </Link>
+
+                <div className="text-sm text-gray-500 mb-3">
+                  <FormattedDate date={publishedAt} /> • {readingTime}
+                </div>
+
+                {/* Показываем теги для каждой статьи */}
+                {tags && tags.length > 0 && (
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-2">
+                      {tags.map((tag) => (
+                        <Link
+                          key={tag}
+                          href={`/blog/tags/${tag}`}
+                          className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
+                          #{tag}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 )}
-              </Link>
 
-              <Link href={`/blog/${slug}`}>
-                <h2 className="text-2xl font-bold hover:text-blue-600 transition-colors mb-2">
-                  {title}
-                </h2>
-              </Link>
+                {description && <p className="text-gray-700">{description}</p>}
 
-              <div className="text-sm text-gray-500 mb-3">
-                <FormattedDate date={publishedAt} /> • {readingTime}
-              </div>
+                <Link
+                  href={`/blog/${slug}`}
+                  className="mt-4 inline-block text-blue-600 hover:underline">
+                  Читать далее →
+                </Link>
+              </article>
+            )
+          })}
+        </div>
 
-              {/* Показываем теги для каждой статьи */}
-              {tags && tags.length > 0 && (
-                <div className="mb-3">
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                      <Link
-                        key={tag}
-                        href={`/blog/tags/${tag}`}
-                        className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
-                        #{tag}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {description && <p className="text-gray-700">{description}</p>}
-
-              <Link
-                href={`/blog/${slug}`}
-                className="mt-4 inline-block text-blue-600 hover:underline">
-                Читать далее →
-              </Link>
-            </article>
-          )
-        })}
+        {/* Компонент пагинации */}
+        <div className="mt-12">
+          <Pagination
+            currentPage={validatedPage}
+            totalPages={totalPages}
+            basePath="/blog"
+          />
+        </div>
       </div>
-
-      {/* Компонент пагинации */}
-      <div className="mt-12">
-        <Pagination
-          currentPage={validatedPage}
-          totalPages={totalPages}
-          basePath="/blog"
-        />
-      </div>
-    </div>
+    </PageWrapper>
   )
 }
