@@ -145,6 +145,10 @@
   @apply px-[var(--padding-x)] py-[clamp(16px,3vw,48px)] flex justify-between items-center sticky top-0 z-50;
 }
 
+.header__end {
+  @apply flex items-center gap-x-4;
+}
+
 /* Logo */
 .logo {
   @apply w-[clamp(140px,15vw,240px)] h-auto;

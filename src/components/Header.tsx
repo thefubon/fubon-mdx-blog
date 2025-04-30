@@ -29,7 +29,7 @@ export default function Header() {
       <div className="header__end">
         <Button
           asChild
-          size="lg">
+          size="default">
           <Link
             href="mailto:hello@fubon.ru"
             aria-label="Отправить Email">

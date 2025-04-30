@@ -6,6 +6,7 @@ import { tracks } from '@/data/player'
 import AudioManager from '@/utils/audioManager'
 import Image from 'next/image'
 import { Button } from './ui/button'
+import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
 
 export default function AudioPlayer() {
   // Состояния UI
@@ -325,7 +326,7 @@ export default function AudioPlayer() {
   const currentTrack = tracks[currentTrackIndex] || tracks[0]
 
   return (
-    <div className="flex flex-col gap-6 p-5 border rounded-xl shadow-lg bg-white w-full max-w-md">
+    <div className="flex flex-col gap-6 p-5 border rounded-xl bg-secondary w-full max-w-md">
       {/* Главный плеер */}
       <div className="flex flex-col items-center gap-4 w-full">
         {/* Обложка */}
@@ -372,7 +373,7 @@ export default function AudioPlayer() {
 
         {/* Информация о треке */}
         <h3 className="text-xl font-semibold mt-6">{currentTrack.title}</h3>
-        <p className="text-gray-600">{currentTrack.artist}</p>
+        <p className="text-foreground/50">{currentTrack.artist}</p>
 
         {/* Прогресс-бар с улучшенным визуальным индикатором */}
         <div className="w-full">
@@ -382,7 +383,7 @@ export default function AudioPlayer() {
           </div>
           <div
             ref={progressBarRef}
-            className="w-full h-4 bg-gray-200 rounded-full cursor-pointer relative overflow-hidden hover:h-6 transition-all"
+            className="w-full h-4 bg-gray-200 dark:bg-zinc-600 rounded-full cursor-pointer relative overflow-hidden  transition-all"
             onClick={handleProgressClick}>
             {/* Линия прогресса с анимацией */}
             <div
@@ -404,21 +405,21 @@ export default function AudioPlayer() {
         <div className="flex justify-between w-full mt-4">
           <button
             onClick={prevTrack}
-            className="text-xl px-4 py-2 rounded-full hover:bg-gray-200"
+            className="text-xl px-4 py-2 rounded-full hover:bg-blue-600"
             aria-label="Предыдущий трек">
-            ⏪
+            <SkipBack />
           </button>
           <button
             onClick={() => togglePlayPause()}
-            className="text-3xl px-5 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+            className="text-3xl px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
             aria-label={isPlaying ? 'Пауза' : 'Воспроизвести'}>
-            {isPlaying ? '⏸️' : '▶️'}
+            {isPlaying ? <Pause /> : <Play />}
           </button>
           <button
             onClick={nextTrack}
-            className="text-xl px-4 py-2 rounded-full hover:bg-gray-200"
+            className="text-xl px-4 py-2 rounded-full hover:bg-blue-600"
             aria-label="Следующий трек">
-            ⏩
+            <SkipForward />
           </button>
         </div>
       </div>
@@ -432,8 +433,8 @@ export default function AudioPlayer() {
               key={index}
               className={`p-3 rounded-lg flex items-center gap-3 relative ${
                 currentTrackIndex === index
-                  ? 'bg-blue-50 border border-blue-200'
-                  : 'bg-gray-50 hover:bg-gray-100'
+                  ? 'border bg-background dark:bg-zinc-600'
+                  : 'border dark:bg-zinc-600/50 dark:hover:bg-zinc-600'
               } cursor-pointer overflow-hidden`}
               onClick={() => togglePlayPause(index)}>
               {/* Миниатюра трека */}
@@ -446,7 +447,7 @@ export default function AudioPlayer() {
                   height={48}
                 />
               ) : (
-                <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-500">
+                <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-foreground">
                   <span>🎵</span>
                 </div>
               )}
@@ -454,17 +455,25 @@ export default function AudioPlayer() {
               {/* Информация о треке */}
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate">{track.title}</p>
-                <p className="text-sm text-gray-600 truncate">{track.artist}</p>
+                <p className="text-sm text-foreground/50 truncate">
+                  {track.artist}
+                </p>
               </div>
 
               {/* Индикатор воспроизведения */}
               <div className="w-8 flex justify-center">
                 {currentTrackIndex === index && isPlaying ? (
-                  <span className="text-blue-600 animate-pulse">▶️</span>
+                  <span className="text-blue-600 animate-pulse">
+                    <Play />
+                  </span>
                 ) : currentTrackIndex === index ? (
-                  <span className="text-gray-400">⏸️</span>
+                  <span className="text-gray-400">
+                    <Pause />
+                  </span>
                 ) : (
-                  <span className="text-gray-400">▶️</span>
+                  <span className="text-gray-400">
+                    <Play />
+                  </span>
                 )}
               </div>
 
