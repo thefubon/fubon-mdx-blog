@@ -1,0 +1,59 @@
+{
+  "name": "Fubon",
+  "short_name": "Fubon",
+  "description": "Креативное агентство по дизайну и разработке.",
+  "icons": [
+    {
+      "src": "/images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-192x192-dark.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "media": "(prefers-color-scheme: dark)"
+    },
+    {
+      "src": "/images/icon-256x256-dark.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "media": "(prefers-color-scheme: dark)"
+    },
+    {
+      "src": "/images/icon-384x384-dark.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "media": "(prefers-color-scheme: dark)"
+    },
+    {
+      "src": "/images/icon-512x512-dark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "media": "(prefers-color-scheme: dark)"
+    }
+  ],
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "theme_color_dark": "#121212",
+  "background_color_dark": "#121212",
+  "scope": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
