@@ -1,5 +1,5 @@
 // src/components/Tags.tsx
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 
 interface TagsProps {
   tags: string[]

@@ -1,5 +1,5 @@
 // src/components/Header.tsx
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import { Button } from './ui/button'
 import Logo from './Logo'
 import Dropdown from './Dropdown'

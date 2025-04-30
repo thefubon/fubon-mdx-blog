@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 
-import { ViewTransitions } from 'next-view-transitions'
-
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { LenisProvider } from '@/components/LenisProvider'
 
@@ -37,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ViewTransitions>
+
       <html
         lang="ru"
         suppressHydrationWarning>
@@ -55,6 +53,5 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ViewTransitions>
   )
 }

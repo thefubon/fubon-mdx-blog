@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import { getAllPosts } from '@/lib/mdx'
 
 export default function TagsPage() {

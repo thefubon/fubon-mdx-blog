@@ -1,7 +1,7 @@
 // src/components/Pagination.tsx
 'use client'
 
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 
 interface PaginationProps {
   currentPage: number

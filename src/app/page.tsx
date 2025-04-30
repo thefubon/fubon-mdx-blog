@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import Image from 'next/image'
 import { getAllPosts } from '@/lib/mdx'
 import CustomCursor from '@/components/CustomCursor'
