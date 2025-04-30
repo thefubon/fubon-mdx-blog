@@ -4,12 +4,20 @@ import { getAllPosts } from '@/lib/mdx'
 import PageWrapper from '@/components/PageWrapper'
 import CustomCursor from '@/components/CustomCursor'
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+
 export default function Home() {
   const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста
 
   return (
     <PageWrapper>
-
       <div className="container-fluid">
         <section className="text-center mb-16">
           <h1 className="text-h1 font-extrabold mb-4">
@@ -26,6 +34,21 @@ export default function Home() {
             className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
             Перейти к статьям
           </Link>
+        </section>
+
+        <section className='max-w-md py-10'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Card Title</CardTitle>
+              <CardDescription>Card Description</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>Card Content</p>
+            </CardContent>
+            <CardFooter>
+              <p>Card Footer</p>
+            </CardFooter>
+          </Card>
         </section>
 
         {posts.length > 0 && (

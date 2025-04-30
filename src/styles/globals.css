@@ -17,8 +17,8 @@
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
-
   --color-sidebar: var(--sidebar);
+
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -145,7 +145,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-secondary text-foreground;
+    @apply bg-background text-foreground;
   }
 
   h1 {font-size: var(--font-size-h1)}
@@ -205,9 +205,24 @@
 /* HEADER__DROPDOWN
 ==================================== */
 
-/* Dropdown_Background */
-.dropdown--background {
-  @apply bg-foreground/75 fixed inset-0;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 /* Dropdown_Button */
@@ -253,7 +268,7 @@
 
 /* Dropdown_List */
 .dropdown-list {
-  @apply bg-background md:mt-4 py-6 space-y-0.5 rounded-lg transition-all duration-300 uppercase;
+  @apply bg-secondary md:mt-4 py-6 space-y-0.5 rounded-lg transition-all duration-300 uppercase;
 }
 
 .dropdown-list--closed {
@@ -302,7 +317,7 @@
 
 /* Dropdown_Section_2 */
 .dropdown-section-2 {
-  @apply bg-background p-6 rounded-lg transition duration-[400ms] text-2xl uppercase flex justify-between items-center;
+  @apply bg-secondary p-6 rounded-lg transition duration-[400ms] text-2xl uppercase flex justify-between items-center;
 }
 
 .dropdown-section-2--closed {
@@ -315,7 +330,7 @@
 
 /* Dropdown_Section_3 */
 .dropdown-section-3 {
-  @apply bg-background text-foreground p-6 rounded-lg text-2xl transition duration-500 uppercase flex justify-between items-center;
+  @apply bg-secondary text-foreground p-6 rounded-lg text-2xl transition duration-500 uppercase flex justify-between items-center;
 }
 
 .dropdown-section-3--closed {
