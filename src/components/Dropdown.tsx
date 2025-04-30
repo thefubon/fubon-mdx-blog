@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'next-view-transitions'
 import { usePathname } from 'next/navigation'
 import { Button } from './ui/button'
-import { menuItems, MenuItem } from '@/data/navbar'
+import { menuItems } from '@/data/navbar'
 import { ModeToggle } from './ModeToggle'
 
 const Dropdown = () => {
