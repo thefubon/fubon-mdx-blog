@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Button } from './ui/button'
 import { menuItems } from '@/data/navbar'
 import { ModeToggle } from './ModeToggle'
 
@@ -12,7 +11,7 @@ const Dropdown = () => {
   const [isMobile, setIsMobile] = useState(false)
   const menuElement = useRef<HTMLDivElement>(null)
   const buttonElement = useRef<HTMLButtonElement>(null)
-  const menuButton = 'Menu'
+  const menuButton = 'Меню'
   const currentUrl = usePathname()
 
   const toggleMenu = () => {
