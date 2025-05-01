@@ -47,6 +47,11 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  /* FUBON COLORS */
+  --color-fubon-brand: var(--fubon-brand);
+  --color-fubon-primary: var(--fubon-primary);
+  
+
   --breakpoint-xs: 30rem;
   --breakpoint-3xl: 120rem;
 
@@ -104,6 +109,13 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  /* FUBON */
+  --fubon-background: oklch(100% 0 0);
+  --fubon-foreground: oklch(15% 0.05 260);
+  --fubon-primary: oklch(45% 0.3 255);
+  --fubon-secondary: oklch(20% 0.02 260);
+  --fubon-muted: oklch(91.5% 0.02 265);
 }
 
 .dark {
@@ -227,7 +239,7 @@
 
 /* Dropdown_Button */
 .dropdown-button {
-  @apply bg-foreground hover:bg-blue-600 text-background relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)];
+  @apply bg-fubon-primary hover:bg-blue-600 text-background relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)];
 
   font-size: var(--button-font-size) !important;
 }
