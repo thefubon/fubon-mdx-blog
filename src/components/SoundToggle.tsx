@@ -14,13 +14,13 @@ export function SoundToggle() {
       aria-label={enabled ? 'Выключить звуки' : 'Включить звуки'}>
       {enabled ? (
         <Volume2
-          size={28}
-          strokeWidth={1.5}
+          size={24}
+          strokeWidth={1.8}
         />
       ) : (
         <VolumeOff
-          size={28}
-          strokeWidth={1.5}
+          size={24}
+          strokeWidth={1.8}
         />
       )}
     </button>

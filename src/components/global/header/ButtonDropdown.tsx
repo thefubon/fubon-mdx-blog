@@ -159,6 +159,16 @@ const ButtonDropdown = () => {
           }}></div>
       )}
 
+      {showBackground && !isMobile && (
+        <div
+          className="dropdown--background-mobile"
+          style={{
+            animation: isFading
+              ? `fade-out ${FADE_OUT_DURATION}ms ease`
+              : `fade-in ${FADE_IN_DURATION}ms ease`,
+          }}></div>
+      )}
+
       <SoundWrapper>
         <button
           ref={buttonElement}
