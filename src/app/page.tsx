@@ -36,7 +36,7 @@ export default function Home() {
 
           
 
-          <h1 className="text-h1 font-extrabold mb-4">
+          <h1 className="text-h1 font-bold mb-4">
             Добро пожаловать!
           </h1>
 

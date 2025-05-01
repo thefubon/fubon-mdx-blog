@@ -6,6 +6,14 @@
 @import "./custom/header-dropdown.css";
 @import "./custom/custom-cursor.css";
 
+@font-face {
+  font-family: 'FubonVF';
+  src: url('/fonts/FubonVF.woff') format('woff');
+  /* font-weight: normal; */
+  font-style: normal;
+  font-display: block;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -85,6 +93,7 @@
 }
 
 :root {
+  --font-sans: 'FubonVF', sans-serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -168,7 +177,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-fubon-muted dark:bg-background text-foreground flex flex-col min-h-screen antialiased;
+    @apply font-[var(--font-sans)] bg-fubon-muted dark:bg-background text-foreground flex flex-col min-h-screen antialiased;
+    font-family: var(--font-sans);
   }
 
   main {
