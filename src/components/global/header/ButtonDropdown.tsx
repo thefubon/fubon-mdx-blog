@@ -31,6 +31,19 @@ const ButtonDropdown = () => {
   const VISIBLE_DURATION = 500 // мс - как долго фон остается видимым до начала анимации исчезновения
   const HIDE_DELAY = 500 // мс - общая задержка удаления элемента
 
+  // Функция для управления блокировкой прокрутки body
+  const toggleBodyScroll = useCallback((disable: boolean) => {
+    if (disable) {
+      // Блокируем прокрутку
+      document.body.style.overflow = 'hidden'
+      document.body.classList.add('overflow-hidden')
+    } else {
+      // Разрешаем прокрутку
+      document.body.style.overflow = ''
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [])
+
   // Функция для очистки всех активных таймеров, обернутая в useCallback
   const clearAllTimers = useCallback(() => {
     if (fadeTimerRef.current) {
@@ -70,36 +83,43 @@ const ButtonDropdown = () => {
 
       if (newValue) {
         // При открытии меню
+        toggleBodyScroll(true) // Блокируем прокрутку
         document.body.classList.add('overflow')
         clearAllTimers() // Очищаем все таймеры
         setShowBackground(true) // Сразу показываем фон
         setIsFading(false) // Сбрасываем статус анимации
       } else {
         // При закрытии меню
+        toggleBodyScroll(false) // Разблокируем прокрутку
         document.body.classList.remove('overflow')
         startFadeOutSequence() // Используем VISIBLE_DURATION
       }
 
       return newValue
     })
-  }, [clearAllTimers, startFadeOutSequence])
+  }, [clearAllTimers, startFadeOutSequence, toggleBodyScroll])
 
-  // Эффект для очистки таймеров при размонтировании
+  // Эффект для очистки таймеров и сброса блокировки при размонтировании
   useEffect(() => {
     return () => {
       clearAllTimers()
+      toggleBodyScroll(false) // Убедимся, что прокрутка разблокирована при размонтировании
     }
-  }, [clearAllTimers])
+  }, [clearAllTimers, toggleBodyScroll])
 
   // Эффект для синхронизации состояния фона с состоянием меню
   useEffect(() => {
     if (isMenuOpen) {
       // При открытии меню
+      toggleBodyScroll(true) // Дополнительная защита: блокируем прокрутку
       clearAllTimers()
       setShowBackground(true)
       setIsFading(false)
+    } else {
+      // При закрытии меню (если состояние изменилось извне)
+      toggleBodyScroll(false) // Разблокируем прокрутку
     }
-  }, [isMenuOpen, clearAllTimers])
+  }, [isMenuOpen, clearAllTimers, toggleBodyScroll])
 
   // Демонстрация использования HIDE_DELAY для случаев закрытия вне нормального потока
   useEffect(() => {
@@ -107,8 +127,15 @@ const ButtonDropdown = () => {
     if (!isMenuOpen && showBackground && !isFading && !fadeTimerRef.current) {
       // Используем HIDE_DELAY в этом особом случае
       startFadeOutSequence(true) // передаем true для использования HIDE_DELAY
+      toggleBodyScroll(false) // Дополнительно разблокируем прокрутку в этом сценарии
     }
-  }, [isMenuOpen, showBackground, isFading, startFadeOutSequence])
+  }, [
+    isMenuOpen,
+    showBackground,
+    isFading,
+    startFadeOutSequence,
+    toggleBodyScroll,
+  ])
 
   const checkIsMobile = useCallback(() => {
     setIsMobile(window.innerWidth < 768) // Предполагаем, что мобильный вид - до 768px
@@ -125,13 +152,14 @@ const ButtonDropdown = () => {
         isMenuOpen // Проверяем, что меню открыто
       ) {
         setIsMenuOpen(false)
+        toggleBodyScroll(false) // Разблокируем прокрутку при закрытии меню
         document.body.classList.remove('overflow')
 
         // Используем альтернативную задержку (HIDE_DELAY) для кликов вне меню
         startFadeOutSequence(true) // true = используем HIDE_DELAY вместо VISIBLE_DURATION
       }
     },
-    [isMenuOpen, startFadeOutSequence]
+    [isMenuOpen, startFadeOutSequence, toggleBodyScroll]
   )
 
   // Устанавливаем и удаляем слушателей событий
@@ -143,9 +171,10 @@ const ButtonDropdown = () => {
     return () => {
       window.removeEventListener('resize', checkIsMobile)
       window.removeEventListener('click', handleClickOutside)
+      toggleBodyScroll(false) // Гарантируем разблокировку прокрутки при размонтировании
       clearAllTimers() // Очищаем все таймеры при размонтировании
     }
-  }, [checkIsMobile, handleClickOutside, clearAllTimers]) // Добавляем все зависимости
+  }, [checkIsMobile, handleClickOutside, clearAllTimers, toggleBodyScroll]) // Добавляем все зависимости
 
   return (
     <div className="header__dropdown">
@@ -279,4 +308,3 @@ const ButtonDropdown = () => {
 }
 
 export default ButtonDropdown
-

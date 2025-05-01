@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 
 import { ThemeProvider } from '@/contexts/ThemeProvider'
-import { LenisProvider } from '@/contexts/LenisProvider'
 
 import Header from '@/components/global/header'
 import Footer from '@/components/global/footer'
@@ -50,9 +49,9 @@ export default function RootLayout({
             disableTransitionOnChange>
             <SoundProvider>
               <Header />
-              <LenisProvider>
+              
                 <main>{children}</main>
-              </LenisProvider>
+         
               <Footer />
             </SoundProvider>
           </ThemeProvider>
