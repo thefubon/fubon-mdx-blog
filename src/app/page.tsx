@@ -20,6 +20,20 @@ export default function Home() {
     <PageWrapper>
       <div className="container-fluid">
         <section className="text-center mb-16">
+          <div className="w-full h-full object-center object-cover overflow-hidden rounded-2xl flex justify-center">
+            <video
+              loop
+              autoPlay
+              muted
+              playsInline
+              className="">
+              <source
+                src="/video/HeroVideo.webm"
+                type="video/mp4"
+              />
+            </video>
+          </div>
+
           <h1 className="text-h1 font-extrabold mb-4">
             Добро пожаловать в MDX Блог
           </h1>
@@ -36,7 +50,7 @@ export default function Home() {
           </Link>
         </section>
 
-        <section className='max-w-md py-10'>
+        <section className="max-w-md py-10">
           <Card>
             <CardHeader>
               <CardTitle>Card Title</CardTitle>
