@@ -8,7 +8,17 @@ import { DarkMode } from './DarkMode'
 import { MailPlus } from 'lucide-react'
 import SoundWrapper from '@/components/SoundWrapper'
 
-const ButtonDropdown = () => {
+// Добавляем пропс для обновления состояния
+interface ButtonDropdownProps {
+  updateMenuState: (state: {
+    isMenuOpen?: boolean;
+    showBackground?: boolean;
+    isFading?: boolean;
+    isMobile?: boolean;
+  }) => void;
+}
+
+const ButtonDropdown = ({ updateMenuState }: ButtonDropdownProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   // Состояние для контроля видимости фона
@@ -175,6 +185,16 @@ const ButtonDropdown = () => {
       clearAllTimers() // Очищаем все таймеры при размонтировании
     }
   }, [checkIsMobile, handleClickOutside, clearAllTimers, toggleBodyScroll]) // Добавляем все зависимости
+
+  // После каждого изменения состояния, обновляем контекст
+  useEffect(() => {
+    updateMenuState({
+      isMenuOpen,
+      showBackground,
+      isFading,
+      isMobile,
+    })
+  }, [isMenuOpen, showBackground, isFading, isMobile, updateMenuState])
 
   return (
     <div className="header__dropdown">

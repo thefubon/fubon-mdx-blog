@@ -2,9 +2,7 @@
 ==================================== */
 
 .dropdown--background {
-  @apply bg-foreground/15 backdrop-blur-2xl fixed inset-0;
-  /* Safari Fix */
-  -webkit-backdrop-filter: blur(40px); 
+  @apply bg-fubon-primary fixed inset-0; 
 }
 
 .dropdown--background-mobile {

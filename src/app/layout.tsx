@@ -49,9 +49,7 @@ export default function RootLayout({
             disableTransitionOnChange>
             <SoundProvider>
               <Header />
-              
-                <main>{children}</main>
-         
+              <main>{children}</main>
               <Footer />
             </SoundProvider>
           </ThemeProvider>
