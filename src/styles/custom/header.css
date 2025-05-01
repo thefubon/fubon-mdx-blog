@@ -22,7 +22,7 @@
 ==================================== */
 
 .logo {
-  @apply w-[clamp(178px,15vw,256px)] h-auto relative z-50;
+  @apply w-[clamp(140px,15vw,256px)] h-auto relative z-50;
 }
 
 /* BUTTON CONTACT
