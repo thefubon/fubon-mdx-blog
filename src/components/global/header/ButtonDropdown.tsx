@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { menuItems } from '@/data/navbar'
 import { DarkMode } from './DarkMode'
 import { MailPlus } from 'lucide-react'
+import SoundWrapper from '@/components/SoundWrapper'
 
 const ButtonDropdown = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -148,8 +149,7 @@ const ButtonDropdown = () => {
 
   return (
     <div className="header__dropdown">
-      {/* showBackground && isMobile && */}
-      {showBackground && (
+      {showBackground && isMobile && (
         <div
           className="dropdown--background"
           style={{
@@ -159,33 +159,35 @@ const ButtonDropdown = () => {
           }}></div>
       )}
 
-      <button
-        ref={buttonElement}
-        className={`group animation-trigger dropdown-button ${
-          isMenuOpen ? 'open' : ''
-        }`}
-        aria-label="Кнопка открытия выпадающего меню"
-        onClick={toggleMenu}>
-        <div className="dropdown-button__text--container">
-          <span
-            className={`dropdown-button__text ${
-              isMenuOpen ? '-translate-y-full' : ''
-            }`}>
-            {menuButton}
-          </span>
-          <span
-            className={`dropdown-button__text open ${
-              isMenuOpen ? '-translate-y-full' : ''
-            }`}>
-            {menuButton}
-          </span>
-        </div>
+      <SoundWrapper>
+        <button
+          ref={buttonElement}
+          className={`group animation-trigger dropdown-button ${
+            isMenuOpen ? 'open' : ''
+          }`}
+          aria-label="Кнопка открытия выпадающего меню"
+          onClick={toggleMenu}>
+          <div className="dropdown-button__text--container">
+            <span
+              className={`dropdown-button__text ${
+                isMenuOpen ? '-translate-y-full' : ''
+              }`}>
+              {menuButton}
+            </span>
+            <span
+              className={`dropdown-button__text open ${
+                isMenuOpen ? '-translate-y-full' : ''
+              }`}>
+              {menuButton}
+            </span>
+          </div>
 
-        <div className={`dropdown-button__dots ${isMenuOpen ? 'open' : ''}`}>
-          <span className="dropdown-button__dots--item"></span>
-          <span className="dropdown-button__dots--item"></span>
-        </div>
-      </button>
+          <div className={`dropdown-button__dots ${isMenuOpen ? 'open' : ''}`}>
+            <span className="dropdown-button__dots--item"></span>
+            <span className="dropdown-button__dots--item"></span>
+          </div>
+        </button>
+      </SoundWrapper>
 
       <div
         ref={menuElement}

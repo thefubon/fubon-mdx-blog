@@ -34,6 +34,8 @@ export default function Home() {
             </video>
           </div> */}
 
+          
+
           <h1 className="text-h1 font-extrabold mb-4">
             Добро пожаловать!
           </h1>

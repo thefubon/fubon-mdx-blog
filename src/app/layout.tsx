@@ -7,6 +7,7 @@ import { LenisProvider } from '@/contexts/LenisProvider'
 
 import Header from '@/components/global/header'
 import Footer from '@/components/global/footer'
+import { SoundProvider } from '@/contexts/SoundProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -47,11 +48,13 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange>
+              <SoundProvider>
             <Header />
             <LenisProvider>
               <main>{children}</main>
-              <Footer />
             </LenisProvider>
+            <Footer />
+            </SoundProvider>
           </ThemeProvider>
         </body>
       </html>

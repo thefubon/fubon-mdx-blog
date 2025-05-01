@@ -3,6 +3,8 @@ import Link from 'next/link'
 import Logo from './Logo'
 import ButtonContact from './ButtonContact'
 import ButtonDropdown from './ButtonDropdown'
+import { SoundToggle } from '@/components/SoundToggle'
+import SoundWrapper from '@/components/SoundWrapper'
 
 export default function Header() {
   return (
@@ -16,14 +18,20 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="header__end">
-          <ButtonContact
-            href="mailto:hello@fubon.ru"
-            className="header__contact-btn"
-            aria-label="Отправить Email">
-            Контакты
-          </ButtonContact>
+        <div>
+          <SoundToggle />
+        </div>
 
+        <div className="header__end">
+          <SoundWrapper>
+            <ButtonContact
+              href="mailto:hello@fubon.ru"
+              className="header__contact-btn"
+              aria-label="Отправить Email">
+              Контакты
+            </ButtonContact>
+          </SoundWrapper>
+         
           <ButtonDropdown />
         </div>
       </div>

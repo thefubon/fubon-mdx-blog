@@ -165,7 +165,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground flex flex-col min-h-screen antialiased;
+    @apply bg-fubon-muted text-foreground flex flex-col min-h-screen antialiased;
   }
 
   main {
