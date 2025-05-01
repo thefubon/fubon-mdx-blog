@@ -18,6 +18,13 @@
   @apply inline-flex justify-end items-center gap-x-2 md:gap-x-4 static md:relative;
 }
 
+/* LOGO
+==================================== */
+
+.logo {
+  @apply w-[clamp(178px,15vw,256px)] h-auto relative z-50;
+}
+
 /* BUTTON CONTACT
 ==================================== */
 

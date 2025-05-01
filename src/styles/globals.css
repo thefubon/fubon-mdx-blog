@@ -214,19 +214,6 @@
   @apply text-2xl font-bold leading-tight tracking-tight text-gray-900 mb-4 sm:text-3xl sm:leading-snug sm:mb-5 md:text-4xl md:mb-6 lg:text-5xl lg:leading-tight lg:tracking-normal lg:mb-8 dark:text-gray-100;
 }
 
-/* HEADER
-==================================== */
-
-/* Logo */
-.logo {
-  @apply w-[clamp(178px,15vw,256px)] h-auto relative z-50;
-}
-
-/* BUTTON
-==================================== */
-
-
-
 @keyframes fade-in {
   from {
     opacity: 0;
