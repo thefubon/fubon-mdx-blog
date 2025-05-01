@@ -18,11 +18,8 @@ export default function Header() {
           </Link>
         </div>
 
-        <div>
-          <SoundToggle />
-        </div>
-
         <div className="header__end">
+          <SoundToggle />
           <SoundWrapper>
             <ButtonContact
               href="mailto:hello@fubon.ru"
@@ -31,7 +28,7 @@ export default function Header() {
               Контакты
             </ButtonContact>
           </SoundWrapper>
-         
+
           <ButtonDropdown />
         </div>
       </div>

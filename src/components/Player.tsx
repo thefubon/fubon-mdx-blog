@@ -96,7 +96,7 @@ export default function Player() {
 
   useEffect(() => {
     soundRef.current = new Howl({
-      src: ['/sound/generic.webm', '/sound/generic.ogg', '/sound/generic.mp3'],
+      src: ['/sounds/generic.webm', '/sounds/generic.ogg', '/sounds/generic.mp3'],
       loop: true,
       volume: 0,
     })

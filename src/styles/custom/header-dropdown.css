@@ -7,7 +7,7 @@
 
 /* Dropdown_Button */
 .dropdown-button {
-  @apply bg-fubon-primary hover:bg-blue-600 text-background relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)];
+  @apply bg-fubon-primary hover:bg-blue-600 text-background relative transition-colors duration-300 flex justify-center items-center gap-x-4 font-medium whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)];
 
   font-size: var(--button-font-size) !important;
 }
@@ -35,7 +35,7 @@
 }
 
 .dropdown-button__dots--item {
-  @apply w-1.5 h-1.5 bg-background rounded-full block;
+  @apply size-1.5 bg-background rounded-full block;
 }
 
 .dropdown-button__dots.open {
@@ -43,7 +43,7 @@
 }
 
 .dropdown-menu {
-  @apply absolute inset-x-0 space-y-4 mt-6 md:mt-4 px-6 md:px-0 overflow-x-clip;
+  @apply absolute inset-x-0 space-y-4 mt-4 px-6 md:px-0 overflow-x-clip;
 }
 
 /* Dropdown_List */
@@ -60,7 +60,7 @@
 }
 
 .dropdown-list__item {
-  @apply py-2 px-8 md:px-10 relative hover:bg-[#EAE5FD] transition-all duration-300 flex justify-between items-center;
+  @apply py-2 px-6 relative hover:bg-[#EAE5FD] transition-all duration-300 flex justify-between items-center;
   font-size: var(--dropdown-text);
 }
 
@@ -88,7 +88,7 @@
 }
 
 .dropdown-list__text {
-  @apply whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full;
+  @apply text-2xl whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full;
 }
 
 .dropdown-list__text.open {
