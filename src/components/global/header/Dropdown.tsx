@@ -147,7 +147,7 @@ const Dropdown = () => {
   }, [checkIsMobile, handleClickOutside, clearAllTimers]) // Добавляем все зависимости
 
   return (
-    <div className="dropdown">
+    <div className="header__dropdown">
       {showBackground && isMobile && (
         <div
           className="bg-primary-foreground fixed inset-0 dropdown--background"
@@ -256,7 +256,7 @@ const Dropdown = () => {
               : 'dropdown-section-3--closed'
           }`}>
           <span>
-            <MailPlus size='32' />
+            <MailPlus size="32" />
           </span>
           <span>Email</span>
         </div>

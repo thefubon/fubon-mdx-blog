@@ -1,0 +1,24 @@
+/* HEADER
+==================================== */
+
+.header {
+  @apply px-[var(--padding-x)] py-[clamp(16px,3vw,48px)] sticky top-0 z-50;
+}
+
+/* Header Container */
+.header__container {
+  @apply flex justify-between items-center;
+}
+
+.header__start {
+  @apply shrink-0;
+}
+
+.header__end {
+  @apply inline-flex justify-end items-center gap-x-3 static md:relative;
+}
+
+/* Contact Button */
+.header__contact-btn {
+  @apply hidden font-medium md:inline-block;
+}

@@ -2,16 +2,16 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 
-import { ThemeProvider } from '@/components/ThemeProvider'
-import { LenisProvider } from '@/components/LenisProvider'
+import { ThemeProvider } from '@/contexts/ThemeProvider'
+import { LenisProvider } from '@/contexts/LenisProvider'
 
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import Header from '@/components/global/header'
+import Footer from '@/components/global/footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Креативное агентство по дизайну и разработке. | Fubon',
+  title: 'Fubon | Креативное агентство по дизайну и разработке.',
   description:
     'Используя методы Data Science и лучшие практики UX-дизайна и проектирования продуктов, мы достигаем измеримых бизнес-результатов и создаем решения, которые отвечают потребностям пользователей и целям компании.',
   // Добавляем метаданные для RSS-фида
@@ -22,7 +22,8 @@ export const metadata: Metadata = {
       'application/rss+xml': [
         {
           url: '/rss.xml',
-          title: 'Креативное агентство по дизайну и разработке. | Fubon',
+          title:
+            'Fubon | Креативное агентство по дизайну и разработке.',
         },
       ],
     },
@@ -40,7 +41,7 @@ export default function RootLayout({
       <html
         lang="ru"
         suppressHydrationWarning>
-        <body className={`${inter.className} flex flex-col min-h-screen antialiased`}>
+        <body className={`${inter.className}`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -48,7 +49,7 @@ export default function RootLayout({
             disableTransitionOnChange>
             <Header />
             <LenisProvider>
-              <main className="flex-1">{children}</main>
+              <main>{children}</main>
               <Footer />
             </LenisProvider>
           </ThemeProvider>

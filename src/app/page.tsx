@@ -20,7 +20,7 @@ export default function Home() {
     <PageWrapper>
       <div className="container-fluid">
         <section className="text-center mb-16">
-          <div className="w-full h-full object-center object-cover overflow-hidden rounded-2xl flex justify-center">
+          {/* <div className="w-full h-full object-center object-cover overflow-hidden rounded-2xl flex justify-center">
             <video
               loop
               autoPlay
@@ -32,7 +32,7 @@ export default function Home() {
                 type="video/mp4"
               />
             </video>
-          </div>
+          </div> */}
 
           <h1 className="text-h1 font-extrabold mb-4">
             Добро пожаловать!
