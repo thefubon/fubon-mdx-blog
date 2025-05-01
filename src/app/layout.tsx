@@ -3,10 +3,10 @@ import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 
 import { ThemeProvider } from '@/contexts/ThemeProvider'
+import { SoundProvider } from '@/contexts/SoundProvider'
 
 import Header from '@/components/global/header'
 import Footer from '@/components/global/footer'
-import { SoundProvider } from '@/contexts/SoundProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,23 +37,22 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-
-      <html
-        lang="ru"
-        suppressHydrationWarning>
-        <body className={`${inter.className}`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
-            <SoundProvider>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </SoundProvider>
-          </ThemeProvider>
-        </body>
-      </html>
+    <html
+      lang="ru"
+      suppressHydrationWarning>
+      <body className={`${inter.className}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
+          <SoundProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </SoundProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }

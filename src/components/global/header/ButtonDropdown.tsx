@@ -1,157 +1,86 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useContext,
+  memo,
+} from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { menuItems } from '@/data/navbar'
 import { DarkMode } from './DarkMode'
 import { MailPlus } from 'lucide-react'
 import SoundWrapper from '@/components/SoundWrapper'
+import { MenuContext } from '@/contexts/LogoProvider'
 
-// Добавляем пропс для обновления состояния
-interface ButtonDropdownProps {
-  updateMenuState: (state: {
-    isMenuOpen?: boolean;
-    showBackground?: boolean;
-    isFading?: boolean;
-    isMobile?: boolean;
-  }) => void;
-}
-
-const ButtonDropdown = ({ updateMenuState }: ButtonDropdownProps) => {
+const ButtonDropdownComponent = () => {
+  const { updateMenuState } = useContext(MenuContext)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  // Состояние для контроля видимости фона
   const [showBackground, setShowBackground] = useState(false)
-  // Состояние для контроля анимации
   const [isFading, setIsFading] = useState(false)
 
-  // Правильная типизация для рефов таймеров
   const fadeTimerRef = useRef<NodeJS.Timeout | null>(null)
   const hideTimerRef = useRef<NodeJS.Timeout | null>(null)
-
   const menuElement = useRef<HTMLDivElement>(null)
   const buttonElement = useRef<HTMLButtonElement>(null)
   const menuButton = 'Меню'
   const currentUrl = usePathname()
 
-  // Раздельные константы для всех аспектов анимации
-  const FADE_IN_DURATION = 300 // мс - продолжительность анимации появления
-  const FADE_OUT_DURATION = 300 // мс - продолжительность анимации исчезновения
-  const VISIBLE_DURATION = 500 // мс - как долго фон остается видимым до начала анимации исчезновения
-  const HIDE_DELAY = 500 // мс - общая задержка удаления элемента
+  const FADE_IN_DURATION = 300
+  const FADE_OUT_DURATION = 300
+  const VISIBLE_DURATION = 500
+  const HIDE_DELAY = 500
 
-  // Функция для управления блокировкой прокрутки body
+  const checkIsMobile = useCallback(() => {
+    return window.innerWidth < 768
+  }, [])
+
   const toggleBodyScroll = useCallback((disable: boolean) => {
-    if (disable) {
-      // Блокируем прокрутку
-      document.body.style.overflow = 'hidden'
-      document.body.classList.add('overflow-hidden')
-    } else {
-      // Разрешаем прокрутку
-      document.body.style.overflow = ''
-      document.body.classList.remove('overflow-hidden')
-    }
+    document.body.style.overflow = disable ? 'hidden' : ''
+    document.body.classList.toggle('overflow-hidden', disable)
   }, [])
 
-  // Функция для очистки всех активных таймеров, обернутая в useCallback
   const clearAllTimers = useCallback(() => {
-    if (fadeTimerRef.current) {
-      clearTimeout(fadeTimerRef.current)
-      fadeTimerRef.current = null
-    }
-    if (hideTimerRef.current) {
-      clearTimeout(hideTimerRef.current)
-      hideTimerRef.current = null
-    }
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current)
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
+    fadeTimerRef.current = null
+    hideTimerRef.current = null
   }, [])
 
-  // Функция для запуска анимации исчезновения с задержкой, обернутая в useCallback
   const startFadeOutSequence = useCallback(
     (useHideDelay = false) => {
-      clearAllTimers() // Сначала очищаем любые активные таймеры
+      clearAllTimers()
+      const delay = useHideDelay ? HIDE_DELAY : VISIBLE_DURATION
 
-      // Выбор между VISIBLE_DURATION и HIDE_DELAY, чтобы использовать обе константы
-      const delayToUse = useHideDelay ? HIDE_DELAY : VISIBLE_DURATION
-
-      // Запускаем анимацию исчезновения после выбранной задержки
       fadeTimerRef.current = setTimeout(() => {
         setIsFading(true)
-
-        // Удаляем элемент после завершения анимации исчезновения
         hideTimerRef.current = setTimeout(() => {
           setShowBackground(false)
         }, FADE_OUT_DURATION)
-      }, delayToUse)
+      }, delay)
     },
-    [HIDE_DELAY, VISIBLE_DURATION, FADE_OUT_DURATION, clearAllTimers]
+    [FADE_OUT_DURATION, HIDE_DELAY, VISIBLE_DURATION, clearAllTimers]
   )
 
   const toggleMenu = useCallback(() => {
-    setIsMenuOpen((prevValue) => {
-      const newValue = !prevValue
+    const newValue = !isMenuOpen
+    setIsMenuOpen(newValue)
 
-      if (newValue) {
-        // При открытии меню
-        toggleBodyScroll(true) // Блокируем прокрутку
-        document.body.classList.add('overflow')
-        clearAllTimers() // Очищаем все таймеры
-        setShowBackground(true) // Сразу показываем фон
-        setIsFading(false) // Сбрасываем статус анимации
-      } else {
-        // При закрытии меню
-        toggleBodyScroll(false) // Разблокируем прокрутку
-        document.body.classList.remove('overflow')
-        startFadeOutSequence() // Используем VISIBLE_DURATION
-      }
-
-      return newValue
-    })
-  }, [clearAllTimers, startFadeOutSequence, toggleBodyScroll])
-
-  // Эффект для очистки таймеров и сброса блокировки при размонтировании
-  useEffect(() => {
-    return () => {
-      clearAllTimers()
-      toggleBodyScroll(false) // Убедимся, что прокрутка разблокирована при размонтировании
-    }
-  }, [clearAllTimers, toggleBodyScroll])
-
-  // Эффект для синхронизации состояния фона с состоянием меню
-  useEffect(() => {
-    if (isMenuOpen) {
-      // При открытии меню
-      toggleBodyScroll(true) // Дополнительная защита: блокируем прокрутку
+    if (newValue) {
+      toggleBodyScroll(true)
       clearAllTimers()
       setShowBackground(true)
       setIsFading(false)
     } else {
-      // При закрытии меню (если состояние изменилось извне)
-      toggleBodyScroll(false) // Разблокируем прокрутку
+      toggleBodyScroll(false)
+      startFadeOutSequence()
     }
-  }, [isMenuOpen, clearAllTimers, toggleBodyScroll])
+  }, [isMenuOpen, clearAllTimers, startFadeOutSequence, toggleBodyScroll])
 
-  // Демонстрация использования HIDE_DELAY для случаев закрытия вне нормального потока
-  useEffect(() => {
-    // Пример: если меню было закрыто каким-то внешним событием
-    if (!isMenuOpen && showBackground && !isFading && !fadeTimerRef.current) {
-      // Используем HIDE_DELAY в этом особом случае
-      startFadeOutSequence(true) // передаем true для использования HIDE_DELAY
-      toggleBodyScroll(false) // Дополнительно разблокируем прокрутку в этом сценарии
-    }
-  }, [
-    isMenuOpen,
-    showBackground,
-    isFading,
-    startFadeOutSequence,
-    toggleBodyScroll,
-  ])
-
-  const checkIsMobile = useCallback(() => {
-    setIsMobile(window.innerWidth < 768) // Предполагаем, что мобильный вид - до 768px
-  }, [])
-
-  // Обработчик клика вне меню, обернутый в useCallback
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
       if (
@@ -159,41 +88,45 @@ const ButtonDropdown = ({ updateMenuState }: ButtonDropdownProps) => {
         buttonElement.current &&
         !menuElement.current.contains(event.target as Node) &&
         !buttonElement.current.contains(event.target as Node) &&
-        isMenuOpen // Проверяем, что меню открыто
+        isMenuOpen
       ) {
-        setIsMenuOpen(false)
-        toggleBodyScroll(false) // Разблокируем прокрутку при закрытии меню
-        document.body.classList.remove('overflow')
-
-        // Используем альтернативную задержку (HIDE_DELAY) для кликов вне меню
-        startFadeOutSequence(true) // true = используем HIDE_DELAY вместо VISIBLE_DURATION
+        toggleMenu()
       }
     },
-    [isMenuOpen, startFadeOutSequence, toggleBodyScroll]
+    [isMenuOpen, toggleMenu]
   )
 
-  // Устанавливаем и удаляем слушателей событий
+  // Инициализация и обработка ресайза
   useEffect(() => {
-    checkIsMobile()
-    window.addEventListener('resize', checkIsMobile)
-    window.addEventListener('click', handleClickOutside)
-
-    return () => {
-      window.removeEventListener('resize', checkIsMobile)
-      window.removeEventListener('click', handleClickOutside)
-      toggleBodyScroll(false) // Гарантируем разблокировку прокрутки при размонтировании
-      clearAllTimers() // Очищаем все таймеры при размонтировании
+    const handleResize = () => {
+      const mobileStatus = checkIsMobile()
+      if (mobileStatus !== isMobile) {
+        setIsMobile(mobileStatus)
+      }
     }
-  }, [checkIsMobile, handleClickOutside, clearAllTimers, toggleBodyScroll]) // Добавляем все зависимости
 
-  // После каждого изменения состояния, обновляем контекст
+    setIsMobile(checkIsMobile())
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [checkIsMobile, isMobile])
+
+  // Обработка кликов вне меню
   useEffect(() => {
-    updateMenuState({
-      isMenuOpen,
-      showBackground,
-      isFading,
-      isMobile,
-    })
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [handleClickOutside])
+
+  // Очистка при размонтировании
+  useEffect(() => {
+    return () => {
+      clearAllTimers()
+      toggleBodyScroll(false)
+    }
+  }, [clearAllTimers, toggleBodyScroll])
+
+  // Оптимизированное обновление состояния
+  useEffect(() => {
+    updateMenuState?.({ isMenuOpen, showBackground, isFading, isMobile })
   }, [isMenuOpen, showBackground, isFading, isMobile, updateMenuState])
 
   return (
@@ -327,4 +260,4 @@ const ButtonDropdown = ({ updateMenuState }: ButtonDropdownProps) => {
   )
 }
 
-export default ButtonDropdown
+export const ButtonDropdown = memo(ButtonDropdownComponent)

@@ -1,7 +1,7 @@
 // src/components/global/header/Logo.tsx
 'use client'
 
-import { useMenuContext } from '@/contexts/MenuContext'
+import { useMenuContext } from '@/contexts/LogoProvider'
 import Link from 'next/link'
 
 export default function Logo() {

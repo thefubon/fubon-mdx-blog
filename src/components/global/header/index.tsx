@@ -1,28 +1,17 @@
 // src/components/global/header/index.tsx
 'use client'
 
-import { useState } from 'react'
+import SoundWrapper from '@/components/SoundWrapper'
+import { SoundToggle } from '@/components/SoundToggle'
+import { MenuProvider } from '@/contexts/LogoProvider'
 import Logo from './Logo'
 import ButtonContact from './ButtonContact'
-import ButtonDropdown from './ButtonDropdown'
-import { SoundToggle } from '@/components/SoundToggle'
-import SoundWrapper from '@/components/SoundWrapper'
-import { MenuContext } from '@/contexts/MenuContext'
+import { ButtonDropdown } from './ButtonDropdown'
+
 
 export default function Header() {
-  const [menuState, setMenuState] = useState({
-    isMenuOpen: false,
-    showBackground: false,
-    isFading: false,
-    isMobile: false,
-  })
-
-  const updateMenuState = (newState: Partial<typeof menuState>) => {
-    setMenuState((prev) => ({ ...prev, ...newState }))
-  }
-
   return (
-    <MenuContext.Provider value={menuState}>
+    <MenuProvider>
       <header className="header">
         <div className="header__container">
           <div className="header__start">
@@ -40,10 +29,10 @@ export default function Header() {
               </ButtonContact>
             </SoundWrapper>
 
-            <ButtonDropdown updateMenuState={updateMenuState} />
+            <ButtonDropdown />
           </div>
         </div>
       </header>
-    </MenuContext.Provider>
+    </MenuProvider>
   )
 }
