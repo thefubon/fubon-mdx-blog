@@ -8,7 +8,7 @@ export function ModeToggle() {
 
   return (
     <>
-      <div className="flex items-center gap-x-2">
+      <div className="flex justify-between items-center w-full">
         <button
           onClick={() => setTheme('light')}>
           Light

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { menuItems } from '@/data/navbar'
 import { ModeToggle } from './ModeToggle'
+import { MailPlus } from 'lucide-react'
 
 const Dropdown = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -254,8 +255,10 @@ const Dropdown = () => {
               ? 'dropdown-section-3--open'
               : 'dropdown-section-3--closed'
           }`}>
-          <span>Labs</span>
-          <span>Icon</span>
+          <span>
+            <MailPlus size='32' />
+          </span>
+          <span>Email</span>
         </div>
       </div>
     </div>
