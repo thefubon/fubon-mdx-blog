@@ -35,7 +35,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-h1 font-extrabold mb-4">
-            Добро пожаловать в MDX Блог
+            Добро пожаловать!
           </h1>
 
           <p className="description text-gray-600 mb-8 max-w-3xl mx-auto">

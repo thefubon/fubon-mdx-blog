@@ -275,7 +275,7 @@
 }
 
 .dropdown-menu {
-  @apply absolute inset-x-0 md:inset-x-auto md:right-0 space-y-4 mt-6 md:mt-4 px-6 md:px-0 overflow-x-clip min-w-80;
+  @apply absolute inset-x-0 space-y-4 mt-6 md:mt-4 px-6 md:px-0 overflow-x-clip;
 }
 
 /* Dropdown_List */
