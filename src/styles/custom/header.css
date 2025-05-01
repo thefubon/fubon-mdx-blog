@@ -29,5 +29,5 @@
 ==================================== */
 
 .header__contact-btn {
-  @apply hidden font-medium md:inline-block;
+  @apply hidden md:inline-block;
 }
