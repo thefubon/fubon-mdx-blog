@@ -22,9 +22,10 @@ export default function ButtonAnimation({
     'h-[var(--button-height)] px-[var(--button-padding-x)]',
     // Варианты цветов
     {
-      'bg-foreground hover:bg-blue-600 text-background':
+      'bg-foreground hover:bg-fubon-primary text-background':
         variant === 'default' || variant === 'secondary',
-      'bg-blue-600 hover:bg-foreground text-background': variant === 'primary',
+      'bg-fubon-primary hover:bg-foreground text-background':
+        variant === 'primary',
     },
     // Пользовательские классы
     className
