@@ -1,6 +1,10 @@
 /* HEADER DROPDOWN
 ==================================== */
 
+.dropdown--background {
+  @apply bg-foreground/15 backdrop-blur-2xl fixed inset-0;
+}
+
 /* Dropdown_Button */
 .dropdown-button {
   @apply bg-fubon-primary hover:bg-blue-600 text-background relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)];
@@ -44,7 +48,7 @@
 
 /* Dropdown_List */
 .dropdown-list {
-  @apply bg-secondary md:mt-4 py-6 space-y-0.5 rounded-lg transition-all duration-300 uppercase;
+  @apply bg-background md:mt-4 py-6 space-y-0.5 rounded-lg transition-all duration-300 uppercase;
 }
 
 .dropdown-list--closed {
@@ -93,7 +97,7 @@
 
 /* Dropdown_Section_2 */
 .dropdown-section-2 {
-  @apply bg-secondary p-6 rounded-lg transition duration-[400ms] text-2xl uppercase flex justify-between items-center;
+  @apply bg-background p-6 rounded-lg transition duration-[400ms] text-2xl uppercase flex justify-between items-center;
 }
 
 .dropdown-section-2--closed {
@@ -106,7 +110,7 @@
 
 /* Dropdown_Section_3 */
 .dropdown-section-3 {
-  @apply bg-secondary text-foreground p-6 rounded-lg text-2xl transition duration-500 uppercase flex justify-between items-center;
+  @apply bg-background text-foreground p-6 rounded-lg text-2xl transition duration-500 uppercase flex justify-between items-center;
 }
 
 .dropdown-section-3--closed {
@@ -115,26 +119,4 @@
 
 .dropdown-section-3-open {
   @apply opacity-100 translate-z-0;
-}
-
-/* Dropdown Animation */
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
 }

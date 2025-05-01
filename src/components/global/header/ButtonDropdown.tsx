@@ -4,10 +4,10 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { menuItems } from '@/data/navbar'
-import { ModeToggle } from './ModeToggle'
+import { DarkMode } from './DarkMode'
 import { MailPlus } from 'lucide-react'
 
-const Dropdown = () => {
+const ButtonDropdown = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   // Состояние для контроля видимости фона
@@ -25,7 +25,7 @@ const Dropdown = () => {
   const currentUrl = usePathname()
 
   // Раздельные константы для всех аспектов анимации
-  const FADE_IN_DURATION = 100 // мс - продолжительность анимации появления
+  const FADE_IN_DURATION = 300 // мс - продолжительность анимации появления
   const FADE_OUT_DURATION = 300 // мс - продолжительность анимации исчезновения
   const VISIBLE_DURATION = 500 // мс - как долго фон остается видимым до начала анимации исчезновения
   const HIDE_DELAY = 500 // мс - общая задержка удаления элемента
@@ -148,9 +148,10 @@ const Dropdown = () => {
 
   return (
     <div className="header__dropdown">
-      {showBackground && isMobile && (
+      {/* showBackground && isMobile && */}
+      {showBackground && (
         <div
-          className="bg-primary-foreground fixed inset-0 dropdown--background"
+          className="dropdown--background"
           style={{
             animation: isFading
               ? `fade-out ${FADE_OUT_DURATION}ms ease`
@@ -246,7 +247,7 @@ const Dropdown = () => {
               ? 'dropdown-section-2--open'
               : 'dropdown-section-2--closed'
           }`}>
-          <ModeToggle />
+          <DarkMode />
         </div>
 
         <div
@@ -265,5 +266,5 @@ const Dropdown = () => {
   )
 }
 
-export default Dropdown
+export default ButtonDropdown
 

@@ -1,8 +1,8 @@
 // src/components/Header.tsx
 import Link from 'next/link'
 import Logo from './Logo'
-import Dropdown from './Dropdown'
-import ButtonAnimation from './ButtonAnimation'
+import ButtonContact from './ButtonContact'
+import ButtonDropdown from './ButtonDropdown'
 
 export default function Header() {
   return (
@@ -17,14 +17,14 @@ export default function Header() {
         </div>
 
         <div className="header__end">
-          <ButtonAnimation
+          <ButtonContact
             href="mailto:hello@fubon.ru"
             className="header__contact-btn"
             aria-label="Отправить Email">
             Контакты
-          </ButtonAnimation>
+          </ButtonContact>
 
-          <Dropdown />
+          <ButtonDropdown />
         </div>
       </div>
     </header>

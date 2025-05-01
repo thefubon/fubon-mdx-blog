@@ -52,18 +52,18 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* FUBON COLORS */
-  --color-fubon-brand: var(--fubon-brand);
-  --color-fubon-primary: var(--fubon-primary);
-  
-
   --breakpoint-xs: 30rem;
   --breakpoint-3xl: 120rem;
+
+  /* FUBON COLORS */
+  --color-fubon-primary: var(--fubon-primary);
+  --color-fubon-secondary: var(--fubon-secondary);
+  --color-fubon-muted: var(--fubon-muted);
 
   /* PADDING */
   --padding-x: max(5vw, 16px);
 
-  /* HEADING */
+  /* FONT SIZE */
   --font-size-h1: clamp(32px, 3.2vw + 16px, 64px);
   --font-size-h2: clamp(28px, 4vw + 12px, 48px);
   --font-size-h3: clamp(24px, 3vw + 10px, 40px);
@@ -116,8 +116,6 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
 
   /* FUBON */
-  --fubon-background: oklch(100% 0 0);
-  --fubon-foreground: oklch(15% 0.05 260);
   --fubon-primary: oklch(45% 0.3 255);
   --fubon-secondary: oklch(20% 0.02 260);
   --fubon-muted: oklch(91.5% 0.02 265);
@@ -155,6 +153,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  /* FUBON */
+  --fubon-primary: oklch(45% 0.3 255);
+  --fubon-secondary: oklch(20% 0.02 260);
+  --fubon-muted: oklch(91.5% 0.02 265);
 }
 
 @layer base {
@@ -213,7 +216,7 @@
 
 /* Logo */
 .logo {
-  @apply w-[clamp(180px,15vw,256px)] h-auto;
+  @apply w-[clamp(180px,15vw,256px)] h-auto relative z-50;
 }
 
 /* BUTTON
@@ -221,4 +224,24 @@
 
 .button-animation {
   font-size: var(--button-font-size) !important;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }

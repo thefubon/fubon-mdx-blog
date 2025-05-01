@@ -7,7 +7,7 @@ type ButtonAnimationProps = {
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
   React.AnchorHTMLAttributes<HTMLAnchorElement>
 
-export default function ButtonAnimation({
+export default function ButtonContact({
   href,
   className,
   children = 'Email',
