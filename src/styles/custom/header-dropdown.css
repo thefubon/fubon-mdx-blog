@@ -3,6 +3,8 @@
 
 .dropdown--background {
   @apply bg-foreground/15 backdrop-blur-2xl fixed inset-0;
+  /* Safari Fix */
+  -webkit-backdrop-filter: blur(40px); 
 }
 
 .dropdown--background-mobile {
@@ -92,7 +94,7 @@
 }
 
 .dropdown-list__text {
-  @apply text-2xl whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full;
+  @apply whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full;
 }
 
 .dropdown-list__text.open {

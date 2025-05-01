@@ -48,12 +48,12 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange>
-              <SoundProvider>
-            <Header />
-            <LenisProvider>
-              <main>{children}</main>
-            </LenisProvider>
-            <Footer />
+            <SoundProvider>
+              <Header />
+              <LenisProvider>
+                <main>{children}</main>
+              </LenisProvider>
+              <Footer />
             </SoundProvider>
           </ThemeProvider>
         </body>

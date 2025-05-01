@@ -79,6 +79,9 @@
   --button-padding-x: clamp(16px, 2vw + 8px, 32px);
   --button-height: clamp(40px, 3vw + 24px, 56px);
   --button-font-size: clamp(16px, 0.5vw+14px, 18px);
+
+  /* DROPDOWN TEXT */
+  --dropdown-text: clamp(24px, 2vw, 32px);
 }
 
 :root {
@@ -216,7 +219,7 @@
 
 /* Logo */
 .logo {
-  @apply w-[clamp(180px,15vw,256px)] h-auto relative z-50;
+  @apply w-[clamp(178px,15vw,256px)] h-auto relative z-50;
 }
 
 /* BUTTON
