@@ -1,7 +1,6 @@
-// src/app/blog/page.tsx
 import Link from 'next/link'
 import Image from 'next/image'
-import { getAllPosts, getPaginatedPosts } from '@/lib/mdx'
+import { getAllPosts, getPaginatedPosts, getAllCategories } from '@/lib/mdx'
 import FormattedDate from '@/components/FormattedDate'
 import SearchBar from '@/components/SearchBar'
 import Pagination from '@/components/Pagination'
@@ -37,16 +36,35 @@ export default async function BlogPage(props: PageProps) {
     )
   ).sort()
 
+  // Получаем все категории с количеством постов
+  const allCategories = getAllCategories()
+
   return (
     <PageWrapper
       title="Блог"
       description="Описание страницы или какой-то вводный текст.">
-
       <div className="max-w-3xl mx-auto px-4">
-        {/* Компонент поиска уже содержит свой собственный Suspense */}
+        {/* Компонент поиска */}
         <div className="mb-6">
           <SearchBar />
         </div>
+
+        {/* Список всех категорий */}
+        {allCategories.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-3">Категории</h2>
+            <div className="flex flex-wrap gap-2">
+              {allCategories.map(({ category, count }) => (
+                <Link
+                  key={category}
+                  href={`/blog/categories/${encodeURIComponent(category)}`}
+                  className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-full transition-colors">
+                  {category} ({count})
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Список всех тегов */}
         {allTags.length > 0 && (
@@ -91,7 +109,7 @@ export default async function BlogPage(props: PageProps) {
                         width={800}
                         height={450}
                         className="w-full h-auto object-cover"
-                        priority={true} // или true для первого изображения
+                        priority={true}
                       />
                     </div>
                   )}
@@ -107,22 +125,37 @@ export default async function BlogPage(props: PageProps) {
                   <FormattedDate date={publishedAt} /> • {readingTime}
                 </div>
 
-                {/* Показываем теги для каждой статьи */}
-                {tags && tags.length > 0 && (
+                {/* Показываем категорию и теги для каждой статьи */}
+                {post.frontmatter.category && (
                   <div className="mb-3">
-                    <div className="flex flex-wrap gap-2">
-                      {tags.map((tag) => (
-                        <Link
-                          key={tag}
-                          href={`/blog/tags/${tag}`}
-                          className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
-                          #{tag}
-                        </Link>
-                      ))}
+                    <div className="flex flex-wrap gap-2 items-center">
+                      {/* Категория */}
+                      <Link
+                        href={`/blog/categories/${encodeURIComponent(
+                          post.frontmatter.category
+                        )}`}
+                        className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full transition-colors">
+                        {post.frontmatter.category}
+                      </Link>
                     </div>
                   </div>
                 )}
 
+                {/* Теги */}
+                {tags && tags.length > 0 && (
+                  <>
+                    {tags.map((tag) => (
+                      <Link
+                        key={tag}
+                        href={`/blog/tags/${tag}`}
+                        className="inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full transition-colors">
+                        #{tag}
+                      </Link>
+                    ))}
+                  </>
+                )}
+
+                
                 {description && <p className="text-gray-700">{description}</p>}
 
                 <Link

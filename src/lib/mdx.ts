@@ -5,7 +5,6 @@ import readingTime from 'reading-time';
 
 const contentDirectory = path.join(process.cwd(), 'src/content');
 
-// Расширяем интерфейс, чтобы включить все возможные поля из frontmatter
 export interface PostMetadata {
   title: string;
   publishedAt: string;
@@ -13,21 +12,19 @@ export interface PostMetadata {
   slug: string;
   readingTime: string;
   tags?: string[];
-  cover?: string; // Добавляем поле для обложки
+  category?: string;
+  cover?: string;
 }
 
-// Определяем типы для результатов функций
 export interface Post {
   frontmatter: PostMetadata;
   content: string;
 }
 
-// Интерфейс для постов с оценкой релевантности
 interface PostWithRelevance extends Post {
   relevance: number;
 }
 
-// Интерфейс для результатов пагинации
 export interface PaginationResult {
   posts: Post[];
   totalPages: number;
@@ -48,41 +45,34 @@ export function getPostBySlug(slug: string): Post {
   const fileContent = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(fileContent);
 
-  // Обработка даты публикации в зависимости от типа
   let publishedAt = new Date().toISOString();
-
   if (data.publishedAt) {
-    // Если дата уже является строкой в формате ISO, используем её
     if (typeof data.publishedAt === 'string') {
       publishedAt = data.publishedAt;
     }
-    // Если дата является объектом Date, преобразуем в ISO строку
     else if (data.publishedAt instanceof Date) {
       publishedAt = data.publishedAt.toISOString();
     }
-    // Если дата в другом формате, пытаемся преобразовать
     else {
       publishedAt = new Date(data.publishedAt).toISOString();
     }
   }
 
-  // Если теги пришли как строка, превращаем их в массив
   let tags = data.tags;
   if (typeof tags === 'string') {
     tags = tags.split(',').map((tag: string) => tag.trim());
   }
 
-  // Убеждаемся, что обязательные поля существуют
   const frontmatter: PostMetadata = {
-    title: data.title || 'Без заголовка', // Значение по умолчанию для title
+    title: data.title || 'Без заголовка',
     publishedAt: publishedAt,
-    description: data.description, // Опциональное поле может быть undefined
+    description: data.description,
     slug: slug,
     readingTime: readingTime(content).text,
-    tags: tags, // Обработанные теги
-    // Включаем все остальные поля из frontmatter
+    tags: tags,
+    category: data.category,
     ...Object.entries(data)
-      .filter(([key]) => !['title', 'publishedAt', 'description', 'tags'].includes(key))
+      .filter(([key]) => !['title', 'publishedAt', 'description', 'tags', 'category'].includes(key))
       .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
   };
 
@@ -100,15 +90,11 @@ export function getAllPosts(): Post[] {
   return posts;
 }
 
-// Улучшенная функция для пагинации записей блога
 export function getPaginatedPosts(page: number = 1, limit: number = 5): PaginationResult {
   const allPosts = getAllPosts();
   const totalPosts = allPosts.length;
-
-  // Убедимся, что страница начинается с 1 и не превышает максимальное количество страниц
   const totalPages = Math.ceil(totalPosts / limit);
-  const currentPage = Math.max(1, Math.min(page, totalPages || 1)); // Используем 1, если totalPages равно 0
-
+  const currentPage = Math.max(1, Math.min(page, totalPages || 1));
   const startIndex = (currentPage - 1) * limit;
   const endIndex = Math.min(startIndex + limit, totalPosts);
 
@@ -116,14 +102,13 @@ export function getPaginatedPosts(page: number = 1, limit: number = 5): Paginati
 
   return {
     posts,
-    totalPages: totalPages || 1, // Минимум 1 страница
+    totalPages: totalPages || 1,
     currentPage,
     hasNextPage: currentPage < totalPages,
     hasPrevPage: currentPage > 1
   };
 }
 
-// Функция для получения всех уникальных тегов
 export function getAllTags(): { tag: string; count: number }[] {
   const posts = getAllPosts();
   const tagsWithCount: Record<string, number> = {};
@@ -140,18 +125,14 @@ export function getAllTags(): { tag: string; count: number }[] {
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
 }
 
-// Функция для получения постов по тегу с пагинацией
 export function getPostsByTag(tag: string, page: number = 1, limit: number = 5): PaginationResult {
-  // Получаем все посты с указанным тегом
   const postsWithTag = getAllPosts().filter(post => {
     const postTags = post.frontmatter.tags || [];
     return postTags.includes(tag);
   });
 
   const totalPosts = postsWithTag.length;
-
-  // Убедимся, что страница начинается с 1 и не превышает максимальное количество страниц
-  const totalPages = Math.ceil(totalPosts / limit) || 1; // Минимум 1 страница, даже если постов нет
+  const totalPages = Math.ceil(totalPosts / limit) || 1;
   const currentPage = Math.max(1, Math.min(page, totalPages));
 
   const startIndex = (currentPage - 1) * limit;
@@ -168,9 +149,7 @@ export function getPostsByTag(tag: string, page: number = 1, limit: number = 5):
   };
 }
 
-// Функция для поиска постов с пагинацией
 export function searchPosts(query: string, page: number = 1, limit: number = 5): PaginationResult {
-  // Если запрос пустой, возвращаем пустой результат с одной страницей
   if (!query || query.trim() === '') {
     return {
       posts: [],
@@ -182,8 +161,6 @@ export function searchPosts(query: string, page: number = 1, limit: number = 5):
   }
 
   const searchQuery = query.toLowerCase().trim();
-
-  // Фильтруем посты, содержащие поисковый запрос
   const matchingPosts = getAllPosts().filter(post => {
     const { title, description } = post.frontmatter;
     const searchableContent = [
@@ -196,9 +173,7 @@ export function searchPosts(query: string, page: number = 1, limit: number = 5):
   });
 
   const totalPosts = matchingPosts.length;
-
-  // Убедимся, что страница начинается с 1 и не превышает максимальное количество страниц
-  const totalPages = Math.ceil(totalPosts / limit) || 1; // Минимум 1 страница, даже если постов нет
+  const totalPages = Math.ceil(totalPosts / limit) || 1;
   const currentPage = Math.max(1, Math.min(page, totalPages));
 
   const startIndex = (currentPage - 1) * limit;
@@ -215,19 +190,14 @@ export function searchPosts(query: string, page: number = 1, limit: number = 5):
   };
 }
 
-// Добавим функцию для получения похожих постов
 export function getRelatedPosts(slug: string, tags: string[] = [], limit: number = 3): Post[] {
   const allPosts = getAllPosts();
-
-  // Исключаем текущий пост
   const otherPosts = allPosts.filter((post) => post.frontmatter.slug !== slug);
 
-  // Если нет тегов, возвращаем случайные посты
   if (!tags || tags.length === 0) {
     return shuffleArray(otherPosts).slice(0, limit);
   }
 
-  // Ранжируем посты по количеству совпадающих тегов
   const relatedPosts = otherPosts.map((post) => {
     const postTags = post.frontmatter.tags || [];
     const commonTags = postTags.filter((tag) => tags.includes(tag));
@@ -237,13 +207,11 @@ export function getRelatedPosts(slug: string, tags: string[] = [], limit: number
     };
   }) as PostWithRelevance[];
 
-  // Сортируем по релевантности и возвращаем лимит
   return relatedPosts
     .sort((a, b) => b.relevance - a.relevance)
     .slice(0, limit);
 }
 
-// Функция для получения архива постов по годам и месяцам
 export function getPostsArchive(): Record<string, Record<string, Post[]>> {
   const posts = getAllPosts();
   const archive: Record<string, Record<string, Post[]>> = {};
@@ -264,7 +232,6 @@ export function getPostsArchive(): Record<string, Record<string, Post[]>> {
     archive[year][month].push(post);
   });
 
-  // Сортируем годы и месяцы в обратном порядке (от новых к старым)
   return Object.keys(archive)
     .sort((a, b) => parseInt(b) - parseInt(a))
     .reduce((sortedArchive, year) => {
@@ -273,7 +240,45 @@ export function getPostsArchive(): Record<string, Record<string, Post[]>> {
     }, {} as Record<string, Record<string, Post[]>>);
 }
 
-// Вспомогательная функция для перемешивания массива
+// Новые функции для работы с категориями
+export function getAllCategories(): { category: string; count: number }[] {
+  const posts = getAllPosts();
+  const categoriesWithCount: Record<string, number> = {};
+
+  posts.forEach(post => {
+    const category = post.frontmatter.category || 'Без категории';
+    categoriesWithCount[category] = (categoriesWithCount[category] || 0) + 1;
+  });
+
+  return Object.entries(categoriesWithCount)
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => b.count - a.count || a.category.localeCompare(b.category));
+}
+
+export function getPostsByCategory(category: string, page: number = 1, limit: number = 5): PaginationResult {
+  const postsInCategory = getAllPosts().filter(post => {
+    const postCategory = post.frontmatter.category || 'Без категории';
+    return postCategory === category;
+  });
+
+  const totalPosts = postsInCategory.length;
+  const totalPages = Math.ceil(totalPosts / limit) || 1;
+  const currentPage = Math.max(1, Math.min(page, totalPages));
+
+  const startIndex = (currentPage - 1) * limit;
+  const endIndex = Math.min(startIndex + limit, totalPosts);
+
+  const posts = postsInCategory.slice(startIndex, endIndex);
+
+  return {
+    posts,
+    totalPages,
+    currentPage,
+    hasNextPage: currentPage < totalPages,
+    hasPrevPage: currentPage > 1
+  };
+}
+
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {

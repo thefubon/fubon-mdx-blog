@@ -6,6 +6,7 @@ import MDXComponents from '@/components/MDXComponents'
 import FormattedDate from '@/components/FormattedDate'
 import Tags from '@/components/Tags'
 import RelatedPosts from '@/components/RelatedPosts'
+import Link from 'next/link'
 
 export async function generateStaticParams() {
   const posts = getAllPostSlugs()
@@ -15,8 +16,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
-  // Получаем slug из параметров
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>
+}) {
   const slug = (await props.params).slug
   const { frontmatter } = getPostBySlug(slug)
 
@@ -26,13 +28,12 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   }
 }
 
-export default async function BlogPost(props: { params: Promise<{ slug: string }> }) {
+export default async function BlogPost(props: {
+  params: Promise<{ slug: string }>
+}) {
   try {
-    // Получаем slug из параметров
     const slug = (await props.params).slug
     const { frontmatter, content } = getPostBySlug(slug)
-
-    // Получаем похожие статьи на основе тегов
     const relatedPosts = getRelatedPosts(slug, frontmatter.tags || [], 3)
 
     return (
@@ -44,6 +45,19 @@ export default async function BlogPost(props: { params: Promise<{ slug: string }
             <FormattedDate date={frontmatter.publishedAt} /> •{' '}
             {frontmatter.readingTime}
           </div>
+
+          {/* Добавляем категорию, если она есть */}
+          {frontmatter.category && (
+            <div className="mb-3">
+              <Link
+                href={`/blog/categories/${encodeURIComponent(
+                  frontmatter.category
+                )}`}
+                className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm px-3 py-1 rounded-full transition-colors">
+                {frontmatter.category}
+              </Link>
+            </div>
+          )}
 
           {/* Добавляем теги, если они есть */}
           {frontmatter.tags && frontmatter.tags.length > 0 && (
