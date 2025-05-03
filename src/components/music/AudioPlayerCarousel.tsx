@@ -7,8 +7,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  // CarouselNext,
-  // CarouselPrevious,
+  CarouselNext,
+  CarouselPrevious,
 } from '@/components/ui/carousel'
 import Image from 'next/image'
 
@@ -20,7 +20,7 @@ export function AudioPlayerCarousel() {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full carousel"
+      className="w-full carousel relative"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
       opts={{
@@ -45,8 +45,8 @@ export function AudioPlayerCarousel() {
         ))}
       </CarouselContent>
 
-      {/* <CarouselPrevious />
-      <CarouselNext /> */}
+      <CarouselPrevious className="absolute left-2 bottom-0 z-20" />
+      <CarouselNext className="absolute right-2 bottom-0 z-20" />
     </Carousel>
   )
 }
