@@ -5,10 +5,12 @@ import { AudioPlayerCarousel } from '@/components/music/AudioPlayerCarousel'
 export default function MusicPage() {
   return (
     <PageWrapper>
-      <AudioPlayerCarousel />
-      
-      <div className="container-fluid">
-        <AudioPlayer />
+      <div className='space-y-8'>
+        <AudioPlayerCarousel />
+
+        <div className="container-fluid">
+          <AudioPlayer />
+        </div>
       </div>
     </PageWrapper>
   )
