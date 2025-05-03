@@ -326,7 +326,7 @@ export default function AudioPlayer() {
   const currentTrack = tracks[currentTrackIndex] || tracks[0]
 
   return (
-    <div className="flex flex-col gap-6 p-5 border border-red-500 rounded-xl bg-background w-full max-w-md">
+    <div className="flex flex-col gap-6 w-full max-w-md">
       
       {/* Главный плеер */}
       <div className="flex flex-col items-center gap-4 w-full border border-blue-500">

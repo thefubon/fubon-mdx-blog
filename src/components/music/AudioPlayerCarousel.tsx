@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import Autoplay from 'embla-carousel-autoplay'
-
 import {
   Carousel,
   CarouselContent,
@@ -14,8 +13,32 @@ import Image from 'next/image'
 
 export function AudioPlayerCarousel() {
   const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
+    Autoplay({ delay: 5000, stopOnInteraction: true })
   )
+
+  // Массив с данными изображений
+  const carouselImages = [
+    {
+      src: '/music/carousel/AudioCarousel-1.png',
+      alt: 'Slide 1',
+    },
+    {
+      src: '/music/carousel/AudioCarousel-2.png',
+      alt: 'Slide 2',
+    },
+    {
+      src: '/music/carousel/AudioCarousel-3.png',
+      alt: 'Slide 3',
+    },
+    {
+      src: '/music/carousel/AudioCarousel-4.png',
+      alt: 'Slide 4',
+    },
+    {
+      src: '/music/carousel/AudioCarousel-5.png',
+      alt: 'Slide 5',
+    },
+  ]
 
   return (
     <Carousel
@@ -24,20 +47,20 @@ export function AudioPlayerCarousel() {
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
       opts={{
-        align: 'center',
-        loop: true,
+        align: 'start',
+        loop: false,
       }}>
-      <CarouselContent className="-ml-4">
-        {Array.from({ length: 5 }).map((_, index) => (
+      <CarouselContent className="md:-ml-4">
+        {carouselImages.map((image, index) => (
           <CarouselItem
             key={index}
-            className="basis-3/4 md:basis-1/2 lg:basis-2/3 2xl:basis-1/3 pl-4">
+            className="basis-3/3 md:basis-2/3 lg:basis-2/4 xl:basis-2/5 md:pl-4">
             <div className="">
               <Image
-                src="/music/carousel/AudioCarousel-1.png"
+                src={image.src}
                 width={1000}
                 height={580}
-                alt="001"
+                alt={image.alt}
                 className="object-cover w-full h-full rounded-lg"
               />
             </div>
@@ -45,8 +68,8 @@ export function AudioPlayerCarousel() {
         ))}
       </CarouselContent>
 
-      <CarouselPrevious className="absolute left-2 bottom-0 z-20" />
-      <CarouselNext className="absolute right-2 bottom-0 z-20" />
+      <CarouselPrevious className="absolute top-auto bottom-4 ml-4 translate-y-0 left-[var(--padding-x)] z-20 size-10 hidden md:flex border-0" />
+      <CarouselNext className="absolute top-auto bottom-4 mr-4 translate-y-0 right-[var(--padding-x)] z-20 size-10 hidden md:flex border-0" />
     </Carousel>
   )
 }
