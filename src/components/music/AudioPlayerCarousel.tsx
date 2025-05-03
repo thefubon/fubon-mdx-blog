@@ -43,7 +43,7 @@ export function AudioPlayerCarousel() {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full carousel relative"
+      className="audio-carousel"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
       opts={{
@@ -68,8 +68,8 @@ export function AudioPlayerCarousel() {
         ))}
       </CarouselContent>
 
-      <CarouselPrevious className="absolute top-auto bottom-4 ml-4 translate-y-0 left-[var(--padding-x)] z-20 size-10 hidden md:flex border-0" />
-      <CarouselNext className="absolute top-auto bottom-4 mr-4 translate-y-0 right-[var(--padding-x)] z-20 size-10 hidden md:flex border-0" />
+      <CarouselPrevious className="carousel__previous" />
+      <CarouselNext className="carousel__next" />
     </Carousel>
   )
 }
