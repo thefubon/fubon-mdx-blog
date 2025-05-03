@@ -11,8 +11,8 @@ export default function MusicPage() {
 
         <div className="container-fluid container-space">
           <Heading
-            title="Моя музыка"
-            description="Опиание"
+            title="PsySystem Records"
+            description="это Российский лейбл звукозаписи, в основном выпускающий музыку в стиле пси-транс. Был основан в 2006 году, и является личным лейблом, где выпускаются только понравившиеся музыка, в основном это свои синглы и работы сторонних исполнителей, в большинстве своем в жанре «пси-транс»."
           />
 
           <AudioPlayer />
