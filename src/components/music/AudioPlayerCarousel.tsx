@@ -50,11 +50,11 @@ export function AudioPlayerCarousel() {
         align: 'start',
         loop: false,
       }}>
-      <CarouselContent className="md:-ml-4">
+      <CarouselContent className="-ml-3 md:-ml-4">
         {carouselImages.map((image, index) => (
           <CarouselItem
             key={index}
-            className="basis-3/3 md:basis-2/3 lg:basis-2/4 xl:basis-2/5 md:pl-4">
+            className="basis-3/3 md:basis-2/3 lg:basis-2/4 xl:basis-2/5 pl-3 md:pl-4">
             <div className="">
               <Image
                 src={image.src}
