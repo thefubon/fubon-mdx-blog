@@ -178,7 +178,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply font-[var(--font-sans)] bg-background text-foreground flex flex-col min-h-screen antialiased;
+    @apply font-[var(--font-sans)] bg-fubon-muted/30 text-foreground flex flex-col min-h-screen antialiased;
     font-family: var(--font-sans);
   }
 

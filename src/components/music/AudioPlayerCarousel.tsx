@@ -47,7 +47,7 @@ export function AudioPlayerCarousel() {
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
       opts={{
-        align: 'center',
+        align: 'start',
         loop: false,
       }}>
       <CarouselContent className="-ml-3 md:-ml-4">
