@@ -201,6 +201,10 @@
   @apply px-[var(--padding-x)];
 }
 
+@utility container-space {
+  @apply space-y-4 md:space-y-8;
+}
+
 /* COMPONENT TEXT
 ==================================== */
 

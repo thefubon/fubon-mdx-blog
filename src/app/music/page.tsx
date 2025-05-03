@@ -6,10 +6,10 @@ import { AudioPlayerCarousel } from '@/components/music/AudioPlayerCarousel'
 export default function MusicPage() {
   return (
     <PageWrapper>
-      <div className="space-y-8">
+      <div className="container-space">
         <AudioPlayerCarousel />
 
-        <div className="container-fluid space-y-8">
+        <div className="container-fluid container-space">
           <Heading
             title="Моя музыка"
             description="Опиание"
