@@ -31,7 +31,7 @@ export function AudioPlayerCarousel() {
         {Array.from({ length: 5 }).map((_, index) => (
           <CarouselItem
             key={index}
-            className="basis-3/4 md:basis-1/2 lg:basis-1/3 pl-4">
+            className="basis-3/4 md:basis-1/2 lg:basis-2/3 pl-4">
             <div className="">
               <Image
                 src="/music/carousel/AudioCarousel-1.png"
