@@ -81,7 +81,7 @@
   --font-size-h6: clamp(18px, 1.5vw + 6px, 24px);
   
   /* Для заголовков и описаний компонентов */
-  --font-size-heading: clamp(24px, 2.5vw + 10px, 36px);
+  --font-size-heading: clamp(28px, 4vw + 12px, 48px);
   --font-size-description: clamp(16px, 0.7vw + 13px, 20px);
 
   /* BUTTON */
