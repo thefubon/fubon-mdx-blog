@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { tracks } from '@/data/player'
 import AudioManager from '@/utils/audioManager'
 import Image from 'next/image'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
 
 export default function AudioPlayer() {
@@ -326,9 +326,10 @@ export default function AudioPlayer() {
   const currentTrack = tracks[currentTrackIndex] || tracks[0]
 
   return (
-    <div className="flex flex-col gap-6 p-5 border rounded-xl bg-background w-full max-w-md">
+    <div className="flex flex-col gap-6 p-5 border border-red-500 rounded-xl bg-background w-full max-w-md">
+      
       {/* Главный плеер */}
-      <div className="flex flex-col items-center gap-4 w-full">
+      <div className="flex flex-col items-center gap-4 w-full border border-blue-500">
         {/* Обложка */}
         {currentTrack.cover ? (
           <div className="relative">
@@ -425,7 +426,7 @@ export default function AudioPlayer() {
       </div>
 
       {/* Список треков */}
-      <div className="w-full mt-6">
+      <div className="w-full mt-6 border border-green-500">
         <h3 className="text-lg font-semibold mb-3">Список треков</h3>
         <div className="space-y-2">
           {tracks.map((track, index) => (

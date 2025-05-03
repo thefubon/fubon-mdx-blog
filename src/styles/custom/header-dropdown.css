@@ -64,7 +64,7 @@
 }
 
 .dropdown-list__item {
-  @apply py-2 px-6 relative hover:bg-[#EAE5FD] transition-all duration-300 flex justify-between items-center;
+  @apply py-2 px-6 relative hover:bg-muted transition-all duration-300 flex justify-between items-center;
   font-size: var(--dropdown-text);
 }
 
