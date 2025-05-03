@@ -101,7 +101,7 @@
 
 /* Dropdown_Section_2 */
 .dropdown-section-2 {
-  @apply bg-background p-6 rounded-lg transition duration-[400ms] text-2xl uppercase flex justify-between items-center;
+  @apply bg-background p-6 rounded-lg transition duration-[400ms];
 }
 
 .dropdown-section-2--closed {

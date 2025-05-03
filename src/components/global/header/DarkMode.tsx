@@ -20,30 +20,29 @@ export function DarkMode() {
 
   return (
     <>
-      <div className="flex justify-between items-center w-full">
+      <div className="flex items-center gap-x-2">
         <Button
           variant={theme === 'light' ? 'default' : 'outline'}
-          size="lg"
           className={`cursor-pointer transition-all ${
-            theme === 'light' ? 'ring-2 ring-primary' : ''
+            theme === 'light' ? '' : ''
           }`}
           onClick={() => setTheme('light')}>
           Light
         </Button>
+
         <Button
           variant={theme === 'dark' ? 'default' : 'outline'}
-          size="lg"
           className={`cursor-pointer transition-all ${
-            theme === 'dark' ? 'ring-2 ring-primary' : ''
+            theme === 'dark' ? '' : ''
           }`}
           onClick={() => setTheme('dark')}>
           Dark
         </Button>
+
         <Button
           variant={theme === 'system' ? 'default' : 'outline'}
-          size="lg"
           className={`cursor-pointer transition-all ${
-            theme === 'system' ? 'ring-2 ring-primary' : ''
+            theme === 'system' ? '' : ''
           }`}
           onClick={() => setTheme('system')}>
           System

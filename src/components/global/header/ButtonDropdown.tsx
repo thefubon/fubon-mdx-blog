@@ -11,10 +11,10 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { menuItems } from '@/data/navbar'
-import { DarkMode } from './DarkMode'
 import { MailPlus } from 'lucide-react'
 import SoundWrapper from '@/components/SoundWrapper'
 import { MenuContext } from '@/contexts/LogoProvider'
+import ButtonDropdownSettings from './ButtonDropdownSettings'
 
 const ButtonDropdownComponent = () => {
   const { updateMenuState } = useContext(MenuContext)
@@ -236,12 +236,12 @@ const ButtonDropdownComponent = () => {
         </ul>
 
         <div
-          className={`dropdown-section-2 ${
+          className={`dropdown-section-2 flex flex-col gap-4 ${
             isMenuOpen
               ? 'dropdown-section-2--open'
               : 'dropdown-section-2--closed'
           }`}>
-          <DarkMode />
+          <ButtonDropdownSettings />
         </div>
 
         <div

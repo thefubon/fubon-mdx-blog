@@ -6,7 +6,7 @@ export default function MusicPage() {
     <PageWrapper
       title="Музыка"
       description="Описание страницы или какой-то вводный текст.">
-      <div className="container-fluid flex justify-center">
+      <div className="container-fluid border border-black">
         <AudioPlayer />
       </div>
     </PageWrapper>
