@@ -47,7 +47,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
                 </div>
               )}
 
-              <div className="flex flex-col h-full">
+              <div className="flex flex-col">
                 {category && (
                   <Link
                     href={`/blog/categories/${encodeURIComponent(category)}`}
