@@ -20,33 +20,33 @@ export function AudioPlayerCarousel() {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full"
+      className="w-full carousel"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
       opts={{
         align: 'center',
         loop: true,
       }}>
-        
-      <CarouselContent>
+      <CarouselContent className="-ml-8">
         {Array.from({ length: 5 }).map((_, index) => (
           <CarouselItem
             key={index}
-            className="md:basis-1/2 lg:basis-1/3">
-            <Image
-              src="/music/carousel/AudioCarousel-1.png"
-              width={1000}
-              height={580}
-              alt="001"
-              className="object-cover w-full h-full rounded-lg"
-            />
+            className="basis-3/4 md:basis-1/2 lg:basis-1/3 pl-8">
+            <div className="">
+              <Image
+                src="/music/carousel/AudioCarousel-1.png"
+                width={1000}
+                height={580}
+                alt="001"
+                className="object-cover w-full h-full rounded-lg"
+              />
+            </div>
           </CarouselItem>
         ))}
       </CarouselContent>
 
-      <CarouselPrevious />
-      <CarouselNext />
-
+      {/* <CarouselPrevious />
+      <CarouselNext /> */}
     </Carousel>
   )
 }
