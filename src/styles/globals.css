@@ -245,5 +245,5 @@
 }
 
 .carousel > div {
-  @apply px-8;
+  @apply px-4;
 }
