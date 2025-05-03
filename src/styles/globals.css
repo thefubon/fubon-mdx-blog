@@ -5,7 +5,7 @@
 @import "./custom/header.css";
 @import "./custom/header-dropdown.css";
 @import "./custom/custom-cursor.css";
-@import "./custom/audio-carousel.css";
+@import "./custom/audio-player-carousel.css";
 
 @font-face {
   font-family: 'FubonVF';
