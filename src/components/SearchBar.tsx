@@ -22,7 +22,7 @@ function SearchForm() {
 
     // Если строка пустая или содержит только пробелы, очищаем поисковый запрос
     if (!searchQuery.trim()) {
-      router.push('/search')
+      router.push('/blog/search')
       return
     }
 

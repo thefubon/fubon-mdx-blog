@@ -1,6 +1,8 @@
+// src/components/music/AudioPlayer.tsx
+
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Button } from '../ui/button'
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
@@ -35,13 +37,42 @@ export default function AudioPlayer({ currentTrack }: AudioPlayerProps) {
     seek(seekTime)
   }
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null
+
+    const startUpdatingProgress = () => {
+      intervalId = setInterval(() => {
+        if (isPlaying && duration > 0) {
+          seek(currentTime + 1)
+        }
+      }, 1000)
+    }
+
+    const stopUpdatingProgress = () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+        intervalId = null
+      }
+    }
+
+    // 开始更新进度条
+    if (isPlaying) {
+      startUpdatingProgress()
+    }
+
+    // 停止更新进度条
+    return () => {
+      stopUpdatingProgress()
+    }
+  }, [isPlaying, duration, currentTime])
+
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       {currentTrack.cover ? (
         <div className="relative">
           <Image
             src={currentTrack.cover}
-            alt={`Обложка ${currentTrack.title}`}
+            alt={`封面 ${currentTrack.title}`}
             className="w-36 h-36 rounded object-cover"
             width={288}
             height={288}
@@ -50,7 +81,7 @@ export default function AudioPlayer({ currentTrack }: AudioPlayerProps) {
           <div className="absolute -bottom-6 left-0 w-full flex justify-center">
             <Button
               className="animation-trigger relative size-12 cursor-pointer rounded-full"
-              aria-label="Кнопка управления музыкой"
+              aria-label="音乐控制按钮"
               onClick={() => togglePlayPause()}
               size="icon">
               <svg
@@ -73,7 +104,7 @@ export default function AudioPlayer({ currentTrack }: AudioPlayerProps) {
         </div>
       ) : (
         <div className="w-36 h-36 bg-muted rounded flex items-center justify-center text-gray-500">
-          No Cover
+          无封面
         </div>
       )}
 
@@ -108,19 +139,19 @@ export default function AudioPlayer({ currentTrack }: AudioPlayerProps) {
         <button
           onClick={prevTrack}
           className="text-xl px-4 py-2 rounded-full hover:bg-blue-600"
-          aria-label="Предыдущий трек">
+          aria-label="上一首">
           <SkipBack />
         </button>
         <button
           onClick={() => togglePlayPause()}
           className="text-3xl px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
-          aria-label={isPlaying ? 'Пауза' : 'Воспроизвести'}>
+          aria-label={isPlaying ? '暂停' : '播放'}>
           {isPlaying ? <Pause /> : <Play />}
         </button>
         <button
           onClick={nextTrack}
           className="text-xl px-4 py-2 rounded-full hover:bg-blue-600"
-          aria-label="Следующий трек">
+          aria-label="下一首">
           <SkipForward />
         </button>
       </div>

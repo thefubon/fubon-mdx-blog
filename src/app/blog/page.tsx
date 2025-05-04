@@ -6,6 +6,7 @@ import SearchBar from '@/components/SearchBar'
 import Pagination from '@/components/Pagination'
 import CustomCursor from '@/components/CustomCursor'
 import PageWrapper from '@/components/PageWrapper'
+import Container from '@/components/ui/Container'
 
 // Константа для количества постов на странице
 const POSTS_PER_PAGE = 3
@@ -40,10 +41,9 @@ export default async function BlogPage(props: PageProps) {
   const allCategories = getAllCategories()
 
   return (
-    <PageWrapper
-      title="Блог"
-      description="Описание страницы или какой-то вводный текст.">
-      <div className="max-w-3xl mx-auto px-4">
+    <PageWrapper>
+
+      <Container padding space>
         {/* Компонент поиска */}
         <div className="mb-6">
           <SearchBar />
@@ -155,7 +155,6 @@ export default async function BlogPage(props: PageProps) {
                   </>
                 )}
 
-                
                 {description && <p className="text-gray-700">{description}</p>}
 
                 <Link
@@ -176,7 +175,7 @@ export default async function BlogPage(props: PageProps) {
             basePath="/blog"
           />
         </div>
-      </div>
+      </Container>
     </PageWrapper>
   )
 }
