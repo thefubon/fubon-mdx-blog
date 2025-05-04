@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import Heading from './Heading'
+import Heading from './ui/Heading'
 
 interface PageWrapperProps {
   title?: string

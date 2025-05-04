@@ -5,8 +5,8 @@ interface HeadingProps {
 
 const Heading: React.FC<HeadingProps> = ({ title, description }) => {
   return (
-    <div>
-      {title && <h2 className="heading font-bold">{title}</h2>}
+    <div className="space-y-2 md:space-y-4">
+      {title && <h2 className="heading font-bold leading-none">{title}</h2>}
       {description && <p className="description">{description}</p>}
     </div>
   )

@@ -1,3 +1,4 @@
+// src/components/music/AudioPlayerCarousel.tsx
 'use client'
 
 import * as React from 'react'
@@ -10,35 +11,40 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import Image from 'next/image'
+import { Button } from '../ui/button'
+import { Pause, Play } from 'lucide-react'
+import { tracks } from '@/data/player'
+import { useAudioPlayer } from '@/contexts/AudioPlayerProvider'
 
 export function AudioPlayerCarousel() {
+  // Используем хук для доступа к контексту
+  const {
+    topTracks,
+    currentTrackIndex,
+    isPlaying,
+    playTrackFromCarousel,
+    togglePlayPause,
+  } = useAudioPlayer()
+
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: true })
   )
 
-  // Массив с данными изображений
-  const carouselImages = [
-    {
-      src: '/music/carousel/AudioCarousel-1.png',
-      alt: 'Slide 1',
-    },
-    {
-      src: '/music/carousel/AudioCarousel-2.png',
-      alt: 'Slide 2',
-    },
-    {
-      src: '/music/carousel/AudioCarousel-3.png',
-      alt: 'Slide 3',
-    },
-    {
-      src: '/music/carousel/AudioCarousel-4.png',
-      alt: 'Slide 4',
-    },
-    {
-      src: '/music/carousel/AudioCarousel-5.png',
-      alt: 'Slide 5',
-    },
-  ]
+  // Показываем карусель только если есть треки для неё
+  if (topTracks.length === 0) return null
+
+  // Функция для правильного переключения воспроизведения из карусели
+  const handleCarouselPlay = (trackId: number) => {
+    const trackIndex = tracks.findIndex((t) => t.id === trackId)
+
+    // Если это тот же трек, что сейчас играет, просто переключаем Play/Pause
+    if (trackIndex === currentTrackIndex) {
+      togglePlayPause()
+    } else {
+      // Иначе запускаем новый трек
+      playTrackFromCarousel(trackId)
+    }
+  }
 
   return (
     <Carousel
@@ -51,18 +57,32 @@ export function AudioPlayerCarousel() {
         loop: false,
       }}>
       <CarouselContent className="-ml-3 md:-ml-4">
-        {carouselImages.map((image, index) => (
+        {topTracks.map((track, index) => (
           <CarouselItem
             key={index}
             className="basis-3/3 md:basis-2/3 lg:basis-2/4 xl:basis-2/5 pl-3 md:pl-4">
-            <div className="">
+            <div className="relative group">
               <Image
-                src={image.src}
+                src={track.carousel || ''}
                 width={1000}
                 height={580}
-                alt={image.alt}
+                alt={`${track.title} - ${track.artist}`}
                 className="object-cover w-full h-full rounded-lg"
               />
+              {/* Кнопка воспроизведения внутри элемента карусели */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/30 rounded-lg">
+                <Button
+                  onClick={() => handleCarouselPlay(track.id)}
+                  className="size-16 rounded-full bg-white/80 backdrop-blur-sm text-blue-600 hover:bg-white hover:text-blue-700"
+                  size="icon">
+                  {currentTrackIndex ===
+                    tracks.findIndex((t) => t.id === track.id) && isPlaying ? (
+                    <Pause size={32} />
+                  ) : (
+                    <Play size={32} />
+                  )}
+                </Button>
+              </div>
             </div>
           </CarouselItem>
         ))}

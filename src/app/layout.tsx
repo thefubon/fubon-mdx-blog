@@ -3,10 +3,10 @@ import '@/styles/globals.css'
 
 import { ThemeProvider } from '@/contexts/ThemeProvider'
 import { SoundProvider } from '@/contexts/SoundProvider'
+import { AudioPlayerProvider } from '@/contexts/AudioPlayerProvider'
 
 import Header from '@/components/global/header'
 import Footer from '@/components/global/footer'
-
 
 export const metadata: Metadata = {
   title: 'Fubon | Креативное агентство по дизайну и разработке.',
@@ -45,9 +45,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange>
           <SoundProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer />
+            <AudioPlayerProvider>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </AudioPlayerProvider>
           </SoundProvider>
         </ThemeProvider>
       </body>

@@ -11,14 +11,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import Container from '@/components/ui/Container'
 
 export default function Home() {
   const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста
 
   return (
     <PageWrapper>
-      <div className="container-fluid">
-        <section className="text-center mb-16">
+      <Container padding={true} space={true}>
+        <section className="text-center">
           <h1 className="text-h1 font-bold mb-4">Добро пожаловать!</h1>
 
           <p className="description text-gray-600 mb-8 max-w-3xl mx-auto">
@@ -33,7 +34,7 @@ export default function Home() {
           </Link>
         </section>
 
-        <section className="max-w-md py-10">
+        <section className="max-w-md">
           <Card>
             <CardHeader>
               <CardTitle>Card Title</CardTitle>
@@ -100,7 +101,7 @@ export default function Home() {
             </div>
           </section>
         )}
-      </div>
+      </Container>
     </PageWrapper>
   )
 }

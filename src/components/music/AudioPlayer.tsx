@@ -1,325 +1,41 @@
-// src/components/AudioPlayer.tsx
+// src/components/music/AudioPlayer.tsx
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { tracks } from '@/data/player'
-import AudioManager from '@/utils/audioManager'
+import { useRef } from 'react'
 import Image from 'next/image'
 import { Button } from '../ui/button'
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react'
+import { useAudioPlayer } from '@/contexts/AudioPlayerProvider'
+import { tracks } from '@/data/player'
 
 export default function AudioPlayer() {
-  // Состояния UI
-  const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0)
-  const [isPlaying, setIsPlaying] = useState<boolean>(false)
-  const [progress, setProgress] = useState<number>(0)
-  const [duration, setDuration] = useState<number>(0)
-  const [currentTime, setCurrentTime] = useState<number>(0)
-  const [debugMode, setDebugMode] = useState<boolean>(false)
+  // Состояния из контекста
+  const {
+    currentTrackIndex,
+    isPlaying,
+    progress,
+    duration,
+    currentTime,
+    togglePlayPause,
+    nextTrack,
+    prevTrack,
+    seek,
+    formatTime,
+  } = useAudioPlayer()
 
-  // Ссылки на DOM-элементы
+  // Ссылка на прогресс-бар
   const progressBarRef = useRef<HTMLDivElement | null>(null)
 
-  // Получаем инстанс менеджера аудио
-  const audioManagerRef = useRef<AudioManager | null>(null)
-
-  // Refs для анимации волны
-  const isWaveActiveRef = useRef(false)
-  const animationFrameIdRef = useRef<number | null>(null)
-  const wavePhaseRef = useRef(0)
-  const currentAmplitudeRef = useRef(0)
-  const lastTimeRef = useRef(0)
-  const wavePathRef = useRef<SVGPathElement | null>(null)
-
-  // Константы анимации волны
-  const waveAmplitude = 16
-  const waveFrequency = 0.08
-
-  // Функция сброса прогресса - вынесем для переиспользования
-  const resetProgress = () => {
-    setProgress(0)
-    setCurrentTime(0)
-    setDuration(0)
-  }
-
-  // Функция создания волны - перенесена из вашего компонента
-  const createWave = useCallback((timestamp: number) => {
-    const pathEl = wavePathRef.current
-    if (!pathEl) return
-
-    const deltaTime = timestamp - (lastTimeRef.current || timestamp)
-    lastTimeRef.current = timestamp
-    const safeDeltaTime = Math.min(deltaTime, 32)
-
-    const points: string[] = []
-    for (let x = 0; x <= 100; x += 5) {
-      const y =
-        10 +
-        currentAmplitudeRef.current *
-          Math.sin(waveFrequency * x + wavePhaseRef.current)
-      points.push(`${x} ${y}`)
-    }
-    pathEl.setAttribute('d', `M${points.join(' L')}`)
-
-    wavePhaseRef.current += (safeDeltaTime / 16) * waveFrequency
-
-    if (
-      isWaveActiveRef.current &&
-      currentAmplitudeRef.current < waveAmplitude
-    ) {
-      currentAmplitudeRef.current += 0.1 * (safeDeltaTime / 16)
-    } else if (!isWaveActiveRef.current && currentAmplitudeRef.current > 0) {
-      currentAmplitudeRef.current -= 0.1 * (safeDeltaTime / 16)
-    }
-    currentAmplitudeRef.current = Math.min(
-      currentAmplitudeRef.current,
-      waveAmplitude
-    )
-
-    if (isWaveActiveRef.current || currentAmplitudeRef.current > 0) {
-      animationFrameIdRef.current = requestAnimationFrame(createWave)
-    } else {
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current)
-        animationFrameIdRef.current = null
-      }
-      pathEl.setAttribute('d', 'M0 10 L100 10')
-    }
-  }, [])
-
-  // Обновляем ref состояния волны при изменении статуса воспроизведения
-  useEffect(() => {
-    isWaveActiveRef.current = isPlaying
-
-    // Запускаем или останавливаем анимацию в зависимости от состояния
-    if (isPlaying && !animationFrameIdRef.current) {
-      createWave(performance.now())
-    }
-  }, [isPlaying, createWave])
-
-  // Инициализируем AudioManager при первом рендере
-  useEffect(() => {
-    const audioManager = AudioManager.getInstance()
-    audioManager.setTracks(tracks)
-    audioManagerRef.current = audioManager
-
-    // Улучшенные колбэки для синхронизации состояния UI с аудио
-    audioManager.setCallbacks({
-      onPlay: () => {
-        setIsPlaying(true)
-        // Принудительно запускаем обновление прогресса через интервал
-        // для гарантии обновления UI
-        const checkInterval = setInterval(() => {
-          if (audioManager.isPlaying()) {
-            const pos = audioManager.getCurrentPosition()
-            const dur = audioManager.getDuration()
-            if (pos > 0 && dur > 0) {
-              setDuration(dur)
-              setCurrentTime(pos)
-              setProgress((pos / dur) * 100)
-            }
-          } else {
-            clearInterval(checkInterval)
-          }
-        }, 100) // Проверяем каждые 100ms
-
-        // Очистка интервала
-        setTimeout(() => clearInterval(checkInterval), 1000)
-      },
-      onPause: () => {
-        setIsPlaying(false)
-        // Обновляем позицию явно при паузе
-        const pos = audioManager.getCurrentPosition()
-        const dur = audioManager.getDuration()
-        setCurrentTime(pos)
-        setProgress((pos / dur) * 100)
-      },
-      onStop: () => {
-        setIsPlaying(false)
-        resetProgress()
-      },
-      onEnd: () => {
-        resetProgress()
-        const newIndex = audioManager.nextTrack()
-        setCurrentTrackIndex(newIndex)
-        audioManager.play()
-      },
-      onLoad: () => {
-        const dur = audioManager.getDuration()
-        setDuration(dur)
-        setCurrentTime(0)
-        setProgress(0)
-      },
-      onSeek: () => {
-        const pos = audioManager.getCurrentPosition()
-        const dur = audioManager.getDuration()
-        setCurrentTime(pos)
-        setProgress((pos / dur) * 100)
-      },
-      onProgress: (position, trackDuration) => {
-        // Добавляем дополнительные проверки и логирование
-        if (position >= 0 && trackDuration > 0) {
-          const newProgress = (position / trackDuration) * 100
-
-          // Логируем только в режиме отладки
-          if (debugMode) {
-            console.log(
-              `[Player] Progress update: ${position.toFixed(
-                2
-              )}/${trackDuration.toFixed(2)} = ${newProgress.toFixed(1)}%`
-            )
-          }
-
-          // Используем функциональное обновление для большей надежности
-          setCurrentTime((prevTime) => {
-            // Обновляем только если значение значительно изменилось
-            if (Math.abs(prevTime - position) > 0.1) {
-              return position
-            }
-            return prevTime
-          })
-
-          setProgress((prevProgress) => {
-            // Обновляем только если значение значительно изменилось
-            if (Math.abs(prevProgress - newProgress) > 0.1) {
-              return newProgress
-            }
-            return prevProgress
-          })
-        }
-      },
-      onTrackChange: () => {
-        console.log('[AudioPlayer] Track changed - resetting progress')
-        resetProgress()
-      },
-    })
-
-    // Инициализация первого трека
-    audioManager.initTrack(0)
-
-    // Добавляем форсированное обновление прогресса
-    const updateInterval = setInterval(() => {
-      if (audioManager.isPlaying()) {
-        audioManager.updateProgressManually()
-      }
-    }, 1000) // Проверяем каждую секунду
-
-    // Устанавливаем ссылку на SVG path для волны
-    wavePathRef.current = document.querySelector<SVGPathElement>('#wavePath')
-
-    // Очистка при размонтировании компонента
-    return () => {
-      clearInterval(updateInterval)
-
-      // Останавливаем анимацию волны
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current)
-        animationFrameIdRef.current = null
-      }
-
-      // Очищаем аудио-менеджер
-      audioManager.destroy()
-    }
-  }, [debugMode, createWave])
-
-  // Добавим новый эффект для ручного обновления прогресса
-  // при изменении продолжительности трека
-  useEffect(() => {
-    if (audioManagerRef.current && duration > 0) {
-      // Если продолжительность обновилась, обновляем прогресс
-      audioManagerRef.current.updateProgressManually()
-    }
-  }, [duration])
-
-  // Обработчик переключения трека
-  useEffect(() => {
-    if (!audioManagerRef.current) return
-
-    const currentManagerIndex = audioManagerRef.current.getCurrentIndex()
-
-    // Если индекс трека в UI не совпадает с индексом в менеджере
-    if (currentTrackIndex !== currentManagerIndex) {
-      // Сначала сбрасываем прогресс для чистого UI при переключении
-      resetProgress()
-
-      // Затем инициализируем новый трек
-      audioManagerRef.current.initTrack(currentTrackIndex)
-
-      // Если был в режиме воспроизведения, продолжаем воспроизведение нового трека
-      if (isPlaying) {
-        audioManagerRef.current.play()
-      }
-    }
-  }, [currentTrackIndex, isPlaying])
-
-  // Функция форматирования времени
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`
-  }
-
-  // Функция переключения воспроизведения/паузы
-  const togglePlayPause = (trackIndex?: number): void => {
-    if (!audioManagerRef.current) return
-
-    if (trackIndex !== undefined && trackIndex !== currentTrackIndex) {
-      // Если выбран другой трек
-      setCurrentTrackIndex(trackIndex)
-      // Сбрасываем прогресс перед переключением
-      resetProgress()
-      return
-    }
-
-    audioManagerRef.current.togglePlayPause()
-  }
-
-  // Функция перехода к следующему треку
-  const nextTrack = (): void => {
-    if (!audioManagerRef.current) return
-
-    // Сбрасываем прогресс перед переключением
-    resetProgress()
-
-    const newIndex = audioManagerRef.current.nextTrack()
-    setCurrentTrackIndex(newIndex)
-
-    if (isPlaying) {
-      audioManagerRef.current.play()
-    }
-  }
-
-  // Функция перехода к предыдущему треку
-  const prevTrack = (): void => {
-    if (!audioManagerRef.current) return
-
-    // Сбрасываем прогресс перед переключением
-    resetProgress()
-
-    const newIndex = audioManagerRef.current.prevTrack()
-    setCurrentTrackIndex(newIndex)
-
-    if (isPlaying) {
-      audioManagerRef.current.play()
-    }
-  }
-
-  // Обработчик клика на прогресс-бар - обновленная версия
+  // Обработчик клика на прогресс-бар
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>): void => {
-    if (!progressBarRef.current || !audioManagerRef.current || duration === 0)
-      return
+    if (!progressBarRef.current || duration === 0) return
 
     const rect = progressBarRef.current.getBoundingClientRect()
     const x = e.clientX - rect.left
     const clickPositionPercent = x / rect.width
     const seekTime = duration * clickPositionPercent
 
-    // Важное изменение: обновляем UI немедленно
-    setCurrentTime(seekTime)
-    setProgress(clickPositionPercent * 100)
-
-    // Затем отправляем команду в аудио-менеджер
-    audioManagerRef.current.seek(seekTime)
+    seek(seekTime)
   }
 
   // Текущий трек
@@ -327,7 +43,6 @@ export default function AudioPlayer() {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-md">
-      
       {/* Главный плеер */}
       <div className="flex flex-col items-center gap-4 w-full border border-blue-500">
         {/* Обложка */}
@@ -341,7 +56,7 @@ export default function AudioPlayer() {
               height={288}
             />
 
-            {/* Кнопка волны под обложкой (в точном соответствии с оригиналом) */}
+            {/* Кнопка волны под обложкой */}
             <div className="absolute -bottom-6 left-0 w-full flex justify-center">
               <Button
                 className="animation-trigger relative size-12 cursor-pointer rounded-full"
@@ -376,7 +91,7 @@ export default function AudioPlayer() {
         <h3 className="text-xl font-semibold mt-6">{currentTrack.title}</h3>
         <p className="text-foreground/50">{currentTrack.artist}</p>
 
-        {/* Прогресс-бар с улучшенным визуальным индикатором */}
+        {/* Прогресс-бар */}
         <div className="w-full">
           <div className="flex justify-between text-sm text-gray-500 mb-1">
             <span>{formatTime(currentTime)}</span>
@@ -384,7 +99,7 @@ export default function AudioPlayer() {
           </div>
           <div
             ref={progressBarRef}
-            className="w-full h-5 bg-gray-200 dark:bg-zinc-600 rounded-full cursor-pointer relative overflow-hidden  transition-all"
+            className="w-full h-5 bg-gray-200 dark:bg-zinc-600 rounded-full cursor-pointer relative overflow-hidden transition-all"
             onClick={handleProgressClick}>
             {/* Линия прогресса с анимацией */}
             <div
@@ -488,29 +203,6 @@ export default function AudioPlayer() {
           ))}
         </div>
       </div>
-
-      {/* Отладочная информация (скрыта по умолчанию) */}
-      {debugMode && (
-        <div className="mt-4 p-3 bg-gray-100 rounded text-xs font-mono">
-          <h4 className="font-bold mb-1">Debug Info:</h4>
-          <div>Current Track: {currentTrackIndex}</div>
-          <div>Playing: {isPlaying ? 'Yes' : 'No'}</div>
-          <div>Wave Active: {isWaveActiveRef.current ? 'Yes' : 'No'}</div>
-          <div>Progress: {progress.toFixed(1)}%</div>
-          <div>Current Time: {currentTime.toFixed(2)}s</div>
-          <div>Duration: {duration.toFixed(2)}s</div>
-        </div>
-      )}
-
-      {/* Кнопка включения режима отладки */}
-      <div className="mt-2 text-center">
-        <button
-          onClick={() => setDebugMode(!debugMode)}
-          className="text-xs text-gray-400 hover:text-gray-600">
-          {debugMode ? 'Скрыть отладку' : 'Режим отладки'}
-        </button>
-      </div>
     </div>
   )
 }
-
