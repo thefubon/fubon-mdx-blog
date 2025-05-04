@@ -42,9 +42,10 @@ export default function AudioPlayer() {
   const currentTrack = tracks[currentTrackIndex] || tracks[0]
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-md">
+    <div className="flex flex-col md:flex-row gap-6 w-full">
       {/* Главный плеер */}
-      <div className="flex flex-col items-center gap-4 w-full border border-blue-500">
+      <div className="flex flex-col items-center gap-4 w-full">
+
         {/* Обложка */}
         {currentTrack.cover ? (
           <div className="relative">
@@ -141,7 +142,7 @@ export default function AudioPlayer() {
       </div>
 
       {/* Список треков */}
-      <div className="w-full mt-6 border border-green-500">
+      <div className="w-full">
         <h3 className="text-lg font-semibold mb-3">Список треков</h3>
         <div className="space-y-2">
           {tracks.map((track, index) => (
@@ -153,8 +154,9 @@ export default function AudioPlayer() {
                   : 'border dark:bg-zinc-600/50 dark:hover:bg-zinc-600'
               } cursor-pointer overflow-hidden`}
               onClick={() => togglePlayPause(index)}>
-
-              <div className='w-6 flex justify-center items-center'>{track.id}</div>
+              <div className="w-6 flex justify-center items-center">
+                {track.id}
+              </div>
 
               {/* Миниатюра трека */}
               {track.cover ? (

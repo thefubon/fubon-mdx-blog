@@ -2,11 +2,11 @@
 'use client'
 
 import SoundWrapper from '@/components/SoundWrapper'
-import { SoundToggle } from '@/components/SoundToggle'
 import { MenuProvider } from '@/contexts/LogoProvider'
 import Logo from './Logo'
 import ButtonContact from './ButtonContact'
 import { ButtonDropdown } from './ButtonDropdown'
+import Player from '@/components/Player'
 
 
 export default function Header() {
@@ -19,7 +19,7 @@ export default function Header() {
           </div>
 
           <div className="header__end">
-            <SoundToggle />
+            <Player />
             <SoundWrapper>
               <ButtonContact
                 href="mailto:hello@fubon.ru"

@@ -127,7 +127,7 @@ export default function Player() {
 
   return (
     <Button
-      className="animation-trigger relative size-12 cursor-pointer rounded-full"
+      className="animation-trigger relative z-50 size-12 md:size-[var(--button-height)] cursor-pointer rounded-full"
       aria-label="Кнопка управления музыкой"
       onClick={handleClick}
       size="icon">
