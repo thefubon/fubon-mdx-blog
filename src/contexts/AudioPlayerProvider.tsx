@@ -1,24 +1,28 @@
-// src/contexts/AudioPlayerProvider.tsx
 'use client'
 
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from 'react'
 import AudioManager from '@/utils/audioManager'
 import { tracks } from '@/data/player'
 
-// Интерфейс контекста
 interface AudioPlayerContextType {
-  currentTrackIndex: number;
-  isPlaying: boolean;
-  progress: number;
-  duration: number;
-  currentTime: number;
-  togglePlayPause: (trackIndex?: number) => void;
-  nextTrack: () => void;
-  prevTrack: () => void;
-  seek: (time: number) => void;
-  formatTime: (seconds: number) => string;
-  topTracks: typeof tracks;
-  playTrackFromCarousel: (trackId: number) => void;
+  currentTrackIndex: number
+  isPlaying: boolean
+  progress: number
+  duration: number
+  currentTime: number
+  togglePlayPause: (trackIndex?: number) => void
+  nextTrack: () => void
+  prevTrack: () => void
+  seek: (time: number) => void
+  formatTime: (seconds: number) => string
+  topTracks: typeof tracks
+  playTrackFromCarousel: (trackId: number) => void
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | null>(null)
@@ -31,38 +35,32 @@ export const useAudioPlayer = () => {
   return context
 }
 
-export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Состояния UI
+export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [progress, setProgress] = useState<number>(0)
   const [duration, setDuration] = useState<number>(0)
   const [currentTime, setCurrentTime] = useState<number>(0)
 
-  // Получаем инстанс менеджера аудио
   const audioManagerRef = useRef<AudioManager | null>(null)
-
-  // Получаем только треки с пометкой top:true и с полем carousel
   const topTracks = tracks.filter((track) => track.top && track.carousel)
 
-  // Функция сброса прогресса
   const resetProgress = () => {
     setProgress(0)
     setCurrentTime(0)
     setDuration(0)
   }
 
-  // Инициализируем AudioManager при первом рендере
   useEffect(() => {
     const audioManager = AudioManager.getInstance()
     audioManager.setTracks(tracks)
     audioManagerRef.current = audioManager
 
-    // Колбэки для синхронизации состояния UI с аудио
     audioManager.setCallbacks({
       onPlay: () => {
         setIsPlaying(true)
-        // Обновляем UI через интервал для надежности
         const checkInterval = setInterval(() => {
           if (audioManager.isPlaying()) {
             const pos = audioManager.getCurrentPosition()
@@ -76,7 +74,6 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
             clearInterval(checkInterval)
           }
         }, 100)
-
         setTimeout(() => clearInterval(checkInterval), 1000)
       },
       onPause: () => {
@@ -112,6 +109,7 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         if (position >= 0 && trackDuration > 0) {
           const newProgress = (position / trackDuration) * 100
           setCurrentTime(position)
+          setDuration(trackDuration)
           setProgress(newProgress)
         }
       },
@@ -120,24 +118,20 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       },
     })
 
-    // Инициализация первого трека
     audioManager.initTrack(0)
 
-    // Обновление прогресса
     const updateInterval = setInterval(() => {
       if (audioManager.isPlaying()) {
         audioManager.updateProgressManually()
       }
-    }, 1000)
+    }, 100)
 
-    // Очистка при размонтировании
     return () => {
       clearInterval(updateInterval)
       audioManager.destroy()
     }
   }, [])
 
-  // Синхронизация индекса трека
   useEffect(() => {
     if (!audioManagerRef.current) return
 
@@ -151,14 +145,12 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [currentTrackIndex, isPlaying])
 
-  // Форматирование времени
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60)
     const secs = Math.floor(seconds % 60)
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`
   }
 
-  // Переключение воспроизведения/паузы
   const togglePlayPause = (trackIndex?: number): void => {
     if (!audioManagerRef.current) return
 
@@ -171,7 +163,6 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     audioManagerRef.current.togglePlayPause()
   }
 
-  // Переход к следующему треку
   const nextTrack = (): void => {
     if (!audioManagerRef.current) return
     resetProgress()
@@ -182,7 +173,6 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }
 
-  // Переход к предыдущему треку
   const prevTrack = (): void => {
     if (!audioManagerRef.current) return
     resetProgress()
@@ -193,7 +183,6 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }
 
-  // Перемотка к определенному времени
   const seek = (seekTime: number): void => {
     if (!audioManagerRef.current || duration === 0) return
     setCurrentTime(seekTime)
@@ -201,7 +190,6 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     audioManagerRef.current.seek(seekTime)
   }
 
-  // Воспроизведение трека из карусели по ID
   const playTrackFromCarousel = (trackId: number): void => {
     const trackIndex = tracks.findIndex((track) => track.id === trackId)
     if (trackIndex !== -1) {
@@ -215,7 +203,6 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }
 
-  // Значения и функции, предоставляемые через контекст
   const contextValue: AudioPlayerContextType = {
     currentTrackIndex,
     isPlaying,
