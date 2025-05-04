@@ -153,6 +153,9 @@ export default function AudioPlayer() {
                   : 'border dark:bg-zinc-600/50 dark:hover:bg-zinc-600'
               } cursor-pointer overflow-hidden`}
               onClick={() => togglePlayPause(index)}>
+
+              <div className='w-6 flex justify-center items-center'>{track.id}</div>
+
               {/* Миниатюра трека */}
               {track.cover ? (
                 <Image
@@ -171,9 +174,12 @@ export default function AudioPlayer() {
               {/* Информация о треке */}
               <div className="flex-1 min-w-0">
                 <p className="font-medium truncate">{track.title}</p>
-                <p className="text-sm text-foreground/50 truncate">
-                  {track.artist}
+
+                <p className="text-xs text-foreground/50 truncate">
+                  {track.date}
                 </p>
+
+                <p className="text-sm truncate">{track.artist}</p>
               </div>
 
               {/* Индикатор воспроизведения */}
