@@ -19,8 +19,8 @@ export default function Header() {
           </div>
 
           <div className="header__end">
-            <Player />
-            
+            <SoundWrapper><Player /></SoundWrapper>
+
             <SoundWrapper>
               <ButtonContact
                 href="mailto:hello@fubon.ru"
