@@ -1,5 +1,3 @@
-import AudioPlayerMini from "@/components/music/AudioPlayerMini";
-
 export default function Footer() {
   return (
     <>
@@ -8,8 +6,6 @@ export default function Footer() {
           &copy; 2004-{new Date().getFullYear()} Fubon.
         </div>
       </footer>
-
-      <AudioPlayerMini />
     </>
   )
 }
