@@ -20,6 +20,7 @@ export default function Header() {
 
           <div className="header__end">
             <Player />
+            
             <SoundWrapper>
               <ButtonContact
                 href="mailto:hello@fubon.ru"

@@ -2,12 +2,12 @@
 ==================================== */
 
 .header {
-  @apply px-[var(--padding-x)] py-[clamp(16px,2.5vw,48px)] sticky top-0 z-50;
+  @apply px-[var(--padding-x)] sticky top-0 z-50;
 }
 
 /* Header Container */
 .header__container {
-  @apply flex justify-between items-center;
+  @apply flex justify-between items-center h-[clamp(80px,10vw,150px)];
 }
 
 .header__start {

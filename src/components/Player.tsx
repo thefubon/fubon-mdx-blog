@@ -3,7 +3,6 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import { Howl } from 'howler'
-import { Button } from './ui/button'
 
 const FADE_DURATION = 1000
 const VOLUME = 1
@@ -126,11 +125,11 @@ export default function Player() {
   }, [isDev, isMobile, startPlayback])
 
   return (
-    <Button
-      className="animation-trigger relative z-50 size-12 md:size-[var(--button-height)] cursor-pointer rounded-full"
+    <div
+      className="animation-trigger bg-foreground text-background flex justify-center items-center size-12 sm:size-[var(--button-height)] cursor-pointer rounded-full"
       aria-label="Кнопка управления музыкой"
       onClick={handleClick}
-      size="icon">
+      >
       <svg
         viewBox="-10 -10 120 30"
         preserveAspectRatio="xMidYMid meet"
@@ -146,6 +145,6 @@ export default function Player() {
           fill="currentColor"
         />
       </svg>
-    </Button>
+    </div>
   )
 }
