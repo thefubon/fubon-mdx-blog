@@ -151,7 +151,6 @@ export function WaveButton({
         className
       )}
       onClick={handleClick}
-      aria-label="Sound control"
       title={
         activeSoundSource === 'music' ? 'Music playing' : 
         isAmbientWaiting ? 'Ambient sound waiting (click to activate)' :

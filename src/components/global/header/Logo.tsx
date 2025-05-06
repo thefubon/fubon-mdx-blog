@@ -8,7 +8,9 @@ export default function Logo() {
   const { showBackground, isFading, isMobile } = useMenuContext()
 
   return (
-    <Link href="/">
+    <Link
+      href="/"
+      aria-label="Вернуться на главную">
       <svg
         width="97"
         height="24"
