@@ -248,7 +248,7 @@ const ButtonDropdownComponent = () => {
           className={`bg-card text-card-foreground p-6 rounded-lg shadow-md transition duration-[400ms] flex flex-col gap-4 ${
             isMenuOpen
               ? 'opacity-100 translate-z-0'
-              : 'opacity-0 translate-y-[7.75em] rotate-[-3.5deg] delay-100'
+              : 'opacity-0 translate-y-[8em] rotate-[-3.5deg] delay-100'
           }`}>
           <ButtonDropdownSettings />
         </div>
@@ -257,7 +257,7 @@ const ButtonDropdownComponent = () => {
           className={`bg-card text-card-foreground p-6 rounded-lg shadow-md transition duration-500 ${
             isMenuOpen
               ? 'opacity-100 translate-z-0'
-              : 'opacity-0 translate-y-[5.75em] rotate-[-3.5deg] delay-75'
+              : 'opacity-0 translate-y-[9em] rotate-[-3.5deg] delay-75'
           }`}>
           <SearchDropdown onSearch={toggleMenu} />
         </div>
