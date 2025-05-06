@@ -107,7 +107,7 @@ export function MiniPlayer() {
   
   if (collapsed) {
     return (
-      <div className="fixed bottom-4 right-4 z-50 transition-all duration-300">
+      <div className="fixed bottom-4 right-4 z-10 transition-all duration-300">
         <Button
           size="icon"
           variant="default"
@@ -124,7 +124,7 @@ export function MiniPlayer() {
 
   return (
     <div className={cn(
-      "sticky bottom-0 inset-0 bg-background border-t p-2 z-50 shadow-lg transition-all duration-300",
+      "sticky bottom-0 inset-0 bg-background border-t p-2 z-10 shadow-lg transition-all duration-300",
       "translate-y-0 opacity-100" // Всегда видимый, когда рендерится
     )}>
       <div className="max-w-screen-xl mx-auto">

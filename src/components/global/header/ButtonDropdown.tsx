@@ -154,7 +154,7 @@ const ButtonDropdownComponent = () => {
       <SoundWrapper>
         <button
           ref={buttonElement}
-          className={`group animation-trigger bg-primary hover:bg-primary/80 text-primary-foreground relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full size-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)] text-[length:var(--button-font-size)]  ${
+          className={`group animation-trigger bg-primary text-primary-foreground relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full size-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)] text-[length:var(--button-font-size)]  ${
             isMenuOpen ? 'bg-primary/90' : ''
           }`}
           aria-label="Кнопка открытия выпадающего меню"
