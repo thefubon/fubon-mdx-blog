@@ -33,21 +33,6 @@ export default function Home() {
           </Link>
         </section>
 
-        <section className="max-w-md">
-          <Card>
-            <CardHeader>
-              <CardTitle>Card Title</CardTitle>
-              <CardDescription>Card Description</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Card Content</p>
-            </CardContent>
-            <CardFooter>
-              <p>Card Footer</p>
-            </CardFooter>
-          </Card>
-        </section>
-
         {posts.length > 0 && (
           <section>
             <h2 className="text-3xl font-bold mb-8 text-center">
