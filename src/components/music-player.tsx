@@ -133,7 +133,7 @@ export default function MusicPlayer() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setVolume(volume === 0 ? 1 : 0)}>
+                onClick={() => setVolume(volume === 0 ? 0.5 : 0)}>
                 {volume === 0 ? <VolumeX /> : <Volume2 />}
               </Button>
               <Slider

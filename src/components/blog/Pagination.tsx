@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface PaginationProps {
   currentPage: number
@@ -18,95 +19,93 @@ export default function Pagination({
     return null
   }
 
-  // Определяем, какие номера страниц показывать
-  const getPageNumbers = () => {
-    const pages = []
-
-    // Всегда показываем первую страницу
-    pages.push(1)
-
-    // Добавляем текущую страницу и страницы вокруг нее
-    for (
-      let i = Math.max(2, currentPage - 1);
-      i <= Math.min(totalPages - 1, currentPage + 1);
-      i++
-    ) {
-      if (!pages.includes(i)) {
-        pages.push(i)
+  // Функция для создания массива страниц для отображения
+  const getPageRange = () => {
+    // Максимальное количество видимых страниц
+    const maxVisiblePages = 5;
+    const pages = [];
+    
+    if (totalPages <= maxVisiblePages) {
+      // Если общее количество страниц меньше или равно максимальному видимому, 
+      // просто показываем все страницы
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Определяем диапазон страниц для отображения
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+      let endPage = startPage + maxVisiblePages - 1;
+      
+      // Если endPage превышает totalPages, корректируем
+      if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
       }
     }
+    
+    return pages;
+  };
 
-    // Всегда показываем последнюю страницу
-    if (totalPages > 1) {
-      pages.push(totalPages)
-    }
-
-    // Сортируем и возвращаем уникальные номера страниц
-    return [...new Set(pages)].sort((a, b) => a - b)
-  }
-
-  const pageNumbers = getPageNumbers()
+  const pageNumbers = getPageRange();
 
   return (
-    <div className="flex justify-center items-center space-x-1 mt-6">
-      {/* Кнопка "Предыдущая страница" */}
-      {currentPage > 1 ? (
-        <Link
-          href={`${basePath}${
-            currentPage === 2 ? '' : `?page=${currentPage - 1}`
-          }`}
-          className="px-3 py-1 rounded border hover:bg-gray-100 transition-colors">
-          &larr; Назад
-        </Link>
-      ) : (
-        <span className="px-3 py-1 rounded border opacity-50 cursor-not-allowed">
-          &larr; Назад
-        </span>
-      )}
+    <div className="flex justify-center items-center mt-10">
+      <div className="inline-flex rounded-md shadow-sm bg-white dark:bg-gray-800 overflow-hidden">
+        {/* Кнопка "Предыдущая страница" */}
+        {currentPage > 1 ? (
+          <Link
+            href={`${basePath}${currentPage === 2 ? '' : `?page=${currentPage - 1}`}`}
+            className="flex items-center px-4 py-2 text-sm font-medium border-r border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Перейти на предыдущую страницу"
+          >
+            <ChevronLeft size={18} className="mr-1" />
+            Назад
+          </Link>
+        ) : (
+          <span className="flex items-center px-4 py-2 text-sm font-medium border-r border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+            <ChevronLeft size={18} className="mr-1" />
+            Назад
+          </span>
+        )}
 
-      {/* Номера страниц */}
-      <div className="flex items-center">
-        {pageNumbers.map((pageNumber, index) => {
-          // Добавляем многоточие, если есть пропуски в номерах страниц
-          if (index > 0 && pageNumber > pageNumbers[index - 1] + 1) {
-            return (
-              <span
-                key={`ellipsis-${index}`}
-                className="px-3 py-1 mx-1">
-                ...
-              </span>
-            )
-          }
+        {/* Номера страниц */}
+        {pageNumbers.map((pageNumber) => (
+          <Link
+            key={pageNumber}
+            href={`${basePath}${pageNumber === 1 ? '' : `?page=${pageNumber}`}`}
+            className={`px-4 py-2 text-sm font-medium border-r border-gray-200 dark:border-gray-700 ${
+              currentPage === pageNumber
+                ? 'bg-blue-600 text-white border-blue-600 dark:border-blue-700 z-10 relative'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            } transition-colors`}
+            aria-current={currentPage === pageNumber ? 'page' : undefined}
+            aria-label={`Страница ${pageNumber}`}
+          >
+            {pageNumber}
+          </Link>
+        ))}
 
-          return (
-            <Link
-              key={pageNumber}
-              href={`${basePath}${
-                pageNumber === 1 ? '' : `?page=${pageNumber}`
-              }`}
-              className={`px-3 py-1 mx-1 rounded ${
-                currentPage === pageNumber
-                  ? 'bg-blue-600 text-white'
-                  : 'border hover:bg-gray-100'
-              }`}>
-              {pageNumber}
-            </Link>
-          )
-        })}
+        {/* Кнопка "Следующая страница" */}
+        {currentPage < totalPages ? (
+          <Link
+            href={`${basePath}?page=${currentPage + 1}`}
+            className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Перейти на следующую страницу"
+          >
+            Вперёд
+            <ChevronRight size={18} className="ml-1" />
+          </Link>
+        ) : (
+          <span className="flex items-center px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 cursor-not-allowed">
+            Вперёд
+            <ChevronRight size={18} className="ml-1" />
+          </span>
+        )}
       </div>
-
-      {/* Кнопка "Следующая страница" */}
-      {currentPage < totalPages ? (
-        <Link
-          href={`${basePath}?page=${currentPage + 1}`}
-          className="px-3 py-1 rounded border hover:bg-gray-100 transition-colors">
-          Вперёд &rarr;
-        </Link>
-      ) : (
-        <span className="px-3 py-1 rounded border opacity-50 cursor-not-allowed">
-          Вперёд &rarr;
-        </span>
-      )}
     </div>
   )
 } 

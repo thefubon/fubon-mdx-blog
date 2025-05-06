@@ -164,7 +164,7 @@ export function MiniPlayer() {
               variant="ghost"
               size="icon"
               className="rounded-full hidden sm:flex"
-              onClick={() => setVolume(volume === 0 ? 1 : 0)}>
+              onClick={() => setVolume(volume === 0 ? 0.5 : 0)}>
               {volume === 0 ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </Button>
             

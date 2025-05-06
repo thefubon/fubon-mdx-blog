@@ -12,7 +12,7 @@ export default function Header() {
     <MenuProvider>
       <header
         className="px-[var(--padding-x)] sticky top-0 z-50">
-        <div className="flex justify-between items-center h-[clamp(80px,10vw,140px)]">
+        <div className="flex justify-between items-center gap-x-4 h-[clamp(80px,10vw,140px)]">
           <div>
             <Logo />
           </div>
@@ -22,6 +22,7 @@ export default function Header() {
               <WaveButton
                 size="lg"
                 pulseWhenIdle={true}
+                showTrackName={true}
               />
             </SoundWrapper>
 
@@ -30,7 +31,7 @@ export default function Header() {
                 href="mailto:hello@fubon.ru"
                 className="hidden md:inline-block"
                 aria-label="Отправить Email">
-                Контакты
+                @ Почта
               </ButtonContact>
             </SoundWrapper>
 
