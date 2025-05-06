@@ -24,6 +24,7 @@ interface MusicPlayerStore {
   toggleRepeat: () => void;
   nextTrack: () => void;
   prevTrack: () => void;
+  stopPlayback: () => void;
 }
 
 export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
@@ -116,5 +117,8 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
     const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
 
     set({ currentTrack: playlist[prevIndex] });
+  },
+  stopPlayback: () => {
+    set({ isPlaying: false });
   },
 }));

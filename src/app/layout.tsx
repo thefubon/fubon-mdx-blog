@@ -6,6 +6,8 @@ import { SoundProvider } from '@/contexts/SoundProvider'
 
 import Header from '@/components/global/header'
 import Footer from '@/components/global/footer'
+import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
+import { AmbientSoundProvider } from '@/contexts/AmbientSoundProvider'
 
 export const metadata: Metadata = {
   title: 'Fubon | Креативное агентство по дизайну и разработке.',
@@ -43,11 +45,16 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange>
-          <SoundProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </SoundProvider>
+          <MusicPlayerProvider>
+            <AmbientSoundProvider>
+              <SoundProvider>
+                <Header />
+                <main>{children}</main>
+                <Footer />
+                
+              </SoundProvider>
+            </AmbientSoundProvider>
+          </MusicPlayerProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -3,7 +3,7 @@
 import Container from '@/components/ui/Container'
 import Heading from '@/components/ui/Heading'
 import PageWrapper from '@/components/PageWrapper'
-import MusicPlayer from '@/components/MusicPlayer'
+import MusicPlayer from '@/components/music-player'
 
 export default function MusicPage() {
   return (

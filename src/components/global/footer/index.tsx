@@ -1,3 +1,5 @@
+import { MiniPlayer } from "@/components/mini-player";
+
 export default function Footer() {
   return (
     <>
@@ -6,6 +8,8 @@ export default function Footer() {
           &copy; 2004-{new Date().getFullYear()} Fubon.
         </div>
       </footer>
+
+      <MiniPlayer />
     </>
   )
 }

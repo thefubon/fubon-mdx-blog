@@ -6,7 +6,7 @@ import { MenuProvider } from '@/contexts/LogoProvider'
 import Logo from './Logo'
 import ButtonContact from './ButtonContact'
 import { ButtonDropdown } from './ButtonDropdown'
-import Player from '@/components/Player'
+import { WaveButton } from '@/components/wave-button'
 
 
 export default function Header() {
@@ -19,7 +19,12 @@ export default function Header() {
           </div>
 
           <div className="header__end">
-            <SoundWrapper><Player /></SoundWrapper>
+            <SoundWrapper>
+              <WaveButton
+                size="lg"
+                pulseWhenIdle={true}
+              />
+            </SoundWrapper>
 
             <SoundWrapper>
               <ButtonContact
