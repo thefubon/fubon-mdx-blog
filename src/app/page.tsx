@@ -63,7 +63,7 @@ export default function Home() {
                   <Link
                     key={slug}
                     href={`/blog/${slug}`}
-                    className="hover:text-blue-600 transition-colors cursor-pointer md:cursor-none group">
+                    className="hover:text-blue-600 transition-colors group">
                     <div className="rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors h-full flex flex-col">
                       {/* Добавляем обложку поста */}
                       {cover && (
