@@ -234,7 +234,7 @@ export function WaveButton({
     <div className="relative">
       {shouldShowTrackName && isMobile && (
         <button
-          className="absolute -top-2 -right-2 z-10 size-5 rounded-full bg-red-500 flex items-center justify-center hover:bg-red-600 transition-colors shadow-sm"
+          className="absolute -top-1.5 -right-1.5 z-10 size-5 rounded-full bg-red-500 flex items-center justify-center hover:bg-red-600 transition-colors shadow-sm"
           onClick={handleCloseClick}
           aria-label="Stop playback">
           <X className="size-3 text-white" />

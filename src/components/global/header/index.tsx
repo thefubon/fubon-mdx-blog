@@ -5,13 +5,13 @@ import Logo from './Logo'
 import ButtonContact from './ButtonContact'
 import { ButtonDropdown } from './ButtonDropdown'
 import { WaveButton } from '@/components/wave-button'
+import { AtSign } from 'lucide-react'
 
 
 export default function Header() {
   return (
     <MenuProvider>
-      <header
-        className="px-[var(--padding-x)] sticky top-0 z-50">
+      <header className="px-[var(--padding-x)] sticky top-0 z-50">
         <div className="flex justify-between items-center gap-x-4 h-[clamp(80px,10vw,140px)]">
           <div>
             <Logo />
@@ -31,7 +31,10 @@ export default function Header() {
                 href="mailto:hello@fubon.ru"
                 className="hidden md:inline-block"
                 aria-label="Отправить Email">
-                @ Почта
+                <div className="flex items-center gap-x-2">
+                  <AtSign />
+                  <span>Почта</span>
+                </div>
               </ButtonContact>
             </SoundWrapper>
 
