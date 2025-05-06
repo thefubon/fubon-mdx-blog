@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import BlogFilters from '@/components/blog/BlogFilters'
-import BlogPostGrid from '@/components/blog/BlogPostGrid'
+import BlogPostGrid from './BlogPostGrid'
 import type { Post } from '@/lib/types'
 import { SortMode } from '@/components/blog/BlogFilters'
 import { filterPosts } from '@/lib/blog-client'
@@ -46,7 +46,7 @@ export default function BlogComponents({ posts }: BlogComponentsProps) {
       />
       <BlogPostGrid 
         posts={filteredPosts} 
-        onFilteredCountChange={(count) => {
+        onFilteredCountChange={(count: number) => {
           // Используем обратный вызов для передачи счетчика вверх, если нужно
           console.log(`Отфильтровано ${count} постов`);
         }}

@@ -74,7 +74,7 @@ export default async function BlogPage(props: PageProps) {
                   </Link>
                 )}
                 
-                <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl mb-4 text-gray-900 dark:text-white leading-tight">
+                <h1 className="font-bold mb-4 text-gray-900 dark:text-white leading-tight">
                   {latestPost.frontmatter.title}
                 </h1>
                 
