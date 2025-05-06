@@ -335,7 +335,7 @@ export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostG
   
   // Отображение в виде сетки 4x4 (по умолчанию)
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {sortedPosts.map((post) => renderPostCard(post))}
     </div>
   )
