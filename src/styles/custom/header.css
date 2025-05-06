@@ -2,7 +2,7 @@
 ==================================== */
 
 .header {
-  @apply px-[var(--padding-x)] sticky top-0 z-50;
+  @apply px-[var(--padding-x)] z-50;
 }
 
 /* Header Container */
