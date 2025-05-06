@@ -231,7 +231,7 @@ export function WaveButton({
   }
   
   return (
-    <div className="relative">
+    <div className="relative z-10">
       {shouldShowTrackName && isMobile && (
         <button
           className="absolute -top-1.5 -right-1.5 z-10 size-5 rounded-full bg-red-500 flex items-center justify-center hover:bg-red-600 transition-colors shadow-sm"
