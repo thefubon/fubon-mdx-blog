@@ -11,7 +11,7 @@ import BlogSkeleton from '@/components/blog/skeletons/BlogSkeleton'
 import BlogComponents from '@/components/blog/BlogComponents'
 
 // Константа для количества постов на странице
-const POSTS_PER_PAGE = 8
+const POSTS_PER_PAGE = 12
 
 // Функция для страницы блога с учетом номера страницы в параметрах
 interface PageProps {
