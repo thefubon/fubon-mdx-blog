@@ -1,4 +1,4 @@
-// src/components/Tags.tsx
+// src/components/blog/Tags.tsx
 import Link from 'next/link'
 
 interface TagsProps {
@@ -18,4 +18,4 @@ export default function Tags({ tags }: TagsProps) {
       ))}
     </div>
   )
-}
+} 

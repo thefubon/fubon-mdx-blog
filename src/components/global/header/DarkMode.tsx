@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { useTheme } from 'next-themes'
-import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
+import { Moon, Sun, Laptop } from 'lucide-react'
 
 export function DarkMode() {
   const { theme, setTheme } = useTheme()
@@ -19,35 +19,39 @@ export function DarkMode() {
   }
 
   return (
-    <>
-      <div className="flex items-center gap-x-2">
-        <Button
-          variant={theme === 'light' ? 'default' : 'outline'}
-          className={`cursor-pointer transition-all ${
-            theme === 'light' ? '' : ''
-          }`}
-          onClick={() => setTheme('light')}>
-          Light
-        </Button>
-
-        <Button
-          variant={theme === 'dark' ? 'default' : 'outline'}
-          className={`cursor-pointer transition-all ${
-            theme === 'dark' ? '' : ''
-          }`}
-          onClick={() => setTheme('dark')}>
-          Dark
-        </Button>
-
-        <Button
-          variant={theme === 'system' ? 'default' : 'outline'}
-          className={`cursor-pointer transition-all ${
-            theme === 'system' ? '' : ''
-          }`}
-          onClick={() => setTheme('system')}>
-          System
-        </Button>
-      </div>
-    </>
+    <div className="flex items-center gap-1 p-1 rounded-full bg-muted">
+      <button
+        onClick={() => setTheme('light')}
+        className={`size-8 flex items-center justify-center rounded-full transition-all ${
+          theme === 'light'
+            ? 'bg-white text-fubon-primary shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        aria-label="Светлая тема">
+        <Sun className="size-4" />
+      </button>
+      
+      <button
+        onClick={() => setTheme('dark')}
+        className={`size-8 flex items-center justify-center rounded-full transition-all ${
+          theme === 'dark'
+            ? 'bg-foreground text-fubon-primary shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        aria-label="Темная тема">
+        <Moon className="size-4" />
+      </button>
+      
+      <button
+        onClick={() => setTheme('system')}
+        className={`size-8 flex items-center justify-center rounded-full transition-all ${
+          theme === 'system'
+            ? 'bg-secondary text-fubon-primary shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        aria-label="Системная тема">
+        <Laptop className="size-4" />
+      </button>
+    </div>
   )
 }

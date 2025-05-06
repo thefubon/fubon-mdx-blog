@@ -1,8 +1,8 @@
-// src/components/SearchBar.tsx
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Search } from 'lucide-react'
 
 // Создаем клиентский компонент, который использует useSearchParams
 function SearchForm() {
@@ -33,18 +33,21 @@ function SearchForm() {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex gap-2 mb-6">
-      <input
-        type="text"
-        placeholder="Поиск по блогу..."
-        className="flex-grow px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        aria-label="Поисковый запрос"
-      />
+      className="flex items-center gap-2">
+      <div className="flex-grow relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <input
+          type="text"
+          placeholder="Поиск по блогу..."
+          className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Поисковый запрос"
+        />
+      </div>
       <button
         type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+        className="px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap">
         Найти
       </button>
     </form>
@@ -56,14 +59,17 @@ export default function SearchBar() {
   return (
     <Suspense
       fallback={
-        <div className="flex gap-2 mb-6">
-          <div className="flex-grow px-4 py-2 border rounded-md bg-gray-100 animate-pulse">
-            Загрузка...
+        <div className="flex gap-2 items-center">
+          <div className="flex-grow relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <div className="w-full pl-10 pr-4 py-3 border rounded-lg bg-gray-100 dark:bg-gray-800 dark:border-gray-700 animate-pulse">
+              Загрузка...
+            </div>
           </div>
-          <div className="px-4 py-2 bg-gray-300 rounded-md">Найти</div>
+          <div className="px-5 py-3 bg-gray-300 rounded-lg whitespace-nowrap">Найти</div>
         </div>
       }>
       <SearchForm />
     </Suspense>
   )
-}
+} 

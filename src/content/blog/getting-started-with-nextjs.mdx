@@ -1,0 +1,355 @@
+---
+title: "Начало работы с Next.js: руководство для новичков"
+publishedAt: "2023-04-10"
+description: "Полное руководство по началу работы с фреймворком Next.js для создания React-приложений"
+tags: ["nextjs", "react", "javascript", "tutorial"]
+category: "Веб-разработка"
+cover: ""
+---
+
+# Начало работы с Next.js: руководство для новичков
+
+Next.js — это фреймворк для React, который предоставляет множество встроенных функций для создания высокопроизводительных веб-приложений. В этой статье мы рассмотрим основы Next.js и создадим простое приложение с нуля.
+
+## Что такое Next.js?
+
+Next.js — это фреймворк React, который предлагает:
+
+- **Серверный рендеринг (SSR)** — генерация HTML на сервере для каждого запроса
+- **Статическую генерацию (SSG)** — генерация HTML во время сборки
+- **Инкрементальную статическую регенерацию (ISR)** — обновление статических страниц без полной пересборки
+- **Встроенную маршрутизацию** — основанную на файловой системе
+- **Автоматическое разделение кода** — для более быстрой загрузки страниц
+- **Встроенную оптимизацию изображений** — для повышения производительности
+- **Поддержку API-маршрутов** — для создания серверных API-эндпоинтов
+
+## Установка и создание проекта
+
+Для создания нового проекта Next.js вам понадобится Node.js (v14 или выше). Выполните следующую команду в терминале:
+
+```bash
+npx create-next-app my-next-app
+# или с помощью yarn
+yarn create next-app my-next-app
+# или с помощью pnpm
+pnpm create next-app my-next-app
+```
+
+Это создаст новый проект с базовой структурой. После установки перейдите в папку проекта и запустите сервер разработки:
+
+```bash
+cd my-next-app
+npm run dev
+# или
+yarn dev
+# или
+pnpm dev
+```
+
+Теперь вы можете открыть [http://localhost:3000](http://localhost:3000) в браузере и увидеть вашу работающую Next.js-приложение.
+
+## Структура проекта
+
+После создания проекта вы увидите следующую структуру файлов:
+
+```
+my-next-app/
+  ├── node_modules/
+  ├── public/          # Статические файлы
+  │   ├── favicon.ico
+  │   └── vercel.svg
+  ├── pages/           # Маршруты приложения
+  │   ├── _app.js      # Компонент верхнего уровня
+  │   ├── api/         # API-маршруты
+  │   │   └── hello.js
+  │   └── index.js     # Главная страница
+  ├── styles/          # CSS-файлы
+  │   ├── globals.css
+  │   └── Home.module.css
+  ├── .gitignore
+  ├── next.config.js   # Конфигурация Next.js
+  ├── package.json
+  └── README.md
+```
+
+## Создание страниц
+
+В Next.js маршрутизация основана на файловой системе. Файлы в директории `pages` автоматически становятся маршрутами.
+
+### Создание простой страницы
+
+Создадим новую страницу `about.js` в директории `pages`:
+
+```jsx
+// pages/about.js
+export default function About() {
+  return (
+    <div>
+      <h1>О нас</h1>
+      <p>Это страница о нашем проекте.</p>
+    </div>
+  );
+}
+```
+
+Теперь вы можете открыть [http://localhost:3000/about](http://localhost:3000/about) и увидеть созданную страницу.
+
+### Динамические маршруты
+
+Next.js поддерживает динамические маршруты. Создадим директорию `posts` и файл `[id].js` внутри неё:
+
+```jsx
+// pages/posts/[id].js
+import { useRouter } from 'next/router';
+
+export default function Post() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  return (
+    <div>
+      <h1>Пост #{id}</h1>
+      <p>Содержимое поста...</p>
+    </div>
+  );
+}
+```
+
+Теперь вы можете открыть [http://localhost:3000/posts/1](http://localhost:3000/posts/1) или [http://localhost:3000/posts/2](http://localhost:3000/posts/2) и увидеть разные страницы для каждого ID.
+
+## Навигация между страницами
+
+Next.js предоставляет компонент `Link` для навигации между страницами:
+
+```jsx
+// pages/index.js
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <div>
+      <h1>Главная страница</h1>
+      <nav>
+        <ul>
+          <li>
+            <Link href="/about">О нас</Link>
+          </li>
+          <li>
+            <Link href="/posts/1">Пост #1</Link>
+          </li>
+          <li>
+            <Link href="/posts/2">Пост #2</Link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+}
+```
+
+## Получение данных
+
+Next.js предоставляет несколько способов для получения данных в ваших страницах.
+
+### getStaticProps (Статическая генерация)
+
+Функция `getStaticProps` выполняется во время сборки и позволяет передать данные в компонент страницы:
+
+```jsx
+// pages/blog.js
+export default function Blog({ posts }) {
+  return (
+    <div>
+      <h1>Блог</h1>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export async function getStaticProps() {
+  // В реальном приложении здесь будет запрос к API или базе данных
+  const posts = [
+    { id: 1, title: 'Начало работы с Next.js' },
+    { id: 2, title: 'React хуки в деталях' },
+    { id: 3, title: 'CSS Grid vs Flexbox' },
+  ];
+
+  return {
+    props: {
+      posts,
+    },
+  };
+}
+```
+
+### getServerSideProps (Серверный рендеринг)
+
+Функция `getServerSideProps` выполняется на каждый запрос, что полезно для данных, которые часто меняются:
+
+```jsx
+// pages/dashboard.js
+export default function Dashboard({ data }) {
+  return (
+    <div>
+      <h1>Панель управления</h1>
+      <p>Данные: {JSON.stringify(data)}</p>
+    </div>
+  );
+}
+
+export async function getServerSideProps() {
+  // Эта функция выполняется на каждый запрос
+  const res = await fetch('https://api.example.com/data');
+  const data = await res.json();
+
+  return {
+    props: { data },
+  };
+}
+```
+
+## API-маршруты
+
+Next.js позволяет создавать API-маршруты внутри вашего приложения. Создадим простой API-эндпоинт:
+
+```jsx
+// pages/api/users.js
+export default function handler(req, res) {
+  const users = [
+    { id: 1, name: 'Джон Доу' },
+    { id: 2, name: 'Джейн Доу' },
+  ];
+
+  res.status(200).json(users);
+}
+```
+
+Теперь вы можете получить доступ к API по адресу [http://localhost:3000/api/users](http://localhost:3000/api/users).
+
+## Стилизация компонентов
+
+Next.js поддерживает несколько способов стилизации компонентов.
+
+### CSS Modules
+
+CSS Modules изолируют стили компонентов:
+
+```css
+/* styles/Button.module.css */
+.button {
+  padding: 0.5rem 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #0060df;
+}
+```
+
+```jsx
+// components/Button.js
+import styles from '../styles/Button.module.css';
+
+export default function Button({ children }) {
+  return (
+    <button className={styles.button}>
+      {children}
+    </button>
+  );
+}
+```
+
+### Глобальные стили
+
+Глобальные стили можно добавить в файле `pages/_app.js`:
+
+```jsx
+// pages/_app.js
+import '../styles/globals.css';
+
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />;
+}
+
+export default MyApp;
+```
+
+### CSS-in-JS
+
+Next.js поддерживает различные библиотеки CSS-in-JS, например, styled-components:
+
+```jsx
+// components/StyledButton.js
+import styled from 'styled-components';
+
+const StyledButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #0060df;
+  }
+`;
+
+export default function Button({ children }) {
+  return <StyledButton>{children}</StyledButton>;
+}
+```
+
+## Оптимизация изображений
+
+Next.js предоставляет компонент `Image` для автоматической оптимизации изображений:
+
+```jsx
+import Image from 'next/image';
+
+export default function Avatar() {
+  return (
+    <div>
+      <Image
+        src="/images/profile.jpg"
+        alt="Аватар пользователя"
+        width={64}
+        height={64}
+      />
+    </div>
+  );
+}
+```
+
+## Деплой Next.js приложения
+
+### Vercel (рекомендуется)
+
+Самый простой способ развернуть Next.js-приложение — использовать платформу Vercel (создатели Next.js):
+
+1. Создайте аккаунт на [vercel.com](https://vercel.com)
+2. Подключите ваш GitHub/GitLab/Bitbucket репозиторий
+3. Настройте проект и нажмите "Deploy"
+
+### Другие платформы
+
+Next.js можно развернуть на любой платформе, поддерживающей Node.js:
+- Netlify
+- DigitalOcean App Platform
+- Heroku
+- AWS Amplify
+- Firebase Hosting (с Cloud Functions)
+
+## Заключение
+
+Next.js — мощный фреймворк для создания React-приложений с множеством встроенных функций, которые решают распространенные проблемы веб-разработки. Он предлагает отличный опыт для разработчиков и оптимизированную производительность для пользователей.
+
+В этой статье мы рассмотрели только основы Next.js. Дальнейшее изучение документации и экспериментирование с примерами поможет вам раскрыть весь потенциал этого замечательного фреймворка. 

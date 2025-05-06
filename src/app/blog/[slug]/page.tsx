@@ -1,11 +1,11 @@
 // src/app/blog/[slug]/page.tsx
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { notFound } from 'next/navigation'
-import { getAllPostSlugs, getPostBySlug, getRelatedPosts } from '@/lib/mdx'
+import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getAllPosts } from '@/lib/mdx'
 import MDXComponents from '@/components/MDXComponents'
-import FormattedDate from '@/components/FormattedDate'
-import Tags from '@/components/Tags'
-import RelatedPosts from '@/components/RelatedPosts'
+import FormattedDate from '@/components/blog/FormattedDate'
+import Tags from '@/components/blog/Tags'
+import RelatedPosts from '@/components/blog/RelatedPosts'
 import Link from 'next/link'
 
 export async function generateStaticParams() {
@@ -35,6 +35,7 @@ export default async function BlogPost(props: {
     const slug = (await props.params).slug
     const { frontmatter, content } = getPostBySlug(slug)
     const relatedPosts = getRelatedPosts(slug, frontmatter.tags || [], 3)
+    const allPosts = getAllPosts();
 
     return (
       <div className="max-w-3xl mx-auto py-10 px-4">
@@ -81,7 +82,12 @@ export default async function BlogPost(props: {
         </article>
 
         {/* Добавляем компонент похожих статей */}
-        <RelatedPosts posts={relatedPosts} />
+        <RelatedPosts 
+          posts={relatedPosts} 
+          currentSlug={slug}
+          allPosts={allPosts}
+          currentTags={frontmatter.tags}
+        />
       </div>
     )
   } catch (error) {

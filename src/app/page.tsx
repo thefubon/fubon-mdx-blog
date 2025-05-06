@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getAllPosts } from '@/lib/mdx'
 import PageWrapper from '@/components/PageWrapper'
-import CustomCursor from '@/components/CustomCursor'
 import {
   Card,
   CardContent,
@@ -64,8 +63,7 @@ export default function Home() {
                   <Link
                     key={slug}
                     href={`/blog/${slug}`}
-                    className="hover:text-blue-600 transition-colors hover-cursor group">
-                    <CustomCursor />
+                    className="hover:text-blue-600 transition-colors cursor-pointer md:cursor-none group">
                     <div className="rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors h-full flex flex-col">
                       {/* Добавляем обложку поста */}
                       {cover && (

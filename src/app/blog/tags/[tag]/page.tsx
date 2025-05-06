@@ -1,10 +1,11 @@
 import Link from 'next/link'
-import FormattedDate from '@/components/FormattedDate'
-import SearchBar from '@/components/SearchBar'
+import FormattedDate from '@/components/blog/FormattedDate'
+import SearchBar from '@/components/blog/SearchBar'
 import { getAllPosts } from '@/lib/mdx'
-import Tags from '@/components/Tags'
+import Tags from '@/components/blog/Tags'
+import Container from '@/components/ui/Container'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const posts = getAllPosts()
   const tags = new Set<string>()
 
@@ -30,18 +31,51 @@ export default async function TagPage(props: {
   const filteredPosts = allPosts.filter((post) =>
     post.frontmatter.tags?.includes(tag)
   )
+  
+  // Собираем все уникальные теги для навигации
+  const allTags = Array.from(
+    new Set(
+      allPosts
+        .flatMap((post) => post.frontmatter.tags || [])
+        .filter(Boolean)
+    )
+  ).sort()
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
+    <Container className="py-10">
+      {/* Tags Navigation */}
+      <div className="mb-8 overflow-x-auto scrollbar-hide pb-2">
+        <div className="flex gap-2 whitespace-nowrap">
+          <Link
+            href="/blog"
+            className="inline-flex items-center justify-center h-9 px-4 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-medium rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          >
+            Все
+          </Link>
+          
+          {allTags.map((t) => (
+            t === tag ? (
+              <p 
+                key={t}
+                className="inline-flex items-center justify-center h-9 px-4 bg-gray-900 text-white text-sm font-medium rounded-full cursor-default"
+              >
+                {t}
+              </p>
+            ) : (
+              <Link
+                key={t}
+                href={`/blog/tags/${t}`}
+                className="inline-flex items-center justify-center h-9 px-4 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-medium rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                {t}
+              </Link>
+            )
+          ))}
+        </div>
+      </div>
+
       <h1 className="text-4xl font-bold mb-2">Тег: #{tag}</h1>
-      <p className="text-gray-600 mb-8">
-        {filteredPosts.length}{' '}
-        {filteredPosts.length === 1
-          ? 'статья'
-          : filteredPosts.length > 1 && filteredPosts.length < 5
-          ? 'статьи'
-          : 'статей'}
-      </p>
+      <div className="text-gray-600 dark:text-gray-400 mb-8"></div>
 
       <SearchBar />
 
@@ -60,23 +94,23 @@ export default async function TagPage(props: {
                 </h2>
               </Link>
 
-              <div className="text-sm text-gray-500 mb-3">
+              <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                 <FormattedDate date={publishedAt} /> • {readingTime}
               </div>
 
-              <p className="text-gray-700">{description}</p>
+              <p className="text-gray-700 dark:text-gray-300">{description}</p>
 
               {tags && <Tags tags={tags} />}
 
               <Link
                 href={`/blog/${slug}`}
-                className="mt-4 inline-block text-blue-600 hover:underline">
+                className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline">
                 Читать далее →
               </Link>
             </article>
           )
         })}
       </div>
-    </div>
+    </Container>
   )
 }

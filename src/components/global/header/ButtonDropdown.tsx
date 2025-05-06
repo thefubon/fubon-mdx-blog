@@ -11,10 +11,10 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { menuItems } from '@/data/navbar'
-import { MailPlus } from 'lucide-react'
 import SoundWrapper from '@/components/SoundWrapper'
 import { MenuContext } from '@/contexts/LogoProvider'
 import ButtonDropdownSettings from './ButtonDropdownSettings'
+import SearchDropdown from './SearchDropdown'
 
 const ButtonDropdownComponent = () => {
   const { updateMenuState } = useContext(MenuContext)
@@ -130,10 +130,10 @@ const ButtonDropdownComponent = () => {
   }, [isMenuOpen, showBackground, isFading, isMobile, updateMenuState])
 
   return (
-    <div className="header__dropdown">
+    <div>
       {showBackground && isMobile && (
         <div
-          className="dropdown--background"
+          className="bg-foreground dark:bg-background fixed inset-0"
           style={{
             animation: isFading
               ? `fade-out ${FADE_OUT_DURATION}ms ease`
@@ -143,7 +143,7 @@ const ButtonDropdownComponent = () => {
 
       {showBackground && !isMobile && (
         <div
-          className="dropdown--background-mobile"
+          className="bg-muted/80 backdrop-blur-sm fixed inset-0"
           style={{
             animation: isFading
               ? `fade-out ${FADE_OUT_DURATION}ms ease`
@@ -154,67 +154,76 @@ const ButtonDropdownComponent = () => {
       <SoundWrapper>
         <button
           ref={buttonElement}
-          className={`group animation-trigger dropdown-button ${
-            isMenuOpen ? 'open' : ''
+          className={`group animation-trigger bg-primary hover:bg-primary/80 text-primary-foreground relative transition-colors duration-300 flex justify-center items-center gap-x-4 whitespace-nowrap cursor-pointer rounded-full h-12 w-12 md:w-auto md:h-[var(--button-height)] md:px-[var(--button-padding-x)] text-[length:var(--button-font-size)]  ${
+            isMenuOpen ? 'bg-primary/90' : ''
           }`}
           aria-label="Кнопка открытия выпадающего меню"
           onClick={toggleMenu}>
-          <div className="dropdown-button__text--container">
+          <div className="hidden relative w-full overflow-hidden md:inline-flex">
             <span
-              className={`dropdown-button__text ${
+              className={`uppercase whitespace-nowrap transition-transform duration-500 ${
                 isMenuOpen ? '-translate-y-full' : ''
               }`}>
               {menuButton}
             </span>
             <span
-              className={`dropdown-button__text open ${
+              className={`uppercase whitespace-nowrap transition-transform duration-500 absolute top-full ${
                 isMenuOpen ? '-translate-y-full' : ''
               }`}>
               {menuButton}
             </span>
           </div>
 
-          <div className={`dropdown-button__dots ${isMenuOpen ? 'open' : ''}`}>
-            <span className="dropdown-button__dots--item"></span>
-            <span className="dropdown-button__dots--item"></span>
+          <div
+            className={`flex items-center gap-x-1 group-hover:rotate-90 transition-transform duration-300 ${
+              isMenuOpen ? 'rotate-90' : ''
+            }`}>
+            <span className="size-1.5 bg-primary-foreground rounded-full block"></span>
+            <span className="size-1.5 bg-primary-foreground rounded-full block"></span>
           </div>
         </button>
       </SoundWrapper>
 
       <div
         ref={menuElement}
-        className={`dropdown-menu ${
+        className={`absolute inset-x-0 space-y-4 mt-6 md:mt-4 px-6 md:px-0 ${
           isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         data-lenis-prevent>
         <ul
-          className={`dropdown-list ${
-            isMenuOpen ? 'dropdown-list--open' : 'dropdown-list--closed'
+          className={`bg-card text-card-foreground md:mt-4 py-6 space-y-0.5 rounded-lg transition-all duration-300 uppercase shadow-md ${
+            isMenuOpen
+              ? 'opacity-100 translate-z-0'
+              : 'opacity-0 translate-y-[5.5em] rotate-[3.5deg] delay-150'
           }`}>
           {menuItems.map((item) =>
             currentUrl === item.link ? (
               <li
                 key={item.link}
-                className="dropdown-list__item active">
+                className="py-2 px-6 relative flex justify-between items-center hover:bg-transparent text-[length:var(--dropdown-text)]">
                 <span>{item.name}</span>
-                <span className="dropdown-list__item--dot"></span>
+                <span className="size-3 bg-primary rounded-full block"></span>
               </li>
             ) : (
               <li
                 key={item.link}
-                className="dropdown-list__item group">
+                className="group py-2 px-6 relative hover:bg-muted transition-all duration-300 flex justify-between items-center text-[length:var(--dropdown-text)]">
                 <Link
                   href={item.link}
                   aria-label={item.name}
                   onClick={toggleMenu}
-                  className="absolute inset-0"
+                  className="absolute z-10 inset-0"
                 />
-                <div className="dropdown-list__text--container">
-                  <span className="dropdown-list__text">{item.name}</span>
-                  <span className="dropdown-list__text open">{item.name}</span>
+                <div className="relative w-full overflow-hidden md:inline-flex cursor-pointer">
+                  <span className="whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
+                    {item.name}
+                  </span>
+                  <span className="whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out hidden md:block absolute top-full group-hover:-translate-y-full">
+                    {item.name}
+                  </span>
                 </div>
 
-                <span className="dropdown-list__item-arrow--icon">
+                <span className="opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none -translate-x-4 group-hover:translate-x-0 text-primary">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -236,24 +245,21 @@ const ButtonDropdownComponent = () => {
         </ul>
 
         <div
-          className={`dropdown-section-2 flex flex-col gap-4 ${
+          className={`bg-card text-card-foreground p-6 rounded-lg shadow-md transition duration-[400ms] flex flex-col gap-4 ${
             isMenuOpen
-              ? 'dropdown-section-2--open'
-              : 'dropdown-section-2--closed'
+              ? 'opacity-100 translate-z-0'
+              : 'opacity-0 translate-y-[7.75em] rotate-[-3.5deg] delay-100'
           }`}>
           <ButtonDropdownSettings />
         </div>
 
         <div
-          className={`dropdown-section-3 ${
+          className={`bg-card text-card-foreground p-6 rounded-lg shadow-md transition duration-500 ${
             isMenuOpen
-              ? 'dropdown-section-3--open'
-              : 'dropdown-section-3--closed'
+              ? 'opacity-100 translate-z-0'
+              : 'opacity-0 translate-y-[5.75em] rotate-[-3.5deg] delay-75'
           }`}>
-          <span>
-            <MailPlus size="32" />
-          </span>
-          <span>Email</span>
+          <SearchDropdown onSearch={toggleMenu} />
         </div>
       </div>
     </div>

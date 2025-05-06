@@ -1,15 +1,28 @@
-// src/components/RelatedPosts.tsx
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
-import FormattedDate from './FormattedDate'
-import { Post } from '@/lib/mdx'
+import FormattedDate from '@/components/blog/FormattedDate'
+import { Post } from '@/lib/types'
+import { getRelatedPostsClient } from '@/lib/blog-client'
 
 interface RelatedPostsProps {
   posts: Post[]
+  currentSlug?: string
+  allPosts?: Post[]
+  currentTags?: string[]
 }
 
-export default function RelatedPosts({ posts }: RelatedPostsProps) {
-  if (!posts || posts.length === 0) {
+export default function RelatedPosts({ posts, currentSlug, allPosts, currentTags }: RelatedPostsProps) {
+  // Если есть все необходимые данные для динамического поиска связанных постов
+  let relatedPosts = posts;
+  
+  if (currentSlug && allPosts && currentTags && allPosts.length > 0) {
+    // Используем клиентскую функцию для поиска связанных постов
+    relatedPosts = getRelatedPostsClient(allPosts, currentSlug, currentTags, 3);
+  }
+  
+  if (!relatedPosts || relatedPosts.length === 0) {
     return null
   }
 
@@ -18,7 +31,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
       <h2 className="text-2xl font-bold mb-6">Похожие статьи</h2>
 
       <div className="grid gap-6 md:grid-cols-3">
-        {posts.map((post) => {
+        {relatedPosts.map((post) => {
           const {
             title,
             publishedAt,
@@ -33,7 +46,7 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
             <article
               key={slug}
               className="border rounded-md p-5 hover:shadow-md transition-shadow">
-              {cover && (
+              {cover ? (
                 <div className="mb-4 rounded-md overflow-hidden h-40 relative">
                   <Link href={`/blog/${slug}`}>
                     <Image
@@ -44,6 +57,26 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </Link>
+                </div>
+              ) : (
+                <div className="mb-4 rounded-md overflow-hidden h-40 relative bg-gray-200 dark:bg-gray-800 flex flex-col items-center justify-center">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="32" 
+                    height="32" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor"
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className="text-gray-400 dark:text-gray-500 mb-1"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                  <span className="text-gray-500 dark:text-gray-400 text-xs font-medium">Нет изображения</span>
                 </div>
               )}
 
@@ -91,4 +124,4 @@ export default function RelatedPosts({ posts }: RelatedPostsProps) {
       </div>
     </div>
   )
-}
+} 

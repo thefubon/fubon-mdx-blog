@@ -1,0 +1,220 @@
+---
+title: "TypeScript: 10 советов для повышения качества кода"
+publishedAt: "2023-08-25"
+description: "Практические советы и решения распространенных проблем при использовании TypeScript"
+tags: ["typescript", "javascript", "frontend", "development"]
+category: "JavaScript"
+cover: ""
+---
+
+# TypeScript: 10 советов для повышения качества кода
+
+TypeScript значительно улучшает разработку JavaScript-приложений, добавляя статическую типизацию и множество полезных функций. В этой статье мы рассмотрим 10 практических советов, которые помогут писать более качественный и надежный код на TypeScript.
+
+## 1. Используйте строгий режим
+
+Включение строгого режима в вашем `tsconfig.json` поможет выявить больше потенциальных проблем:
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    // Это включает:
+    // noImplicitAny, noImplicitThis, alwaysStrict,
+    // strictBindCallApply, strictNullChecks,
+    // strictFunctionTypes, strictPropertyInitialization
+  }
+}
+```
+
+## 2. Избегайте типа `any`
+
+Тип `any` отключает проверку типов и лишает вас преимуществ TypeScript:
+
+```typescript
+// Плохо
+function processData(data: any) {
+  return data.length; // Нет проверки существования свойства length
+}
+
+// Хорошо
+function processData(data: string | string[] | { length: number }) {
+  return data.length; // TypeScript проверит, что свойство length существует
+}
+```
+
+## 3. Используйте дженерики для гибкости
+
+Дженерики позволяют создавать многоразовые компоненты и функции:
+
+```typescript
+// Функция, которая работает с любым типом
+function firstElement<T>(arr: T[]): T | undefined {
+  return arr[0];
+}
+
+// Использование
+const numbers = [1, 2, 3];
+const first = firstElement(numbers); // TypeScript выведет тип number
+```
+
+## 4. Используйте дискриминированные объединения
+
+Это мощный способ работы с разными типами данных:
+
+```typescript
+type Shape = 
+  | { kind: 'circle'; radius: number }
+  | { kind: 'rectangle'; width: number; height: number };
+
+function calculateArea(shape: Shape): number {
+  switch (shape.kind) {
+    case 'circle':
+      return Math.PI * shape.radius ** 2;
+    case 'rectangle':
+      return shape.width * shape.height;
+  }
+}
+```
+
+## 5. Определяйте возвращаемые типы функций
+
+Явное указание возвращаемого типа помогает выявлять ошибки и улучшает документацию:
+
+```typescript
+// Хорошо: явно указан возвращаемый тип
+function calculateTotal(items: CartItem[]): number {
+  return items.reduce((total, item) => total + item.price * item.quantity, 0);
+}
+```
+
+## 6. Используйте утилитарные типы
+
+TypeScript предоставляет множество встроенных утилитарных типов:
+
+```typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}
+
+// Только чтение - все поля становятся readonly
+type ReadonlyUser = Readonly<User>;
+
+// Частичный - все поля становятся опциональными
+type PartialUser = Partial<User>;
+
+// Выбрать подмножество полей
+type UserCredentials = Pick<User, 'email' | 'password'>;
+
+// Исключить некоторые поля
+type PublicUser = Omit<User, 'password'>;
+```
+
+## 7. Организуйте типы в пространства имен
+
+Для больших проектов используйте пространства имен для организации типов:
+
+```typescript
+namespace API {
+  export interface User {
+    id: number;
+    name: string;
+  }
+  
+  export namespace Requests {
+    export interface GetUser {
+      userId: number;
+    }
+    
+    export interface UpdateUser {
+      userId: number;
+      data: Partial<User>;
+    }
+  }
+  
+  export namespace Responses {
+    export interface GetUser {
+      user: User;
+    }
+    
+    export interface UpdateUser {
+      success: boolean;
+      user: User;
+    }
+  }
+}
+```
+
+## 8. Используйте keyof и mapped types
+
+Они позволяют создавать продвинутые типы на основе существующих:
+
+```typescript
+interface Options {
+  timeout: number;
+  debug: boolean;
+  baseUrl: string;
+}
+
+// Создаем тип, где все поля опциональны
+type PartialOptions = {
+  [K in keyof Options]?: Options[K];
+};
+
+// Тип, который принимает только имена полей Options
+function updateOption<K extends keyof Options>(key: K, value: Options[K]) {
+  // ...
+}
+```
+
+## 9. Используйте исчерпывающую проверку в switch
+
+TypeScript может проверять, обработали ли вы все возможные случаи:
+
+```typescript
+type Status = 'pending' | 'fulfilled' | 'rejected';
+
+function handleStatus(status: Status) {
+  switch (status) {
+    case 'pending':
+      return 'Ожидание...';
+    case 'fulfilled':
+      return 'Успех!';
+    case 'rejected':
+      return 'Ошибка!';
+    default:
+      // Эта строка гарантирует, что мы обработали все возможные значения Status
+      const _exhaustiveCheck: never = status;
+      return _exhaustiveCheck;
+  }
+}
+```
+
+## 10. Создавайте шаблоны типов из API-ответов
+
+Для работы с внешними API используйте инструменты для генерации типов:
+
+```typescript
+// Сгенерированные типы из API-схемы
+interface ApiResponse<T> {
+  data: T;
+  meta: {
+    page: number;
+    totalPages: number;
+    count: number;
+  };
+}
+
+// Использование
+async function fetchUsers(): Promise<ApiResponse<User[]>> {
+  const response = await fetch('/api/users');
+  return response.json();
+}
+```
+
+## Заключение
+
+TypeScript — это мощный инструмент, который требует некоторого опыта для эффективного использования. Применяя эти советы, вы сможете использовать его возможности максимально эффективно и писать более качественный, надежный код. 

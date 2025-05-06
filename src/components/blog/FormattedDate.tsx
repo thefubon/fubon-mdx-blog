@@ -14,4 +14,4 @@ export default function FormattedDate({ date, className }: FormattedDateProps) {
       {format(parseISO(date), 'd MMMM yyyy', { locale: ru })}
     </time>
   )
-}
+} 

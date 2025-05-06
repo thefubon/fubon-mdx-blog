@@ -2,35 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import readingTime from 'reading-time';
+import { Post, PostMetadata, PaginationResult } from './types';
 
 const contentDirectory = path.join(process.cwd(), 'src/content');
 
-export interface PostMetadata {
-  title: string;
-  publishedAt: string;
-  description?: string;
-  slug: string;
-  readingTime: string;
-  tags?: string[];
-  category?: string;
-  cover?: string;
-}
-
-export interface Post {
-  frontmatter: PostMetadata;
-  content: string;
-}
-
 interface PostWithRelevance extends Post {
   relevance: number;
-}
-
-export interface PaginationResult {
-  posts: Post[];
-  totalPages: number;
-  currentPage: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
 }
 
 export function getAllPostSlugs() {
@@ -90,8 +67,8 @@ export function getAllPosts(): Post[] {
   return posts;
 }
 
-export function getPaginatedPosts(page: number = 1, limit: number = 5): PaginationResult {
-  const allPosts = getAllPosts();
+export function getPaginatedPosts(page: number = 1, limit: number = 5, excludeSlugs: string[] = []): PaginationResult {
+  const allPosts = getAllPosts().filter(post => !excludeSlugs.includes(post.frontmatter.slug));
   const totalPosts = allPosts.length;
   const totalPages = Math.ceil(totalPosts / limit);
   const currentPage = Math.max(1, Math.min(page, totalPages || 1));

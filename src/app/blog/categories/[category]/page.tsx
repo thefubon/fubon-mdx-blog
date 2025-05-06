@@ -1,14 +1,15 @@
 import Link from 'next/link'
-import FormattedDate from '@/components/FormattedDate'
+import FormattedDate from '@/components/blog/FormattedDate'
 import { getPostsByCategory, getAllCategories } from '@/lib/mdx' // Добавлен импорт getAllCategories
-import Pagination from '@/components/Pagination'
+import Pagination from '@/components/blog/Pagination'
+import Container from '@/components/ui/Container'
 
 interface PageProps {
   params: Promise<{ category: string }>
   searchParams: Promise<{ page?: string }>
 }
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const categories = getAllCategories()
   return categories.map(({ category }) => ({
     category: encodeURIComponent(category),
@@ -27,14 +28,45 @@ export default async function CategoryPage(props: PageProps) {
     totalPages,
     currentPage: validatedPage,
   } = getPostsByCategory(category, currentPage, POSTS_PER_PAGE)
+  
+  // Получаем все категории для навигации
+  const allCategories = getAllCategories()
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
+    <Container className="py-10">
+      {/* Categories navigation */}
+      <div className="mb-8 overflow-x-auto scrollbar-hide">
+        <div className="flex space-x-1 border-b dark:border-gray-800 mb-4 pb-1 whitespace-nowrap">
+          <Link 
+            href="/blog" 
+            className="px-4 py-2 rounded-t-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          >
+            Все статьи
+          </Link>
+          
+          {allCategories.map(({ category: cat, count }) => (
+            cat === category ? (
+              <p 
+                key={cat}
+                className="px-4 py-2 rounded-t-lg font-medium bg-gray-900 text-white cursor-default"
+              >
+                {cat} <span className="text-xs ml-1 text-gray-300">({count})</span>
+              </p>
+            ) : (
+              <Link
+                key={cat}
+                href={`/blog/categories/${encodeURIComponent(cat)}`}
+                className="px-4 py-2 rounded-t-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                {cat} <span className="text-xs ml-1 text-gray-500 dark:text-gray-400">({count})</span>
+              </Link>
+            )
+          ))}
+        </div>
+      </div>
+
       <h1 className="text-4xl font-bold mb-2">Категория: {category}</h1>
-      <p className="text-gray-600 mb-8">
-        {posts.length}{' '}
-        {posts.length === 1 ? 'статья' : posts.length < 5 ? 'статьи' : 'статей'}
-      </p>
+      <div className="mb-8"></div>
 
       <div className="space-y-8">
         {posts.map((post) => {
@@ -51,15 +83,15 @@ export default async function CategoryPage(props: PageProps) {
                 </h2>
               </Link>
 
-              <div className="text-sm text-gray-500 mb-3">
+              <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                 <FormattedDate date={publishedAt} /> • {readingTime}
               </div>
 
-              <p className="text-gray-700">{description}</p>
+              <p className="text-gray-700 dark:text-gray-300">{description}</p>
 
               <Link
                 href={`/blog/${slug}`}
-                className="mt-4 inline-block text-blue-600 hover:underline">
+                className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline">
                 Читать далее →
               </Link>
             </article>
@@ -76,14 +108,6 @@ export default async function CategoryPage(props: PageProps) {
           />
         </div>
       )}
-
-      <div className="mt-10">
-        <Link
-          href="/blog/categories"
-          className="text-blue-600 hover:underline">
-          ← Все категории
-        </Link>
-      </div>
-    </div>
+    </Container>
   )
 }

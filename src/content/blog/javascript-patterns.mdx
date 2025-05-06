@@ -1,0 +1,885 @@
+---
+title: "10 паттернов проектирования в JavaScript, которые должен знать каждый разработчик"
+publishedAt: "2023-01-05"
+description: "Практический обзор полезных паттернов проектирования для современных JavaScript приложений"
+tags: ["javascript", "patterns", "design-patterns", "architecture"]
+category: "JavaScript"
+cover: ""
+---
+
+# 10 паттернов проектирования в JavaScript, которые должен знать каждый разработчик
+
+Паттерны проектирования – это проверенные, документированные решения часто встречающихся проблем в разработке программного обеспечения. В этой статье мы рассмотрим 10 наиболее полезных паттернов проектирования для JavaScript-разработчиков с практическими примерами.
+
+## 1. Модуль (Module)
+
+Паттерн Модуль позволяет организовать связанный код в независимые, инкапсулированные модули. Он реализует принцип инкапсуляции и предоставляет способ создания приватных и публичных переменных и методов.
+
+```javascript
+// Реализация IIFE (Immediately Invoked Function Expression)
+const counterModule = (function() {
+  // Приватная переменная
+  let count = 0;
+  
+  // Публичный интерфейс
+  return {
+    increment() {
+      count += 1;
+      return count;
+    },
+    decrement() {
+      count -= 1;
+      return count;
+    },
+    getCount() {
+      return count;
+    }
+  };
+})();
+
+console.log(counterModule.getCount()); // 0
+console.log(counterModule.increment()); // 1
+console.log(counterModule.increment()); // 2
+console.log(counterModule.decrement()); // 1
+console.log(counterModule.count); // undefined (приватная переменная)
+```
+
+### Современный подход с ES модулями:
+
+```javascript
+// counter.js
+let count = 0;
+
+export function increment() {
+  count += 1;
+  return count;
+}
+
+export function decrement() {
+  count -= 1;
+  return count;
+}
+
+export function getCount() {
+  return count;
+}
+```
+
+```javascript
+// main.js
+import { increment, getCount } from './counter.js';
+
+increment();
+console.log(getCount()); // 1
+```
+
+## 2. Синглтон (Singleton)
+
+Паттерн Синглтон гарантирует, что класс имеет только один экземпляр и предоставляет глобальную точку доступа к нему.
+
+```javascript
+class Database {
+  constructor(data) {
+    if (Database.instance) {
+      return Database.instance;
+    }
+    
+    Database.instance = this;
+    this.data = data;
+  }
+  
+  getData() {
+    return this.data;
+  }
+  
+  setData(data) {
+    this.data = data;
+  }
+}
+
+const mongo = new Database('MongoDB');
+console.log(mongo.getData()); // MongoDB
+
+const mysql = new Database('MySQL');
+console.log(mysql.getData()); // MongoDB (не MySQL!)
+
+mongo.setData('MongoDB + Redis');
+console.log(mysql.getData()); // MongoDB + Redis
+
+console.log(mongo === mysql); // true
+```
+
+### Современный подход с модулями:
+
+```javascript
+// database.js
+let instance;
+
+class Database {
+  constructor(data) {
+    if (instance) {
+      return instance;
+    }
+    
+    instance = this;
+    this.data = data;
+  }
+  
+  getData() {
+    return this.data;
+  }
+  
+  setData(data) {
+    this.data = data;
+  }
+}
+
+export default Database;
+```
+
+## 3. Фабрика (Factory)
+
+Паттерн Фабрика определяет интерфейс для создания объекта, но позволяет подклассам решать, какой класс следует инстанцировать.
+
+```javascript
+// Базовый класс
+class Vehicle {
+  constructor(options) {
+    this.wheels = options.wheels || 4;
+    this.doors = options.doors || 4;
+    this.color = options.color || 'black';
+  }
+  
+  toString() {
+    return `A ${this.color} vehicle with ${this.wheels} wheels and ${this.doors} doors`;
+  }
+}
+
+// Подклассы
+class Car extends Vehicle {}
+
+class Truck extends Vehicle {
+  constructor(options) {
+    super(options);
+    this.wheels = options.wheels || 6;
+    this.doors = options.doors || 2;
+    this.hasBed = options.hasBed !== undefined ? options.hasBed : true;
+  }
+  
+  toString() {
+    return `${super.toString()}, with${this.hasBed ? '' : 'out'} a bed`;
+  }
+}
+
+class Motorcycle extends Vehicle {
+  constructor(options) {
+    super(options);
+    this.wheels = 2;
+    this.doors = 0;
+    this.hasHelmet = options.hasHelmet !== undefined ? options.hasHelmet : false;
+  }
+  
+  toString() {
+    return `${super.toString()}, with${this.hasHelmet ? '' : 'out'} a helmet`;
+  }
+}
+
+// Фабрика
+class VehicleFactory {
+  createVehicle(options) {
+    switch (options.type) {
+      case 'car':
+        return new Car(options);
+      case 'truck':
+        return new Truck(options);
+      case 'motorcycle':
+        return new Motorcycle(options);
+      default:
+        return new Vehicle(options);
+    }
+  }
+}
+
+// Использование
+const factory = new VehicleFactory();
+
+const car = factory.createVehicle({
+  type: 'car',
+  color: 'red'
+});
+
+const truck = factory.createVehicle({
+  type: 'truck',
+  wheels: 8,
+  color: 'blue'
+});
+
+const motorcycle = factory.createVehicle({
+  type: 'motorcycle',
+  hasHelmet: true,
+  color: 'green'
+});
+
+console.log(car.toString());       // A red vehicle with 4 wheels and 4 doors
+console.log(truck.toString());     // A blue vehicle with 8 wheels and 2 doors, with a bed
+console.log(motorcycle.toString()); // A green vehicle with 2 wheels and 0 doors, with a helmet
+```
+
+## 4. Наблюдатель (Observer)
+
+Паттерн Наблюдатель определяет зависимость один-ко-многим между объектами, чтобы при изменении состояния одного объекта все зависимые от него объекты были уведомлены и обновлены автоматически.
+
+```javascript
+class Observable {
+  constructor() {
+    this.observers = [];
+  }
+  
+  subscribe(observer) {
+    this.observers.push(observer);
+    return () => this.unsubscribe(observer); // Возвращаем функцию отписки
+  }
+  
+  unsubscribe(observer) {
+    this.observers = this.observers.filter(obs => obs !== observer);
+  }
+  
+  notify(data) {
+    this.observers.forEach(observer => observer(data));
+  }
+}
+
+// Использование
+const news = new Observable();
+
+// Регистрируем наблюдателей
+const unsubscribeJohn = news.subscribe(data => {
+  console.log(`John: I heard that ${data}`);
+});
+
+const unsubscribeLisa = news.subscribe(data => {
+  console.log(`Lisa: Oh my! ${data}, that's incredible!`);
+});
+
+// Уведомляем наблюдателей
+news.notify('JavaScript is awesome!');
+// John: I heard that JavaScript is awesome!
+// Lisa: Oh my! JavaScript is awesome!, that's incredible!
+
+// Отписываем Джона
+unsubscribeJohn();
+
+// Теперь только Лиза получит уведомление
+news.notify('ES2022 has been released');
+// Lisa: Oh my! ES2022 has been released, that's incredible!
+```
+
+## 5. Декоратор (Decorator)
+
+Паттерн Декоратор позволяет динамически добавлять объектам новую функциональность, оборачивая их в полезные "обертки".
+
+```javascript
+// Базовый компонент
+class Coffee {
+  cost() {
+    return 5;
+  }
+  
+  description() {
+    return 'Simple coffee';
+  }
+}
+
+// Декораторы
+class MilkDecorator {
+  constructor(coffee) {
+    this.coffee = coffee;
+  }
+  
+  cost() {
+    return this.coffee.cost() + 1.5;
+  }
+  
+  description() {
+    return `${this.coffee.description()}, with milk`;
+  }
+}
+
+class VanillaDecorator {
+  constructor(coffee) {
+    this.coffee = coffee;
+  }
+  
+  cost() {
+    return this.coffee.cost() + 2;
+  }
+  
+  description() {
+    return `${this.coffee.description()}, with vanilla`;
+  }
+}
+
+class CaramelDecorator {
+  constructor(coffee) {
+    this.coffee = coffee;
+  }
+  
+  cost() {
+    return this.coffee.cost() + 2.5;
+  }
+  
+  description() {
+    return `${this.coffee.description()}, with caramel`;
+  }
+}
+
+// Использование
+let myCoffee = new Coffee();
+console.log(`${myCoffee.description()}: $${myCoffee.cost()}`);
+// Simple coffee: $5
+
+// Добавляем молоко
+myCoffee = new MilkDecorator(myCoffee);
+console.log(`${myCoffee.description()}: $${myCoffee.cost()}`);
+// Simple coffee, with milk: $6.5
+
+// Добавляем ваниль
+myCoffee = new VanillaDecorator(myCoffee);
+console.log(`${myCoffee.description()}: $${myCoffee.cost()}`);
+// Simple coffee, with milk, with vanilla: $8.5
+
+// Добавляем карамель
+myCoffee = new CaramelDecorator(myCoffee);
+console.log(`${myCoffee.description()}: $${myCoffee.cost()}`);
+// Simple coffee, with milk, with vanilla, with caramel: $11
+```
+
+### В современном JavaScript можно использовать декораторы ES-предложения:
+
+```javascript
+function logMethod(target, name, descriptor) {
+  const original = descriptor.value;
+  
+  descriptor.value = function(...args) {
+    console.log(`Calling ${name} with arguments: ${JSON.stringify(args)}`);
+    return original.apply(this, args);
+  };
+  
+  return descriptor;
+}
+
+class Calculator {
+  @logMethod
+  add(a, b) {
+    return a + b;
+  }
+  
+  @logMethod
+  multiply(a, b) {
+    return a * b;
+  }
+}
+
+const calc = new Calculator();
+calc.add(2, 3); // Calling add with arguments: [2,3]
+calc.multiply(4, 5); // Calling multiply with arguments: [4,5]
+```
+
+## 6. Стратегия (Strategy)
+
+Паттерн Стратегия позволяет определить семейство алгоритмов, инкапсулировать каждый из них и делать их взаимозаменяемыми.
+
+```javascript
+// Интерфейс (пример)
+class PaymentStrategy {
+  pay(amount) {
+    throw new Error('pay() method must be implemented');
+  }
+}
+
+// Конкретные стратегии
+class CreditCardStrategy {
+  constructor(name, cardNumber, cvv, expirationDate) {
+    this.name = name;
+    this.cardNumber = cardNumber;
+    this.cvv = cvv;
+    this.expirationDate = expirationDate;
+  }
+  
+  pay(amount) {
+    console.log(`Paying ${amount} using Credit Card (${this.cardNumber})`);
+    return true;
+  }
+}
+
+class PayPalStrategy {
+  constructor(email, password) {
+    this.email = email;
+    this.password = password;
+  }
+  
+  pay(amount) {
+    console.log(`Paying ${amount} using PayPal (${this.email})`);
+    return true;
+  }
+}
+
+class BitcoinStrategy {
+  constructor(address) {
+    this.address = address;
+  }
+  
+  pay(amount) {
+    console.log(`Paying ${amount} using Bitcoin to address ${this.address}`);
+    return true;
+  }
+}
+
+// Контекст
+class ShoppingCart {
+  constructor() {
+    this.items = [];
+    this.paymentStrategy = null;
+  }
+  
+  addItem(item) {
+    this.items.push(item);
+  }
+  
+  setPaymentStrategy(strategy) {
+    this.paymentStrategy = strategy;
+  }
+  
+  calculateTotal() {
+    return this.items.reduce((total, item) => total + item.price, 0);
+  }
+  
+  checkout() {
+    if (!this.paymentStrategy) {
+      throw new Error('No payment strategy has been set');
+    }
+    
+    const amount = this.calculateTotal();
+    return this.paymentStrategy.pay(amount);
+  }
+}
+
+// Использование
+const cart = new ShoppingCart();
+cart.addItem({ name: 'Item 1', price: 100 });
+cart.addItem({ name: 'Item 2', price: 50 });
+
+// Оплата кредитной картой
+cart.setPaymentStrategy(new CreditCardStrategy(
+  'John Doe',
+  '1234-5678-9012-3456',
+  '123',
+  '12/2025'
+));
+cart.checkout(); // Paying 150 using Credit Card (1234-5678-9012-3456)
+
+// Оплата через PayPal
+cart.setPaymentStrategy(new PayPalStrategy(
+  'john@example.com',
+  'password'
+));
+cart.checkout(); // Paying 150 using PayPal (john@example.com)
+
+// Оплата биткоинами
+cart.setPaymentStrategy(new BitcoinStrategy(
+  '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'
+));
+cart.checkout(); // Paying 150 using Bitcoin to address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+```
+
+## 7. Итератор (Iterator)
+
+Паттерн Итератор предоставляет способ последовательного доступа к элементам составного объекта, не раскрывая его внутреннего представления.
+
+```javascript
+class Iterator {
+  constructor(items) {
+    this.items = items;
+    this.index = 0;
+  }
+  
+  hasNext() {
+    return this.index < this.items.length;
+  }
+  
+  next() {
+    return this.items[this.index++];
+  }
+  
+  reset() {
+    this.index = 0;
+  }
+  
+  each(callback) {
+    for (let item = this.next(); this.hasNext(); item = this.next()) {
+      callback(item);
+    }
+  }
+}
+
+// Использование
+const items = ['Item 1', 'Item 2', 'Item 3'];
+const iterator = new Iterator(items);
+
+while (iterator.hasNext()) {
+  console.log(iterator.next());
+}
+
+// Или использование метода each
+iterator.reset();
+iterator.each(item => console.log(item));
+```
+
+### Современные итераторы в JavaScript:
+
+```javascript
+// Объект с итератором
+const iterableObj = {
+  data: ['Item 1', 'Item 2', 'Item 3'],
+  
+  [Symbol.iterator]() {
+    let index = 0;
+    
+    return {
+      next: () => {
+        if (index < this.data.length) {
+          return { value: this.data[index++], done: false };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+};
+
+// Использование in for...of loop
+for (const item of iterableObj) {
+  console.log(item);
+}
+
+// Или с spread оператором
+const items = [...iterableObj];
+console.log(items); // ["Item 1", "Item 2", "Item 3"]
+```
+
+## 8. Команда (Command)
+
+Паттерн Команда инкапсулирует запрос как объект, позволяя параметризовать клиентов с различными запросами, ставить запросы в очередь, протоколировать их, а также поддерживать отмену операций.
+
+```javascript
+// Получатель — выполняет действия
+class Light {
+  turnOn() {
+    console.log('Light is ON');
+  }
+  
+  turnOff() {
+    console.log('Light is OFF');
+  }
+}
+
+// Интерфейс команды
+class Command {
+  execute() {
+    throw new Error('execute() method must be implemented');
+  }
+  
+  undo() {
+    throw new Error('undo() method must be implemented');
+  }
+}
+
+// Конкретные команды
+class TurnOnCommand extends Command {
+  constructor(light) {
+    super();
+    this.light = light;
+  }
+  
+  execute() {
+    this.light.turnOn();
+  }
+  
+  undo() {
+    this.light.turnOff();
+  }
+}
+
+class TurnOffCommand extends Command {
+  constructor(light) {
+    super();
+    this.light = light;
+  }
+  
+  execute() {
+    this.light.turnOff();
+  }
+  
+  undo() {
+    this.light.turnOn();
+  }
+}
+
+// Инвокер — инициирует команды
+class RemoteControl {
+  constructor() {
+    this.commands = [];
+    this.history = [];
+  }
+  
+  addCommand(slot, command) {
+    this.commands[slot] = command;
+  }
+  
+  pressButton(slot) {
+    const command = this.commands[slot];
+    if (command) {
+      command.execute();
+      this.history.push(command);
+    }
+  }
+  
+  pressUndoButton() {
+    const command = this.history.pop();
+    if (command) {
+      command.undo();
+    }
+  }
+}
+
+// Использование
+const light = new Light();
+const turnOnCommand = new TurnOnCommand(light);
+const turnOffCommand = new TurnOffCommand(light);
+
+const remote = new RemoteControl();
+remote.addCommand(0, turnOnCommand);
+remote.addCommand(1, turnOffCommand);
+
+remote.pressButton(0); // Light is ON
+remote.pressButton(1); // Light is OFF
+remote.pressUndoButton(); // Light is ON
+```
+
+## 9. Прокси (Proxy)
+
+Паттерн Прокси предоставляет заместителя другого объекта для контроля доступа к нему.
+
+```javascript
+// Реальный объект
+class ExpensiveObject {
+  process() {
+    console.log('Processing complete.');
+  }
+}
+
+// Прокси
+class ExpensiveObjectProxy {
+  constructor() {
+    this.expensiveObject = null;
+  }
+  
+  process() {
+    if (!this.expensiveObject) {
+      console.log('Creating expensive object...');
+      this.expensiveObject = new ExpensiveObject();
+    }
+    
+    this.expensiveObject.process();
+  }
+}
+
+// Использование
+const proxy = new ExpensiveObjectProxy();
+
+// Первый вызов создаст объект
+proxy.process();
+// Creating expensive object...
+// Processing complete.
+
+// Второй вызов использует уже созданный объект
+proxy.process();
+// Processing complete.
+```
+
+### JavaScript Proxy API:
+
+```javascript
+const user = {
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john@example.com'
+};
+
+const handler = {
+  get(target, property) {
+    console.log(`Getting property "${property}"`);
+    
+    if (property === 'fullName') {
+      return `${target.firstName} ${target.lastName}`;
+    }
+    
+    return target[property];
+  },
+  
+  set(target, property, value) {
+    console.log(`Setting property "${property}" to "${value}"`);
+    
+    if (property === 'email') {
+      // Валидация email
+      if (!value.includes('@')) {
+        throw new Error('Invalid email!');
+      }
+    }
+    
+    target[property] = value;
+    return true;
+  }
+};
+
+const userProxy = new Proxy(user, handler);
+
+// Получение свойств
+console.log(userProxy.firstName); // Getting property "firstName" / John
+console.log(userProxy.fullName);  // Getting property "fullName" / John Doe
+
+// Установка свойств
+userProxy.firstName = 'Jane'; // Setting property "firstName" to "Jane"
+
+try {
+  userProxy.email = 'invalid-email'; // Вызовет ошибку
+} catch (e) {
+  console.error(e.message); // Invalid email!
+}
+
+userProxy.email = 'jane@example.com'; // Setting property "email" to "jane@example.com"
+```
+
+## 10. Цепочка обязанностей (Chain of Responsibility)
+
+Паттерн Цепочка обязанностей позволяет избежать связывания отправителя запроса с его получателем, предоставляя более чем одному объекту возможность обработать запрос.
+
+```javascript
+class Request {
+  constructor(amount) {
+    this.amount = amount;
+    this.isApproved = false;
+  }
+}
+
+// Обработчик
+class Handler {
+  constructor() {
+    this.nextHandler = null;
+  }
+  
+  setNext(handler) {
+    this.nextHandler = handler;
+    return handler;
+  }
+  
+  process(request) {
+    if (this.nextHandler) {
+      return this.nextHandler.process(request);
+    }
+    
+    return request;
+  }
+}
+
+// Конкретные обработчики
+class Manager extends Handler {
+  process(request) {
+    // Менеджер может одобрить до 500
+    if (request.amount <= 500) {
+      request.isApproved = true;
+      console.log(`Manager approved request of $${request.amount}`);
+      return request;
+    }
+    
+    console.log(`Manager cannot approve request of $${request.amount}`);
+    return super.process(request);
+  }
+}
+
+class Director extends Handler {
+  process(request) {
+    // Директор может одобрить до 1000
+    if (request.amount <= 1000) {
+      request.isApproved = true;
+      console.log(`Director approved request of $${request.amount}`);
+      return request;
+    }
+    
+    console.log(`Director cannot approve request of $${request.amount}`);
+    return super.process(request);
+  }
+}
+
+class CEO extends Handler {
+  process(request) {
+    // CEO может одобрить до 5000
+    if (request.amount <= 5000) {
+      request.isApproved = true;
+      console.log(`CEO approved request of $${request.amount}`);
+      return request;
+    }
+    
+    console.log(`CEO cannot approve request of $${request.amount}`);
+    return super.process(request);
+  }
+}
+
+class CFO extends Handler {
+  process(request) {
+    // CFO может одобрить любую сумму
+    request.isApproved = true;
+    console.log(`CFO approved request of $${request.amount}`);
+    return request;
+  }
+}
+
+// Использование
+const manager = new Manager();
+const director = new Director();
+const ceo = new CEO();
+const cfo = new CFO();
+
+manager.setNext(director).setNext(ceo).setNext(cfo);
+
+// Тестирование с разными суммами
+let request = new Request(200);
+manager.process(request);
+// Manager approved request of $200
+
+request = new Request(700);
+manager.process(request);
+// Manager cannot approve request of $700
+// Director approved request of $700
+
+request = new Request(4500);
+manager.process(request);
+// Manager cannot approve request of $4500
+// Director cannot approve request of $4500
+// CEO approved request of $4500
+
+request = new Request(10000);
+manager.process(request);
+// Manager cannot approve request of $10000
+// Director cannot approve request of $10000
+// CEO cannot approve request of $10000
+// CFO approved request of $10000
+```
+
+## Заключение
+
+Знание паттернов проектирования значительно улучшает качество вашего кода и позволяет решать стандартные проблемы эффективным, проверенным способом. Каждый из рассмотренных паттернов имеет свои преимущества и недостатки, а также область применения.
+
+При использовании паттернов важно помнить о принципе KISS (Keep It Simple, Stupid) - не переусложняйте код добавлением ненужных абстракций. Используйте паттерны, когда они действительно необходимы и упрощают решение проблемы.
+
+В современном JavaScript некоторые из этих паттернов уже встроены в язык (например, итераторы или прокси), но понимание лежащих в их основе принципов всё равно важно для создания чистого, поддерживаемого кода. 

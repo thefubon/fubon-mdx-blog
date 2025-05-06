@@ -2,25 +2,35 @@
 'use client'
 
 import { useSoundContext } from '@/contexts/SoundProvider'
-import { Volume2, VolumeOff } from 'lucide-react'
-import { Button } from './ui/button'
+import { Volume2, VolumeX } from 'lucide-react'
 
 export function SoundToggle() {
   const { enabled, setEnabled } = useSoundContext()
 
   return (
-    <>
-      <Button
-        onClick={() => setEnabled(!enabled)}
-        className="size-12 md:size-[var(--button-height)] bg-foreground hover:bg-fubon-primary text-background rounded-full relative z-50 cursor-pointer flex justify-center items-center transition-colors duration-300"
-        aria-label={enabled ? 'Выключить звуки' : 'Включить звуки'}>
-        {enabled ? (
-          <Volume2 className="size-6 stroke-[1.8]" />
-        ) : (
-          <VolumeOff className="size-6 stroke-[1.8]" />
-        )}
-      </Button>
-    </>
+    <div className="flex items-center gap-1 p-1 rounded-full bg-muted">
+      <button
+        onClick={() => setEnabled(true)}
+        className={`size-8 flex items-center justify-center rounded-full transition-all ${
+          enabled
+            ? 'bg-white text-primary shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        aria-label="Включить звуки">
+        <Volume2 className="size-4" />
+      </button>
+      
+      <button
+        onClick={() => setEnabled(false)}
+        className={`size-8 flex items-center justify-center rounded-full transition-all ${
+          !enabled
+            ? 'bg-white text-primary shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        aria-label="Выключить звуки">
+        <VolumeX className="size-4" />
+      </button>
+    </div>
   )
 }
 

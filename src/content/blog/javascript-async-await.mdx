@@ -1,0 +1,316 @@
+---
+title: "Мастерство асинхронности с JavaScript async/await"
+publishedAt: "2023-05-18"
+description: "Глубокое погружение в асинхронное программирование с использованием async/await в JavaScript"
+tags: ["javascript", "async", "promises", "frontend"]
+category: "JavaScript"
+cover: ""
+---
+
+# Мастерство асинхронности с JavaScript async/await
+
+Асинхронное программирование всегда было одной из самых сложных частей JavaScript. С появлением `async/await` в ES2017 работа с асинхронным кодом стала намного более понятной и элегантной. В этой статье мы разберемся, как использовать `async/await` эффективно и избегать распространенных ошибок.
+
+## Эволюция асинхронности в JavaScript
+
+Прежде чем погрузиться в `async/await`, давайте кратко рассмотрим эволюцию асинхронности в JavaScript:
+
+### 1. Коллбэки
+
+```javascript
+function fetchData(callback) {
+  setTimeout(() => {
+    callback(null, { data: 'Данные получены' });
+  }, 1000);
+}
+
+fetchData((error, data) => {
+  if (error) {
+    console.error('Ошибка:', error);
+    return;
+  }
+  console.log(data);
+});
+```
+
+Проблема: быстро превращается в "коллбэк ад" при вложенных асинхронных операциях.
+
+### 2. Промисы (Promises)
+
+```javascript
+function fetchData() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({ data: 'Данные получены' });
+    }, 1000);
+  });
+}
+
+fetchData()
+  .then(data => console.log(data))
+  .catch(error => console.error('Ошибка:', error));
+```
+
+Лучше, но все еще требует цепочки `.then()` для последовательных операций.
+
+### 3. Async/Await
+
+```javascript
+async function getData() {
+  try {
+    const data = await fetchData();
+    console.log(data);
+  } catch (error) {
+    console.error('Ошибка:', error);
+  }
+}
+
+getData();
+```
+
+Чистый, читаемый код, который выглядит почти как синхронный.
+
+## Основы Async/Await
+
+### Функция async
+
+Функция, объявленная с ключевым словом `async`, всегда возвращает промис:
+
+```javascript
+async function hello() {
+  return 'Привет, мир!';
+}
+
+// Эквивалентно:
+function hello() {
+  return Promise.resolve('Привет, мир!');
+}
+
+hello().then(message => console.log(message)); // 'Привет, мир!'
+```
+
+### Оператор await
+
+Оператор `await` приостанавливает выполнение функции до разрешения промиса:
+
+```javascript
+async function example() {
+  console.log('Начало');
+  const result = await new Promise(resolve => {
+    setTimeout(() => resolve('Готово!'), 1000);
+  });
+  console.log(result);
+  console.log('Конец');
+}
+
+example();
+// Начало
+// (через 1 секунду)
+// Готово!
+// Конец
+```
+
+## Обработка ошибок
+
+Одно из главных преимуществ `async/await` — возможность использовать стандартный блок `try/catch`:
+
+```javascript
+async function fetchUserData(userId) {
+  try {
+    const user = await fetchUser(userId);
+    const posts = await fetchPosts(user.id);
+    const comments = await fetchComments(posts[0].id);
+    
+    return {
+      user,
+      posts,
+      comments
+    };
+  } catch (error) {
+    console.error('Ошибка получения данных:', error);
+    throw error; // Передаем ошибку вызывающему коду
+  }
+}
+```
+
+## Параллельное выполнение
+
+Хотя `await` заставляет функцию ждать разрешения промиса, иногда нам нужно запускать несколько асинхронных операций параллельно:
+
+```javascript
+async function fetchAllData() {
+  try {
+    // Операции запускаются параллельно
+    const usersPromise = fetchUsers();
+    const postsPromise = fetchPosts();
+    const commentsPromise = fetchComments();
+    
+    // Ждем завершения всех операций
+    const [users, posts, comments] = await Promise.all([
+      usersPromise,
+      postsPromise,
+      commentsPromise
+    ]);
+    
+    return { users, posts, comments };
+  } catch (error) {
+    console.error('Ошибка:', error);
+    throw error;
+  }
+}
+```
+
+## Распространенные ошибки и как их избегать
+
+### 1. Забывание ключевого слова await
+
+```javascript
+async function example() {
+  // Неправильно: fetchData() возвращает промис, а не данные
+  const data = fetchData();
+  console.log(data); // Promise { <pending> }
+  
+  // Правильно:
+  const result = await fetchData();
+  console.log(result); // Фактические данные
+}
+```
+
+### 2. Последовательное выполнение, когда можно параллельное
+
+```javascript
+async function inefficient() {
+  // Неэффективно: каждая операция ждет завершения предыдущей
+  const users = await fetchUsers();
+  const posts = await fetchPosts();
+  const comments = await fetchComments();
+  
+  return { users, posts, comments };
+}
+
+async function efficient() {
+  // Эффективно: операции запускаются параллельно
+  const [users, posts, comments] = await Promise.all([
+    fetchUsers(),
+    fetchPosts(),
+    fetchComments()
+  ]);
+  
+  return { users, posts, comments };
+}
+```
+
+### 3. Забывание обработки ошибок
+
+```javascript
+// Неправильно: ошибки не обрабатываются
+async function unsafe() {
+  const data = await fetchData();
+  return processData(data);
+}
+
+// Правильно: ошибки обрабатываются
+async function safe() {
+  try {
+    const data = await fetchData();
+    return processData(data);
+  } catch (error) {
+    console.error('Произошла ошибка:', error);
+    throw error;
+  }
+}
+```
+
+## Продвинутые техники
+
+### 1. Таймауты для асинхронных операций
+
+```javascript
+function timeout(ms) {
+  return new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Операция прервана по таймауту')), ms)
+  );
+}
+
+async function fetchWithTimeout(url, ms) {
+  try {
+    return await Promise.race([
+      fetch(url),
+      timeout(ms)
+    ]);
+  } catch (error) {
+    console.error('Ошибка:', error);
+    throw error;
+  }
+}
+
+// Использование:
+const response = await fetchWithTimeout('https://api.example.com/data', 5000);
+```
+
+### 2. Последовательная обработка массива
+
+```javascript
+async function processArray(array) {
+  const results = [];
+  
+  for (const item of array) {
+    // Последовательная обработка
+    const result = await processItem(item);
+    results.push(result);
+  }
+  
+  return results;
+}
+
+// Параллельная обработка с ограничением
+async function processArrayWithConcurrencyLimit(array, limit = 3) {
+  const results = [];
+  const inProgress = new Set();
+  
+  for (const item of array) {
+    // Если достигнут лимит, ждем завершения одной из операций
+    if (inProgress.size >= limit) {
+      await Promise.race(inProgress);
+    }
+    
+    // Запускаем новую операцию
+    const promise = processItem(item)
+      .then(result => {
+        results.push(result);
+        inProgress.delete(promise);
+      });
+    
+    inProgress.add(promise);
+  }
+  
+  // Ждем завершения всех оставшихся операций
+  await Promise.all(inProgress);
+  
+  return results;
+}
+```
+
+### 3. Асинхронные функции-генераторы
+
+```javascript
+async function* asyncGenerator() {
+  let i = 0;
+  while (i < 5) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    yield i++;
+  }
+}
+
+(async () => {
+  for await (const num of asyncGenerator()) {
+    console.log(num); // 0, 1, 2, 3, 4 (с интервалом в 1 секунду)
+  }
+})();
+```
+
+## Заключение
+
+Синтаксис `async/await` — это огромный шаг вперед в асинхронном программировании JavaScript. Он делает асинхронный код более читаемым, поддерживаемым и похожим на синхронный, при этом сохраняя все преимущества неблокирующего выполнения.
+
+Используя лучшие практики и избегая распространенных ошибок, вы можете писать элегантный и эффективный асинхронный код, который будет радовать и вас, и ваших коллег-разработчиков. 

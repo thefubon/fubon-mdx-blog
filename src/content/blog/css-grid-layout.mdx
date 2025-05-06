@@ -1,0 +1,268 @@
+---
+title: "Создание современных макетов с CSS Grid Layout"
+publishedAt: "2023-06-20"
+description: "Подробное руководство по созданию гибких и отзывчивых макетов с помощью CSS Grid"
+tags: ["css", "grid", "frontend", "layout"]
+category: "CSS"
+cover: ""
+---
+
+# Создание современных макетов с CSS Grid Layout
+
+CSS Grid Layout — это мощный инструмент для создания двумерных макетов страниц. Он позволяет точно контролировать размещение и выравнивание элементов как по горизонтали, так и по вертикали. В этой статье мы рассмотрим, как использовать CSS Grid для создания современных, отзывчивых макетов веб-страниц.
+
+## Основы CSS Grid
+
+CSS Grid позволяет определить сетку с рядами и колонками, в которой можно размещать элементы:
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+  height: 100vh;
+}
+```
+
+Этот код создает сетку с тремя колонками (200px, гибкий центральный столбец и еще 200px) и тремя рядами (автоматический размер для заголовка, гибкое основное содержимое и автоматический размер для подвала).
+
+## Гибкие единицы: fr и minmax()
+
+### Фракционные единицы (fr)
+
+Единица `fr` позволяет распределить доступное пространство:
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+}
+```
+
+Здесь средняя колонка будет в два раза шире крайних.
+
+### Функция minmax()
+
+`minmax()` задает минимальный и максимальный размеры:
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(300px, 2fr);
+  gap: 20px;
+}
+```
+
+Первая колонка будет не менее 200px и займет 1/3 доступного пространства, вторая — не менее 300px и займет 2/3 пространства.
+
+## Размещение элементов в сетке
+
+### Базовое размещение
+
+```css
+.header {
+  grid-column: 1 / 4; /* От 1-й до 4-й линии сетки */
+  grid-row: 1; /* Первый ряд */
+}
+
+.sidebar {
+  grid-column: 1; /* Первая колонка */
+  grid-row: 2; /* Второй ряд */
+}
+
+.content {
+  grid-column: 2 / 4; /* От 2-й до 4-й линии сетки */
+  grid-row: 2; /* Второй ряд */
+}
+
+.footer {
+  grid-column: 1 / 4; /* От 1-й до 4-й линии сетки */
+  grid-row: 3; /* Третий ряд */
+}
+```
+
+### Именованные линии и области
+
+Можно давать имена линиям и областям сетки:
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: 
+    [sidebar-start] 200px 
+    [sidebar-end content-start] 1fr 
+    [content-end];
+  grid-template-rows: 
+    [header-start] auto 
+    [header-end content-start] 1fr 
+    [content-end footer-start] auto 
+    [footer-end];
+  gap: 20px;
+  height: 100vh;
+}
+
+.header {
+  grid-column: sidebar-start / content-end;
+  grid-row: header-start / header-end;
+}
+```
+
+Или использовать `grid-template-areas`:
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 
+    "header header"
+    "sidebar content"
+    "footer footer";
+  gap: 20px;
+  height: 100vh;
+}
+
+.header {
+  grid-area: header;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.content {
+  grid-area: content;
+}
+
+.footer {
+  grid-area: footer;
+}
+```
+
+## Автоматическое размещение и выравнивание
+
+### Автоматические ряды и колонки
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+```
+
+Этот код создает столько колонок шириной не менее 200px, сколько поместится в контейнер.
+
+### Выравнивание
+
+CSS Grid предоставляет мощные средства для выравнивания:
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center; /* Выравнивание по горизонтали внутри ячеек */
+  align-items: center; /* Выравнивание по вертикали внутри ячеек */
+  justify-content: space-between; /* Распределение колонок в контейнере */
+  align-content: space-between; /* Распределение рядов в контейнере */
+}
+```
+
+## Практический пример: адаптивный макет
+
+Давайте создадим адаптивный макет, который перестраивается в зависимости от размера экрана:
+
+```html
+<div class="grid-container">
+  <header class="header">Заголовок</header>
+  <nav class="nav">Навигация</nav>
+  <main class="main">Основное содержимое</main>
+  <aside class="aside">Боковая панель</aside>
+  <footer class="footer">Подвал</footer>
+</div>
+```
+
+```css
+.grid-container {
+  display: grid;
+  gap: 20px;
+  
+  /* Для мобильных устройств */
+  grid-template-areas:
+    "header"
+    "nav"
+    "main"
+    "aside"
+    "footer";
+  
+  /* Для планшетов и больше */
+  @media (min-width: 768px) {
+    grid-template-columns: 200px 1fr;
+    grid-template-areas:
+      "header header"
+      "nav nav"
+      "aside main"
+      "footer footer";
+  }
+  
+  /* Для десктопов */
+  @media (min-width: 1024px) {
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-areas:
+      "header header header"
+      "nav main aside"
+      "footer footer footer";
+  }
+}
+
+.header { grid-area: header; }
+.nav { grid-area: nav; }
+.main { grid-area: main; }
+.aside { grid-area: aside; }
+.footer { grid-area: footer; }
+```
+
+## Продвинутые техники
+
+### Subgrid
+
+CSS Grid Level 2 вводит концепцию `subgrid`, который позволяет дочернему элементу с `display: grid` наследовать линии сетки родителя:
+
+```css
+.parent {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 10px;
+}
+
+.child {
+  grid-column: 2 / 7;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+```
+
+### Автоматическое заполнение и автоматическая подгонка
+
+```css
+/* auto-fill создает как можно больше треков */
+.auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+/* auto-fit расширяет существующие треки, чтобы заполнить контейнер */
+.auto-fit {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+```
+
+## Заключение
+
+CSS Grid — незаменимый инструмент для современного веб-дизайна. Он позволяет создавать сложные макеты, которые раньше требовали использования хаков и обходных путей.
+
+Совместное использование Grid и Flexbox (для одномерных компоновок) дает веб-разработчикам невероятную мощь и гибкость для создания современных, адаптивных интерфейсов.
+
+Начните использовать CSS Grid сегодня, и вы увидите, насколько проще станет реализация ваших дизайнерских идей! 

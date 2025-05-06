@@ -17,15 +17,17 @@ export default function ButtonContact({
   // Базовые классы для кнопки
   const buttonClasses = cn(
     // Основные стили кнопки с CSS переменными
-    'group animation-trigger relative z-10 cursor-pointer overflow-hidden flex items-center rounded-full bg-foreground text-background uppercase transition-colors duration-300 hover:bg-secondary md:flex',
+    'group animation-trigger relative z-10 cursor-pointer overflow-hidden flex items-center rounded-full uppercase transition-colors duration-300 md:flex',
     // CSS переменные применяются через стили inline
     'h-[var(--button-height)] px-[var(--button-padding-x)]',
     // Варианты цветов
     {
-      'bg-foreground hover:bg-fubon-primary text-background':
-        variant === 'default' || variant === 'secondary',
-      'bg-fubon-primary hover:bg-foreground text-background':
+      'bg-secondary hover:bg-primary text-secondary-foreground hover:text-primary-foreground':
+        variant === 'default',
+      'bg-primary hover:bg-primary/80 text-primary-foreground':
         variant === 'primary',
+      'bg-accent hover:bg-accent/80 text-accent-foreground':
+        variant === 'secondary',
     },
     // Пользовательские классы
     className
@@ -64,7 +66,7 @@ export default function ButtonContact({
           {children}
         </span>
 
-        <span className="scale-100 h-1.5 w-1.5 rounded-full bg-background transition-transform duration-200 group-hover:scale-0"></span>
+        <span className="scale-100 h-1.5 w-1.5 rounded-full bg-current transition-transform duration-200 group-hover:scale-0"></span>
       </div>
     </button>
   )

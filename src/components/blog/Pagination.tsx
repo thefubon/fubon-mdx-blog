@@ -1,4 +1,3 @@
-// src/components/Pagination.tsx
 'use client'
 
 import Link from 'next/link'
@@ -14,9 +13,6 @@ export default function Pagination({
   totalPages,
   basePath,
 }: PaginationProps) {
-  // Убираем неиспользуемую переменную pathname
-  // const pathname = usePathname();
-
   // Если всего одна страница, не показываем пагинацию
   if (totalPages <= 1) {
     return null
@@ -113,4 +109,4 @@ export default function Pagination({
       )}
     </div>
   )
-}
+} 

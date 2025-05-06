@@ -3,11 +3,11 @@ import '@/styles/globals.css'
 
 import { ThemeProvider } from '@/contexts/ThemeProvider'
 import { SoundProvider } from '@/contexts/SoundProvider'
+import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
+import { AmbientSoundProvider } from '@/contexts/AmbientSoundProvider'
 
 import Header from '@/components/global/header'
 import Footer from '@/components/global/footer'
-import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
-import { AmbientSoundProvider } from '@/contexts/AmbientSoundProvider'
 
 export const metadata: Metadata = {
   title: 'Fubon | Креативное агентство по дизайну и разработке.',
@@ -51,7 +51,6 @@ export default function RootLayout({
                 <Header />
                 <main>{children}</main>
                 <Footer />
-                
               </SoundProvider>
             </AmbientSoundProvider>
           </MusicPlayerProvider>

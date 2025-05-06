@@ -40,7 +40,7 @@ export default function CodeBlock({
     return (
       <div className="code-block-wrapper mb-6 rounded-lg overflow-hidden">
         {filename && (
-          <div className="bg-gray-800 text-gray-300 text-xs px-4 py-2">
+          <div className="bg-muted text-muted-foreground text-xs px-4 py-2">
             {filename}
           </div>
         )}
@@ -51,9 +51,9 @@ export default function CodeBlock({
 
   // После загрузки на клиенте возвращаем код с классами для Prism
   return (
-    <div className="code-block-wrapper rounded-lg overflow-hidden !m-0 !p-0">
+    <div className="code-block-wrapper rounded-lg overflow-hidden !m-0 !p-0 border border-border">
       {filename && (
-        <div className="bg-foreground text-background text-xs px-4 py-2">
+        <div className="bg-secondary text-secondary-foreground text-xs px-4 py-2">
           {filename}
         </div>
       )}

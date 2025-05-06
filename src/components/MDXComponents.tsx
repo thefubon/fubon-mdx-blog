@@ -53,7 +53,32 @@ const MDXComponents = {
     height?: number
   }) => {
     // Проверяем, является ли источник внешним URL
-    const isExternal = src.startsWith('http')
+    const isExternal = src && src.startsWith('http')
+    
+    // Если src не определен или пустой, показываем заполнитель
+    if (!src) {
+      return (
+        <div className="my-6 rounded-lg bg-gray-200 dark:bg-gray-800 p-4 flex flex-col items-center justify-center" style={{ height: `${height}px`, maxWidth: `${width}px`, margin: '0 auto' }}>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="48" 
+            height="48" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor"
+            strokeWidth="1.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            className="text-gray-400 dark:text-gray-500 mb-3"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          <span className="text-gray-500 dark:text-gray-400">{alt || 'Изображение недоступно'}</span>
+        </div>
+      )
+    }
 
     return (
       <div className="my-6">
@@ -64,6 +89,34 @@ const MDXComponents = {
             src={src}
             alt={alt}
             className="rounded-lg mx-auto max-w-full h-auto"
+            onError={(e) => {
+              // При ошибке загрузки показываем иконку и текст
+              const target = e.target as HTMLImageElement;
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `
+                  <div class="rounded-lg bg-gray-200 dark:bg-gray-800 p-4 flex flex-col items-center justify-center" style="height: ${height}px; max-width: ${width}px; margin: 0 auto;">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="48" 
+                      height="48" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor"
+                      stroke-width="1.5" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      class="text-gray-400 dark:text-gray-500 mb-3"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span class="text-gray-500 dark:text-gray-400">${alt || 'Изображение недоступно'}</span>
+                  </div>
+                `;
+              }
+            }}
           />
         ) : (
           // Для локальных изображений используем компонент Image
@@ -73,6 +126,34 @@ const MDXComponents = {
             width={width}
             height={height}
             className="rounded-lg mx-auto"
+            onError={(e) => {
+              // При ошибке загрузки показываем иконку и текст
+              const target = e.target as HTMLImageElement;
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `
+                  <div class="rounded-lg bg-gray-200 dark:bg-gray-800 p-4 flex flex-col items-center justify-center" style="height: ${height}px; max-width: ${width}px; margin: 0 auto;">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="48" 
+                      height="48" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor"
+                      stroke-width="1.5" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      class="text-gray-400 dark:text-gray-500 mb-3"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span class="text-gray-500 dark:text-gray-400">${alt || 'Изображение недоступно'}</span>
+                  </div>
+                `;
+              }
+            }}
           />
         )}
         {alt && <p className="text-center text-sm text-gray-500 mt-2">{alt}</p>}

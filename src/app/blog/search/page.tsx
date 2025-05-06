@@ -1,7 +1,7 @@
 // src/app/search/page.tsx
 import Link from 'next/link'
-import FormattedDate from '@/components/FormattedDate'
-import SearchBar from '@/components/SearchBar'
+import FormattedDate from '@/components/blog/FormattedDate'
+import SearchBar from '@/components/blog/SearchBar'
 import { getAllPosts } from '@/lib/mdx'
 
 export default async function SearchPage(
