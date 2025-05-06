@@ -2,14 +2,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getAllPosts } from '@/lib/mdx'
 import PageWrapper from '@/components/PageWrapper'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import Container from '@/components/ui/Container'
 
 export default function Home() {
