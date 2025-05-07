@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 
 export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   
   useEffect(() => {
+    setIsMounted(true)
     const media = window.matchMedia(query)
     
     // Задаем начальное значение
@@ -25,5 +27,6 @@ export function useMediaQuery(query: string): boolean {
     }
   }, [query])
   
-  return matches
+  // Во время серверного рендеринга или до монтирования возвращаем false
+  return isMounted && matches
 } 

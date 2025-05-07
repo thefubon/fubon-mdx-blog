@@ -50,13 +50,19 @@ export default function CategoryPosts({
   const [showFavorites, setShowFavorites] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('grid3')
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts)
   const POSTS_PER_PAGE = 12
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
   
-  // Загружаем настройки из localStorage
+  // Отмечаем, что компонент смонтирован (и мы на клиенте)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    setIsMounted(true)
+  }, [])
+  
+  // Загружаем настройки из localStorage только на клиенте
+  useEffect(() => {
+    if (isMounted) {
       const timer = setTimeout(() => {
         const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode
         const savedShowFavorites = localStorage.getItem('blogShowFavorites') === 'true'
@@ -77,7 +83,7 @@ export default function CategoryPosts({
       
       return () => clearTimeout(timer)
     }
-  }, [posts])
+  }, [isMounted, posts])
   
   // Обработчик для переключения режима избранного
   const handleToggleFavorites = (value: boolean) => {
@@ -116,7 +122,8 @@ export default function CategoryPosts({
   const visiblePosts = filteredPosts.slice(0, visibleCount)
   
   // Показываем скелетон до загрузки настроек
-  if (!isSettingsLoaded) {
+  if (!isMounted || !isSettingsLoaded) {
+    // На сервере или до загрузки настроек на клиенте
     return (
       <div>
         <HeaderSkeleton />
@@ -228,6 +235,7 @@ export default function CategoryPosts({
             </div>
           )}
           
+          {/* Серверная пагинация */}
           {!showFavorites && totalPages > 1 && (
             <div className="mt-12" id="server-pagination">
               <Pagination

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FilterIcon, Search } from 'lucide-react'
 import { useMediaQuery } from '@/hooks'
 import { Button } from '@/components/ui/button'
@@ -50,7 +50,23 @@ export function FilterDialog({
   onViewModeChange
 }: FilterDialogProps) {
   const [open, setOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  
+  // Отмечаем, что компонент смонтирован (и мы на клиенте)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  // Для серверного рендеринга используем мобильный вариант по умолчанию
+  if (!isMounted) {
+    return (
+      <Button variant="outline" className="gap-2">
+        <FilterIcon size={16} />
+        Фильтры
+      </Button>
+    )
+  }
 
   if (isDesktop) {
     return (

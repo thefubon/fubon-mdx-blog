@@ -23,25 +23,38 @@ export default function Pagination({
   basePath,
 }: PaginationProps) {
   const [isVisible, setIsVisible] = useState(true)
+  const [isMounted, setIsMounted] = useState(false)
+  
+  // Отмечаем, что компонент смонтирован (и мы на клиенте)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
   
   // Проверяем нужно ли показывать пагинацию при рендеринге
   useEffect(() => {
-    // Проверяем localStorage на активность режима "Избранное"
-    const showFavorites = localStorage.getItem('blogShowFavorites') === 'true'
-    setIsVisible(!showFavorites)
-    
-    // Добавляем обработчик на изменение localStorage
-    const handleStorageChange = () => {
+    if (isMounted) {
+      // Проверяем localStorage на активность режима "Избранное"
       const showFavorites = localStorage.getItem('blogShowFavorites') === 'true'
       setIsVisible(!showFavorites)
+      
+      // Добавляем обработчик на изменение localStorage
+      const handleStorageChange = () => {
+        const showFavorites = localStorage.getItem('blogShowFavorites') === 'true'
+        setIsVisible(!showFavorites)
+      }
+      
+      window.addEventListener('storage', handleStorageChange)
+      return () => window.removeEventListener('storage', handleStorageChange)
     }
-    
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
-  }, [])
+  }, [isMounted])
   
-  // Если режим "Избранное" активен или всего одна страница, не показываем пагинацию
-  if (!isVisible || totalPages <= 1) {
+  // Во время серверного рендеринга или до монтирования, всегда показываем пагинацию
+  if (!isMounted) {
+    if (totalPages <= 1) {
+      return null
+    }
+    // Иначе продолжаем рендеринг (будет совпадать с серверным рендерингом)
+  } else if (!isVisible || totalPages <= 1) {
     return null
   }
 

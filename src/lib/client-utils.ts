@@ -4,13 +4,13 @@ import { SortMode } from '@/components/blog/BlogFilters';
 
 // Получить режим сортировки из localStorage
 export function getSavedSortMode(): SortMode {
-  if (typeof window === 'undefined') return 'new';
+  if (typeof window === 'undefined') return 'date';
   
   try {
     const saved = localStorage.getItem('blogSortMode');
-    return (saved === 'popular' || saved === 'new') ? saved as SortMode : 'new';
+    return (saved === 'popular' || saved === 'date') ? saved as SortMode : 'date';
   } catch {
-    return 'new';
+    return 'date';
   }
 }
 

@@ -38,12 +38,18 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
   const [showFavorites, setShowFavorites] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('grid3')
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   const POSTS_PER_PAGE = 12
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
 
+  // Отмечаем, что компонент смонтирован (и мы на клиенте)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   // Загрузка сохраненного режима отображения
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isMounted) {
       // Небольшая задержка для предотвращения мигания
       const timer = setTimeout(() => {
         const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode
@@ -62,7 +68,7 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
       
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [isMounted])
 
   // Получаем отфильтрованные посты (все, без пагинации)
   const allFilteredPosts = filterPosts(posts, {
@@ -80,30 +86,35 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
 
   // Функция для обновления режима отображения
   const updateViewMode = (mode: ViewMode) => {
-    setViewMode(mode)
-    localStorage.setItem('blogViewMode', mode)
+    if (isMounted) {
+      setViewMode(mode)
+      localStorage.setItem('blogViewMode', mode)
+    }
   }
 
   // Функция для переключения режима избранного
   const toggleFavorites = (value: boolean) => {
-    setShowFavorites(value)
-    // Используем dispatchEvent для корректной работы слушателей
-    const oldValue = localStorage.getItem('blogShowFavorites')
-    localStorage.setItem('blogShowFavorites', String(value))
-    
-    // Dispatch event для обработки в других компонентах
-    window.dispatchEvent(new StorageEvent('storage', {
-      key: 'blogShowFavorites',
-      oldValue,
-      newValue: String(value),
-      storageArea: localStorage
-    }))
-    
-    setVisibleCount(POSTS_PER_PAGE)
+    if (isMounted) {
+      setShowFavorites(value)
+      // Используем dispatchEvent для корректной работы слушателей
+      const oldValue = localStorage.getItem('blogShowFavorites')
+      localStorage.setItem('blogShowFavorites', String(value))
+      
+      // Dispatch event для обработки в других компонентах
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'blogShowFavorites',
+        oldValue,
+        newValue: String(value),
+        storageArea: localStorage
+      }))
+      
+      setVisibleCount(POSTS_PER_PAGE)
+    }
   }
 
   // Если настройки еще не загружены, показываем скелетон
-  if (!isSettingsLoaded) {
+  if (!isMounted || !isSettingsLoaded) {
+    // На сервере или до загрузки настроек на клиенте
     return (
       <div>
         <HeaderSkeleton />
