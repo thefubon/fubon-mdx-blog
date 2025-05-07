@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  MoreHorizontalIcon,
 } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+import {
+  Pagination as UIPagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationEllipsis,
+} from "@/components/ui/pagination"
+import { useMusicPlayer } from '@/contexts/MusicPlayerProvider'
+import { useMusicPlayerStore } from '@/store/use-music-player-store'
 
 interface PaginationProps {
   currentPage: number
@@ -25,6 +30,8 @@ export default function Pagination({
   const router = useRouter()
   const [isVisible, setIsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false)
+  const { audioRef } = useMusicPlayer()
+  const { currentTrack } = useMusicPlayerStore()
   
   // Отмечаем, что компонент смонтирован (и мы на клиенте)
   useEffect(() => {
@@ -111,104 +118,84 @@ export default function Pagination({
   // Функция для клиентской навигации
   const handleNavigate = (pageNumber: number, e: React.MouseEvent) => {
     e.preventDefault()
+    
+    // Сохраняем состояние музыкального плеера перед навигацией
+    if (audioRef.current && currentTrack) {
+      const state = {
+        trackId: currentTrack.id,
+        currentTime: audioRef.current.currentTime,
+        isPlaying: !audioRef.current.paused
+      }
+      localStorage.setItem('musicPlayerState', JSON.stringify(state))
+    }
+    
     const url = getPageHref(pageNumber)
     router.push(url)
   }
 
   return (
-    <nav className="mx-auto flex w-full justify-center mt-10">
-      <ul className="flex flex-row items-center gap-1">
+    <UIPagination className="mt-10">
+      <PaginationContent>
         {/* Кнопка "Предыдущая страница" */}
-        <li>
+        <PaginationItem>
           {currentPage > 1 ? (
-            <button
+            <PaginationLink
               onClick={(e) => handleNavigate(currentPage - 1, e)}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "default" }),
-                "gap-1 px-2.5 sm:pl-2.5"
-              )}
-              aria-label="Предыдущая страница"
+              className="gap-1 px-2.5 sm:pl-2.5"
             >
               <ChevronLeftIcon />
               <span className="hidden sm:block">Назад</span>
-            </button>
+            </PaginationLink>
           ) : (
-            <button
-              disabled
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "default" }),
-                "gap-1 px-2.5 sm:pl-2.5 pointer-events-none opacity-50"
-              )}
-              aria-label="Предыдущая страница"
-            >
+            <span className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 gap-1 sm:pl-2.5 pointer-events-none opacity-50">
               <ChevronLeftIcon />
               <span className="hidden sm:block">Назад</span>
-            </button>
+            </span>
           )}
-        </li>
+        </PaginationItem>
 
         {/* Номера страниц с эллипсисами */}
         {pageNumbers.map((pageNumber, index) => {
           // Если это маркер эллипсиса
           if (pageNumber < 0) {
             return (
-              <li key={`ellipsis-${index}`}>
-                <span className="flex size-9 items-center justify-center" aria-hidden>
-                  <MoreHorizontalIcon className="size-4" />
-                  <span className="sr-only">Ещё страницы</span>
-                </span>
-              </li>
+              <PaginationItem key={`ellipsis-${index}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
             );
           }
           
           // Если это обычная страница
           return (
-            <li key={pageNumber}>
-              <button
-                className={cn(
-                  buttonVariants({
-                    variant: pageNumber === currentPage ? "outline" : "ghost",
-                    size: "icon",
-                  })
-                )}
-                aria-current={pageNumber === currentPage ? "page" : undefined}
+            <PaginationItem key={pageNumber}>
+              <PaginationLink
+                isActive={pageNumber === currentPage}
                 onClick={(e) => handleNavigate(pageNumber, e)}
               >
                 {pageNumber}
-              </button>
-            </li>
+              </PaginationLink>
+            </PaginationItem>
           );
         })}
 
         {/* Кнопка "Следующая страница" */}
-        <li>
+        <PaginationItem>
           {currentPage < totalPages ? (
-            <button
+            <PaginationLink
               onClick={(e) => handleNavigate(currentPage + 1, e)}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "default" }),
-                "gap-1 px-2.5 sm:pr-2.5"
-              )}
-              aria-label="Следующая страница"
+              className="gap-1 px-2.5 sm:pr-2.5"
             >
               <span className="hidden sm:block">Далее</span>
               <ChevronRightIcon />
-            </button>
+            </PaginationLink>
           ) : (
-            <button
-              disabled
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "default" }),
-                "gap-1 px-2.5 sm:pr-2.5 pointer-events-none opacity-50"
-              )}
-              aria-label="Следующая страница"
-            >
+            <span className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 gap-1 sm:pr-2.5 pointer-events-none opacity-50">
               <span className="hidden sm:block">Далее</span>
               <ChevronRightIcon />
-            </button>
+            </span>
           )}
-        </li>
-      </ul>
-    </nav>
+        </PaginationItem>
+      </PaginationContent>
+    </UIPagination>
   )
 } 

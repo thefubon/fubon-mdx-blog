@@ -40,14 +40,16 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 type PaginationLinkProps = {
   isActive?: boolean
   onClick?: (e: React.MouseEvent) => void
+  children?: React.ReactNode
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">
+  Omit<React.ComponentProps<"a">, "ref">
 
 function PaginationLink({
   className,
   isActive,
   size = "icon",
   onClick,
+  children,
   ...props
 }: PaginationLinkProps) {
   const commonClassName = cn(
@@ -60,17 +62,16 @@ function PaginationLink({
 
   // If onClick is provided, render as button to handle client-side routing
   if (onClick) {
-    const { href, ...buttonProps } = props;
     return (
       <button
+        type="button"
         onClick={onClick}
         aria-current={isActive ? 'page' : undefined}
-        data-slot="pagination-link"
+        data-slot="pagination-link" 
         data-active={isActive}
         className={commonClassName}
-        {...buttonProps}
       >
-        {props.children}
+        {children}
       </button>
     )
   }
@@ -83,7 +84,9 @@ function PaginationLink({
       data-active={isActive}
       className={commonClassName}
       {...props}
-    />
+    >
+      {children}
+    </a>
   )
 }
 
