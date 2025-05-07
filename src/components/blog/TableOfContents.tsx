@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import { translateReadingTime } from '@/lib/utils'
 
 interface Heading {
   id: string
@@ -302,7 +303,7 @@ export default function TableOfContents({ readingTime }: TableOfContentsProps) {
           <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
           <path d="M12 7V12L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
-        {readingTime}
+        {translateReadingTime(readingTime)}
       </div>
     </div>
   );

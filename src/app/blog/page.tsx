@@ -78,7 +78,7 @@ async function BlogContent({ page }: { page: number }) {
                 <div className="flex items-center mb-4 text-sm text-gray-600 dark:text-gray-300">
                   <FormattedDate date={latestPost.frontmatter.publishedAt} /> 
                   <span className="mx-2">•</span> 
-                  <span>{latestPost.frontmatter.readingTime}</span>
+                  <span>{latestPost.frontmatter.readingTime.replace('min read', 'мин. чтения')}</span>
                   
                   {latestPost.frontmatter.favorite && (
                     <>

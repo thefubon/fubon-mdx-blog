@@ -10,3 +10,8 @@ export function formatTime(seconds: number) {
   const remainingSecond = Math.floor(seconds % 60);
   return `${minutes}:${remainingSecond.toString().padStart(2, "0")}`;
 }
+
+// Функция для перевода времени чтения на русский
+export function translateReadingTime(readingTime: string): string {
+  return readingTime.replace('min read', 'мин. чтения');
+}

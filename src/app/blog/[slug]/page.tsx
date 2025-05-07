@@ -9,6 +9,7 @@ import TableOfContents from '@/components/blog/TableOfContents'
 import Link from 'next/link'
 import Container from '@/components/ui/Container'
 import Image from 'next/image'
+import { translateReadingTime } from '@/lib/utils'
 
 export async function generateStaticParams() {
   const posts = getAllPostSlugs()
@@ -100,7 +101,7 @@ export default async function BlogPost(props: {
                         strokeLinecap="round"
                       />
                     </svg>
-                    {frontmatter.readingTime}
+                    {translateReadingTime(frontmatter.readingTime)}
                   </span>
                 </div>
 
@@ -163,7 +164,7 @@ export default async function BlogPost(props: {
                       strokeLinecap="round"
                     />
                   </svg>
-                  {frontmatter.readingTime}
+                  {translateReadingTime(frontmatter.readingTime)}
                 </span>
               </div>
 

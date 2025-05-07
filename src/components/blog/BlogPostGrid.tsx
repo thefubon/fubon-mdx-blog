@@ -6,6 +6,7 @@ import { Star } from 'lucide-react'
 import FormattedDate from '@/components/blog/FormattedDate'
 import type { Post } from '@/lib/types'
 import type { ViewMode } from './BlogFilters'
+import { translateReadingTime } from '@/lib/utils'
 
 interface BlogPostGridProps {
   posts: Post[]
@@ -73,7 +74,7 @@ export default function BlogPostGrid({ posts, viewMode }: BlogPostGridProps) {
         <div className="flex flex-col flex-grow p-4">
           <div className="mb-2">
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-              <FormattedDate date={publishedAt} /> • {readingTime}
+              <FormattedDate date={publishedAt} /> • {translateReadingTime(readingTime)}
             </div>
             
             {/* Категория */}
@@ -195,7 +196,7 @@ export default function BlogPostGrid({ posts, viewMode }: BlogPostGridProps) {
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                      <FormattedDate date={publishedAt} /> • {readingTime}
+                      <FormattedDate date={publishedAt} /> • {translateReadingTime(readingTime)}
                     </div>
                   </div>
                   
