@@ -1,19 +1,24 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import BlogPostGrid from './BlogPostGrid'
-import type { Post } from '@/lib/types'
-import { ViewMode } from '@/components/blog/BlogFilters'
-import { filterPosts } from '@/lib/blog-client'
-import { FilterDialog } from './FilterDialog'
+import Link from 'next/link'
 import FavoriteToggle from './FavoriteToggle'
+import { Post } from '@/lib/types'
+import Pagination from '@/components/blog/Pagination'
+import BlogPostGrid from './BlogPostGrid'
+import { ViewMode } from './BlogFilters'
 import { Button } from '@/components/ui/button'
-import { Grid2X2, Grid3X3, List } from 'lucide-react'
+import { Grid2X2, Grid3X3, List, ArrowLeft } from 'lucide-react'
+import { FilterDialog } from './FilterDialog'
 
-interface BlogComponentsProps {
+interface CategoryPostsProps {
   posts: Post[]
-  categories: Array<{ category: string, count: number }>
-  tags: string[]
+  category: string
+  totalPages: number
+  currentPage: number
+  basePath: string
+  categories?: Array<{ category: string, count: number }>
+  allTags?: string[]
 }
 
 // Компонент скелетона для заголовка и фильтров
@@ -33,18 +38,25 @@ function HeaderSkeleton() {
   )
 }
 
-// Клиентский компонент для синхронизации между фильтрами и сеткой постов
-export default function BlogComponents({ posts, categories, tags }: BlogComponentsProps) {
+export default function CategoryPosts({ 
+  posts, 
+  category, 
+  totalPages, 
+  currentPage,
+  basePath,
+  categories,
+  allTags = []
+}: CategoryPostsProps) {
   const [showFavorites, setShowFavorites] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('grid3')
   const [isSettingsLoaded, setIsSettingsLoaded] = useState(false)
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts)
   const POSTS_PER_PAGE = 12
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
-
-  // Загрузка сохраненного режима отображения
+  
+  // Загружаем настройки из localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Небольшая задержка для предотвращения мигания
       const timer = setTimeout(() => {
         const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode
         const savedShowFavorites = localStorage.getItem('blogShowFavorites') === 'true'
@@ -52,42 +64,26 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
         if (savedViewMode) {
           setViewMode(savedViewMode)
         }
-        if (savedShowFavorites) {
-          setShowFavorites(true)
-        }
         
-        // Отмечаем, что настройки загружены
+        setShowFavorites(savedShowFavorites)
         setIsSettingsLoaded(true)
+        
+        if (savedShowFavorites) {
+          setFilteredPosts(posts.filter(post => post.frontmatter.favorite))
+        } else {
+          setFilteredPosts(posts)
+        }
       }, 200)
       
       return () => clearTimeout(timer)
     }
-  }, [])
-
-  // Получаем отфильтрованные посты (все, без пагинации)
-  const allFilteredPosts = filterPosts(posts, {
-    sortBy: 'date',
-    showFavorites
-  })
-
-  // Получаем видимые посты
-  const visiblePosts = allFilteredPosts.slice(0, visibleCount)
-
-  // Сброс visibleCount при смене фильтра
-  useEffect(() => {
-    setVisibleCount(POSTS_PER_PAGE)
-  }, [showFavorites])
-
-  // Функция для обновления режима отображения
-  const updateViewMode = (mode: ViewMode) => {
-    setViewMode(mode)
-    localStorage.setItem('blogViewMode', mode)
-  }
-
-  // Функция для переключения режима избранного
-  const toggleFavorites = (value: boolean) => {
+  }, [posts])
+  
+  // Обработчик для переключения режима избранного
+  const handleToggleFavorites = (value: boolean) => {
     setShowFavorites(value)
-    // Используем dispatchEvent для корректной работы слушателей
+    
+    // Сохраняем в localStorage
     const oldValue = localStorage.getItem('blogShowFavorites')
     localStorage.setItem('blogShowFavorites', String(value))
     
@@ -99,10 +95,27 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
       storageArea: localStorage
     }))
     
+    // Фильтруем посты
+    if (value) {
+      setFilteredPosts(posts.filter(post => post.frontmatter.favorite))
+    } else {
+      setFilteredPosts(posts)
+    }
+    
+    // Сбрасываем счетчик видимых постов
     setVisibleCount(POSTS_PER_PAGE)
   }
-
-  // Если настройки еще не загружены, показываем скелетон
+  
+  // Функция для обновления режима отображения
+  const updateViewMode = (mode: ViewMode) => {
+    setViewMode(mode)
+    localStorage.setItem('blogViewMode', mode)
+  }
+  
+  // Получаем видимые посты
+  const visiblePosts = filteredPosts.slice(0, visibleCount)
+  
+  // Показываем скелетон до загрузки настроек
   if (!isSettingsLoaded) {
     return (
       <div>
@@ -114,18 +127,26 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
       </div>
     )
   }
-
+  
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
         <div className="flex items-center justify-between w-full sm:w-auto">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Все новости</h2>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/blog">
+                <ArrowLeft size={20} />
+              </Link>
+            </Button>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Категория: {category}</h2>
+          </div>
           <div className="sm:hidden">
             <FilterDialog
-              categories={categories}
-              tags={tags}
+              categories={categories || [{ category, count: filteredPosts.length }]}
+              currentCategory={category}
+              tags={allTags}
               showFavorites={showFavorites}
-              onShowFavoritesChange={toggleFavorites}
+              onShowFavoritesChange={handleToggleFavorites}
               viewMode={viewMode}
               onViewModeChange={updateViewMode}
             />
@@ -135,7 +156,7 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
           <FavoriteToggle 
             showFavorites={showFavorites} 
-            onToggle={toggleFavorites} 
+            onToggle={handleToggleFavorites} 
           />
           
           {/* Переключатель вида отображения - только на десктопе */}
@@ -177,10 +198,11 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
           
           <div className="hidden sm:block">
             <FilterDialog
-              categories={categories}
-              tags={tags}
+              categories={categories || [{ category, count: filteredPosts.length }]}
+              currentCategory={category}
+              tags={allTags}
               showFavorites={showFavorites}
-              onShowFavoritesChange={toggleFavorites}
+              onShowFavoritesChange={handleToggleFavorites}
               viewMode={viewMode}
               onViewModeChange={updateViewMode}
             />
@@ -188,19 +210,39 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
         </div>
       </div>
 
-      <BlogPostGrid 
-        posts={visiblePosts} 
-        viewMode={viewMode}
-      />
-
-      {visibleCount < allFilteredPosts.length && (
-        <div className="mt-12 flex justify-center">
-          <Button
-            className="px-6 py-3"
-            onClick={() => setVisibleCount((c) => c + POSTS_PER_PAGE)}
-          >
-            Показать ещё
-          </Button>
+      {filteredPosts.length > 0 ? (
+        <>
+          <BlogPostGrid 
+            posts={visiblePosts} 
+            viewMode={viewMode}
+          />
+          
+          {visibleCount < filteredPosts.length && (
+            <div className="mt-12 flex justify-center">
+              <Button
+                className="px-6 py-3"
+                onClick={() => setVisibleCount((c) => c + POSTS_PER_PAGE)}
+              >
+                Показать ещё
+              </Button>
+            </div>
+          )}
+          
+          {!showFavorites && totalPages > 1 && (
+            <div className="mt-12" id="server-pagination">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath={basePath}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="py-20 text-center">
+          <p className="text-xl text-gray-500 dark:text-gray-400">
+            Нет избранных постов в этой категории
+          </p>
         </div>
       )}
     </div>

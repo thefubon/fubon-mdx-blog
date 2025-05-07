@@ -45,7 +45,7 @@ export default function RelatedPosts({ posts, currentSlug, allPosts, currentTags
           return (
             <article
               key={slug}
-              className="border rounded-md p-5 hover:shadow-md transition-shadow">
+              className="rounded-md p-5 hover:shadow-md transition-shadow">
               {cover ? (
                 <div className="mb-4 rounded-md overflow-hidden h-40 relative">
                   <Link href={`/blog/${slug}`}>

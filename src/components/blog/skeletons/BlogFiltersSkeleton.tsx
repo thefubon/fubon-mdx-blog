@@ -1,15 +1,17 @@
+import { Skeleton } from "@/components/ui/skeleton"
+
 export default function BlogFiltersSkeleton() {
   return (
-    <div className="flex justify-between items-center mb-6 animate-pulse">
+    <div className="flex justify-between items-center mb-6">
       {/* Заголовок со счетчиком */}
-      <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-32"></div>
+      <Skeleton className="h-6 w-32" />
       
       <div className="flex items-center space-x-2">
         {/* Кнопки сортировки */}
-        <div className="flex border rounded-lg dark:border-gray-800 overflow-hidden h-8 w-36 bg-gray-200 dark:bg-gray-800"></div>
+        <Skeleton className="h-8 w-36" />
         
         {/* Кнопки вида отображения */}
-        <div className="flex border rounded-lg dark:border-gray-800 overflow-hidden h-8 w-20 bg-gray-200 dark:bg-gray-800"></div>
+        <Skeleton className="h-8 w-20" />
       </div>
     </div>
   )

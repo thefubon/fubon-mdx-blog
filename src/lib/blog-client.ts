@@ -9,10 +9,19 @@ export function filterPosts(posts: Post[], options: {
   tag?: string,
   page?: number,
   limit?: number,
-  excludeSlugs?: string[]
+  excludeSlugs?: string[],
+  showFavorites?: boolean
 }): Post[] {
   let filteredPosts = [...posts];
-  const { sortBy = 'date', category, tag, excludeSlugs = [] } = options;
+  const { 
+    sortBy = 'date', 
+    category, 
+    tag, 
+    excludeSlugs = [],
+    showFavorites = false,
+    page = 1,
+    limit = 12
+  } = options;
   
   // Фильтрация по исключенным слагам
   if (excludeSlugs.length > 0) {
@@ -34,6 +43,11 @@ export function filterPosts(posts: Post[], options: {
       return postTags.includes(tag);
     });
   }
+
+  // Фильтрация по избранному
+  if (showFavorites) {
+    filteredPosts = filteredPosts.filter(post => post.frontmatter.favorite);
+  }
   
   // Сортировка
   if (sortBy === 'date') {
@@ -50,6 +64,11 @@ export function filterPosts(posts: Post[], options: {
         new Date(a.frontmatter.publishedAt).getTime()
       );
   }
+
+  // Пагинация
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  filteredPosts = filteredPosts.slice(startIndex, endIndex);
   
   return filteredPosts;
 }

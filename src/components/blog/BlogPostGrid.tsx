@@ -1,89 +1,96 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import FormattedDate from '@/components/blog/FormattedDate'
-import { ViewMode, SortMode } from '@/components/blog/BlogFilters'
-import type { Post } from '@/lib/types'
 import { Star } from 'lucide-react'
-import { filterPosts } from '@/lib/blog-client'
+import FormattedDate from '@/components/blog/FormattedDate'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { Post } from '@/lib/types'
+import type { ViewMode } from './BlogFilters'
 
-// Экспортируем тип пропсов для внешнего использования
-export interface BlogPostGridProps {
+interface BlogPostGridProps {
   posts: Post[]
-  onFilteredCountChange?: (count: number) => void
+  viewMode: ViewMode
 }
 
-export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostGridProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('grid4')
-  const [sortMode, setSortMode] = useState<SortMode>('new')
+function PostSkeleton({ type }: { type: 'grid' | 'list' }) {
+  if (type === 'list') {
+    return (
+      <div className="flex flex-col sm:flex-row rounded-lg overflow-hidden shadow-sm">
+        <Skeleton className="sm:w-[280px] shrink-0 aspect-video sm:aspect-[4/3]" />
+        <div className="flex flex-col flex-grow p-4 space-y-4">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-7 w-3/4" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+          <Skeleton className="h-4 w-32 mt-auto" />
+        </div>
+      </div>
+    )
+  }
   
-  // Сортировка постов в зависимости от режима
-  const sortedPosts = useMemo(() => {
-    const sortBy = sortMode === 'popular' ? 'popular' : 'date';
-    return filterPosts(posts, { sortBy });
-  }, [posts, sortMode])
-  
-  // Обновляем информацию о количестве постов в родительском компоненте
-  useEffect(() => {
-    if (onFilteredCountChange && sortedPosts.length > 0) {
-      // Используем setTimeout, чтобы убедиться, что это происходит после гидратации
-      const timer = setTimeout(() => {
-        onFilteredCountChange(sortedPosts.length);
-      }, 0);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [sortedPosts, onFilteredCountChange]);
-  
-  // Загружаем режимы из localStorage при инициализации и в ответ на события
-  const updateFromLocalStorage = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode
-      const savedSortMode = localStorage.getItem('blogSortMode') as SortMode
-      
-      if (savedViewMode && savedViewMode !== viewMode) {
-        setViewMode(savedViewMode)
-      }
-      
-      if (savedSortMode && savedSortMode !== sortMode) {
-        setSortMode(savedSortMode)
-      }
-    }
-  }, [viewMode, sortMode]);
-  
-  // При первоначальной загрузке
-  useEffect(() => {
-    updateFromLocalStorage()
-    
-    // Настраиваем слушатель события хранилища
-    if (typeof window !== 'undefined') {
-      const handleStorageChange = () => {
-        updateFromLocalStorage()
-      }
-      
-      // Обработчик изменения размера окна
-      const handleResize = () => {
-        updateFromLocalStorage()
-      }
-      
-      window.addEventListener('storage', handleStorageChange)
-      window.addEventListener('resize', handleResize)
-      
-      // Также проверяем изменения каждые 500 мс для большей надежности
-      const interval = setInterval(updateFromLocalStorage, 500)
-      
-      return () => {
-        window.removeEventListener('storage', handleStorageChange)
-        window.removeEventListener('resize', handleResize)
-        clearInterval(interval)
-      }
-    }
-  }, [updateFromLocalStorage])
+  return (
+    <div className="flex flex-col rounded-lg overflow-hidden shadow-sm h-full">
+      <Skeleton className="aspect-video" />
+      <div className="flex flex-col flex-grow p-4 space-y-4">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-6 w-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+        </div>
+        <Skeleton className="h-4 w-28 mt-auto" />
+      </div>
+    </div>
+  )
+}
 
+export default function BlogPostGrid({ posts, viewMode }: BlogPostGridProps) {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    // Небольшая задержка для загрузки правильного вида
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Отображаем скелетон до монтирования компонента
+  if (!isMounted) {
+    if (viewMode === 'list') {
+      return (
+        <div className="space-y-6">
+          {[...Array(3)].map((_, i) => (
+            <PostSkeleton key={i} type="list" />
+          ))}
+        </div>
+      );
+    }
+    
+    // Для сетки имитируем соответствующее количество колонок
+    const gridClass = viewMode === 'grid3'
+      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+      : viewMode === 'grid2' 
+        ? 'grid-cols-1 sm:grid-cols-2' 
+        : 'grid-cols-1';
+    
+    return (
+      <div className={`grid ${gridClass} gap-6`}>
+        {[...Array(6)].map((_, i) => (
+          <PostSkeleton key={i} type="grid" />
+        ))}
+      </div>
+    );
+  }
+  
   // Рендер поста в виде карточки
-  const renderPostCard = (post: Post, isCompact = false) => {
+  const renderPostCard = (post: Post) => {
     const {
       title,
       description,
@@ -96,12 +103,10 @@ export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostG
       favorite
     } = post.frontmatter
     
-    const grid2Classes = isCompact ? 'md:col-span-1' : 'md:col-span-2'
-
     return (
       <article
         key={slug}
-        className={`flex flex-col border dark:border-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer h-full ${viewMode === 'grid2' ? grid2Classes : ''}`}>
+        className="flex flex-col rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer h-full">
         <Link href={`/blog/${slug}`} className="block overflow-hidden aspect-video relative">
           {cover ? (
             <Image
@@ -202,7 +207,7 @@ export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostG
     // Отображение в виде списка
     return (
       <div className="space-y-6">
-        {sortedPosts.map((post) => {
+        {posts.map((post) => {
           const {
             title,
             description,
@@ -218,7 +223,7 @@ export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostG
           return (
             <article
               key={slug}
-              className="flex flex-col sm:flex-row border dark:border-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer">
+              className="flex flex-col sm:flex-row rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer">
               
               {/* Изображение слева только для планшетов и больше */}
               <div className="sm:w-[280px] shrink-0 relative">
@@ -262,9 +267,9 @@ export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostG
                 )}
               </div>
 
-              <div className="flex flex-col p-4 flex-grow">
-                <div className="mb-2 flex justify-between">
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex flex-col flex-grow p-4">
+                <div className="mb-2">
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
                     <FormattedDate date={publishedAt} /> • {readingTime}
                   </div>
                   
@@ -272,20 +277,20 @@ export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostG
                   {category && (
                     <Link
                       href={`/blog/categories/${encodeURIComponent(category)}`}
-                      className="inline-block bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full transition-colors">
+                      className="inline-block bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full transition-colors mr-1">
                       {category}
                     </Link>
                   )}
                 </div>
 
                 <Link href={`/blog/${slug}`} className="block mb-2">
-                  <h3 className="font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                  <h3 className="text-xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     {title}
                   </h3>
                 </Link>
 
                 {description && (
-                  <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
+                  <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">
                     {description}
                   </p>
                 )}
@@ -324,19 +329,16 @@ export default function BlogPostGrid({ posts, onFilteredCountChange }: BlogPostG
     )
   }
   
-  if (viewMode === 'grid2') {
-    // Отображение в виде сетки 2x2
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {sortedPosts.map((post) => renderPostCard(post, true))}
-      </div>
-    )
-  }
-  
-  // Отображение в виде сетки 4x4 (по умолчанию)
+  // Определяем количество колонок в зависимости от viewMode
+  const gridClass = viewMode === 'grid3' 
+    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
+    : viewMode === 'grid2'
+      ? 'grid-cols-1 sm:grid-cols-2'
+      : 'grid-cols-1';
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {sortedPosts.map((post) => renderPostCard(post))}
+    <div className={`grid ${gridClass} gap-6`}>
+      {posts.map((post) => renderPostCard(post))}
     </div>
   )
 } 

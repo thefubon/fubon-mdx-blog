@@ -143,72 +143,77 @@ export default async function BlogPage(props: PageProps) {
       </div>
       
       <Container padding space className="py-8">
-        {/* Categories */}
-        <div className="mb-10 rounded-xl bg-gray-50 dark:bg-gray-900/40 p-5 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">Категории</h2>
-          <div className="md:overflow-visible overflow-x-auto scrollbar-hide">
-            <div className="flex space-x-2 mb-1 whitespace-nowrap md:whitespace-normal md:flex-wrap md:gap-2">
-              <p
-                className="px-4 py-2 rounded-lg font-medium bg-blue-600 text-white transition-all shadow-md cursor-default"
-              >
-                Все статьи
-              </p>
-              
-              {allCategories.map(({ category, count }) => (
-                <Link
-                  key={category}
-                  href={`/blog/categories/${encodeURIComponent(category)}`}
-                  className="px-4 py-2 rounded-lg font-medium bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all hover:shadow-md flex items-center gap-2"
-                >
-                  {category} <span className="inline-flex items-center justify-center bg-gray-100 dark:bg-gray-700 text-xs rounded-full px-2 py-0.5 text-gray-600 dark:text-gray-300">{count}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Tags */}
-        {allTags.length > 0 && (
-          <div className="mb-10 rounded-xl bg-gray-50 dark:bg-gray-900/40 p-5 shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">Теги</h2>
-            <div className="md:overflow-visible overflow-x-auto scrollbar-hide pb-2">
-              <div className="flex gap-2 whitespace-nowrap md:whitespace-normal md:flex-wrap">
-                <p
-                  className="inline-flex items-center justify-center h-9 px-4 bg-blue-600 text-white text-sm font-medium rounded-full shadow-md cursor-default"
-                >
-                  Все
-                </p>
-                
-                {allTags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/blog/tags/${tag}`}
-                    className="inline-flex items-center justify-center h-9 px-4 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-medium rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all hover:shadow-md"
-                  >
-                    #{tag}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Компоненты фильтров и постов с использованием Suspense */}
         <Suspense fallback={<BlogSkeleton />}>
           {/* Клиентский компонент с фильтрами и сеткой постов */}
           <BlogComponents 
-            posts={posts} 
+            posts={posts}
+            categories={allCategories}
+            tags={allTags}
           />
         </Suspense>
 
-        {/* Компонент пагинации */}
-        <div className="mt-12">
+        {/* 
+          Компонент пагинации отображаем только для серверной пагинации.
+          При клиентской фильтрации (в т.ч. при просмотре избранных) 
+          пагинация не должна отображаться, т.к. используется "Показать ещё" в BlogComponents
+        */}
+        <div id="server-pagination" className="mt-12">
           <Pagination
             currentPage={validatedPage}
             totalPages={totalPages}
             basePath="/blog"
           />
         </div>
+        
+        {/* Добавляем скрипт для скрытия серверной пагинации при активации клиентских фильтров */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Функция для проверки и скрытия пагинации
+              function checkAndHidePagination() {
+                if (localStorage.getItem('blogShowFavorites') === 'true') {
+                  const paginationElement = document.getElementById('server-pagination');
+                  if (paginationElement) paginationElement.style.display = 'none';
+                }
+              }
+              
+              // Скрываем пагинацию немедленно, до загрузки DOM
+              checkAndHidePagination();
+              
+              document.addEventListener('DOMContentLoaded', function() {
+                // Проверяем еще раз после загрузки DOM
+                checkAndHidePagination();
+
+                // Проверяем изменения в localStorage
+                window.addEventListener('storage', function(e) {
+                  if (e.key === 'blogShowFavorites') {
+                    const paginationElement = document.getElementById('server-pagination');
+                    if (!paginationElement) return;
+                    
+                    if (e.newValue === 'true') {
+                      paginationElement.style.display = 'none';
+                    } else {
+                      paginationElement.style.display = 'block';
+                    }
+                  }
+                });
+                
+                // Мониторим изменения в DOM, которые могут происходить при клике на переключатель
+                const observer = new MutationObserver(function() {
+                  // Проверяем состояние после любых изменений
+                  checkAndHidePagination();
+                });
+                
+                // Начинаем наблюдение за всем документом
+                observer.observe(document.body, { 
+                  childList: true, 
+                  subtree: true 
+                });
+              });
+            `
+          }}
+        />
       </Container>
     </PageWrapper>
   )
