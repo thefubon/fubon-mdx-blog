@@ -15,12 +15,22 @@ const MDXComponents = {
   h1: ({ children }: { children: React.ReactNode }) => (
     <h1 className="text-3xl font-bold mb-6 mt-10">{children}</h1>
   ),
-  h2: ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-2xl font-bold mb-4 mt-8">{children}</h2>
-  ),
-  h3: ({ children }: { children: React.ReactNode }) => (
-    <h3 className="text-xl font-bold mb-3 mt-6">{children}</h3>
-  ),
+  h2: ({ children }: { children: React.ReactNode }) => {
+    const id = typeof children === 'string' 
+      ? children.toLowerCase().replace(/\s+/g, '-') 
+      : '';
+    return (
+      <h2 id={id} className="text-2xl font-bold mb-4 mt-8">{children}</h2>
+    );
+  },
+  h3: ({ children }: { children: React.ReactNode }) => {
+    const id = typeof children === 'string' 
+      ? children.toLowerCase().replace(/\s+/g, '-') 
+      : '';
+    return (
+      <h3 id={id} className="text-xl font-bold mb-3 mt-6">{children}</h3>
+    );
+  },
   p: ({ children }: { children: React.ReactNode }) => (
     <p className="mb-4">{children}</p>
   ),

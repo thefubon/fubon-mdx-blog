@@ -6,7 +6,9 @@ import MDXComponents from '@/components/MDXComponents'
 import FormattedDate from '@/components/blog/FormattedDate'
 import Tags from '@/components/blog/Tags'
 import RelatedPosts from '@/components/blog/RelatedPosts'
+import TableOfContents from '@/components/blog/TableOfContents'
 import Link from 'next/link'
+import Container from '@/components/ui/Container'
 
 export async function generateStaticParams() {
   const posts = getAllPostSlugs()
@@ -38,8 +40,8 @@ export default async function BlogPost(props: {
     const allPosts = getAllPosts();
 
     return (
-      <div className="max-w-3xl mx-auto py-10 px-4">
-        <header className="mb-8">
+      <Container className="py-10">
+        <header className="mb-8 max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold mb-2">{frontmatter.title}</h1>
 
           <div className="text-gray-500 mb-4">
@@ -74,21 +76,29 @@ export default async function BlogPost(props: {
           )}
         </header>
 
-        <article className="prose lg:prose-lg max-w-none">
-          <MDXRemote
-            source={content}
-            components={MDXComponents}
-          />
-        </article>
+        <div className="flex flex-col lg:flex-row lg:gap-8 relative">
+          {/* Add a fixed width div for TableOfContents to reserve space */}
+          <div className="lg:w-64 lg:flex-shrink-0" style={{ position: 'relative', height: 'auto' }}>
+            <TableOfContents readingTime={frontmatter.readingTime} />
+          </div>
+          
+          <article className="prose lg:prose-lg max-w-none lg:flex-1 mx-auto lg:mx-0">
+            <MDXRemote
+              source={content}
+              components={MDXComponents}
+            />
+          </article>
+        </div>
 
-        {/* Добавляем компонент похожих статей */}
-        <RelatedPosts 
-          posts={relatedPosts} 
-          currentSlug={slug}
-          allPosts={allPosts}
-          currentTags={frontmatter.tags}
-        />
-      </div>
+        <div className="max-w-3xl mx-auto mt-12">
+          <RelatedPosts 
+            posts={relatedPosts} 
+            currentSlug={slug}
+            allPosts={allPosts}
+            currentTags={frontmatter.tags}
+          />
+        </div>
+      </Container>
     )
   } catch (error) {
     console.error('Ошибка при рендеринге страницы блога:', error)
