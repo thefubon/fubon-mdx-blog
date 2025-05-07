@@ -19,11 +19,8 @@ interface PageProps {
   searchParams?: Promise<{ page?: string }>
 }
 
-export default async function BlogPage(props: PageProps) {
-  const searchParams = await props.searchParams;
-  // Получаем номер текущей страницы из query параметров, если есть
-  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1
-
+// Компонент для динамического контента, который поддерживает как серверный, так и клиентский рендеринг
+async function BlogContent({ page }: { page: number }) {
   // Получаем все посты для отображения героя
   const allPosts = getAllPosts()
   const latestPost = allPosts[0] // Первый пост - самый новый
@@ -33,9 +30,9 @@ export default async function BlogPage(props: PageProps) {
     posts,
     totalPages,
     currentPage: validatedPage,
-  } = currentPage === 1
-      ? getPaginatedPosts(currentPage, POSTS_PER_PAGE, [latestPost.frontmatter.slug])
-      : getPaginatedPosts(currentPage, POSTS_PER_PAGE)
+  } = page === 1
+      ? getPaginatedPosts(page, POSTS_PER_PAGE, [latestPost.frontmatter.slug])
+      : getPaginatedPosts(page, POSTS_PER_PAGE)
 
   // Собираем все уникальные теги из всех постов
   const allTags = Array.from(
@@ -50,21 +47,21 @@ export default async function BlogPage(props: PageProps) {
   const allCategories = getAllCategories()
 
   return (
-    <PageWrapper>
-      {/* Hero section с последним постом */}
-      <div className="py-16">
-        <Container>
-          {/* Breadcrumbs */}
-          <nav className="flex items-center text-sm mb-6 text-gray-500 dark:text-gray-400">
-            <Link href="/" className="flex items-center hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-              <Home className="w-4 h-4 mr-1" />
-              <span>Главная</span>
-            </Link>
-            <ChevronRight className="w-4 h-4 mx-1" />
-            <span className="text-gray-900 dark:text-gray-200 font-medium">Блог</span>
-          </nav>
-          
-          {currentPage === 1 && latestPost && (
+    <>
+      {/* Hero section с последним постом - показываем только на первой странице */}
+      {page === 1 && latestPost && (
+        <div className="py-16">
+          <Container>
+            {/* Breadcrumbs */}
+            <nav className="flex items-center text-sm mb-6 text-gray-500 dark:text-gray-400">
+              <Link href="/" className="flex items-center hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                <Home className="w-4 h-4 mr-1" />
+                <span>Главная</span>
+              </Link>
+              <ChevronRight className="w-4 h-4 mx-1" />
+              <span className="text-gray-900 dark:text-gray-200 font-medium">Блог</span>
+            </nav>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-8 items-center">
               <div>
                 {latestPost.frontmatter.category && (
@@ -139,26 +136,33 @@ export default async function BlogPage(props: PageProps) {
                 )}
               </div>
             </div>
-          )}
-        </Container>
-      </div>
+          </Container>
+        </div>
+      )}
       
-      <Container padding space className="py-8">
-        {/* Компоненты фильтров и постов с использованием Suspense */}
-        <Suspense fallback={<BlogSkeleton />}>
-          {/* Клиентский компонент с фильтрами и сеткой постов */}
-          <BlogComponents 
-            posts={posts}
-            categories={allCategories}
-            tags={allTags}
-          />
-        </Suspense>
+      <Container padding space className={page === 1 ? "py-8" : "py-16"}>
+        {/* Если мы на странице > 1, добавляем breadcrumbs */}
+        {page > 1 && (
+          <nav className="flex items-center text-sm mb-6 text-gray-500 dark:text-gray-400">
+            <Link href="/" className="flex items-center hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+              <Home className="w-4 h-4 mr-1" />
+              <span>Главная</span>
+            </Link>
+            <ChevronRight className="w-4 h-4 mx-1" />
+            <Link href="/blog" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Блог</Link>
+            <ChevronRight className="w-4 h-4 mx-1" />
+            <span className="text-gray-900 dark:text-gray-200 font-medium">Страница {page}</span>
+          </nav>
+        )}
+        
+        {/* Компоненты фильтров и постов */}
+        <BlogComponents 
+          posts={posts}
+          categories={allCategories}
+          tags={allTags}
+        />
 
-        {/* 
-          Компонент пагинации отображаем только для серверной пагинации.
-          При клиентской фильтрации (в т.ч. при просмотре избранных) 
-          пагинация не должна отображаться, т.к. используется "Показать ещё" в BlogComponents
-        */}
+        {/* Компонент пагинации */}
         <div id="server-pagination" className="mt-12">
           <Pagination
             currentPage={validatedPage}
@@ -166,10 +170,24 @@ export default async function BlogPage(props: PageProps) {
             basePath="/blog"
           />
         </div>
-        
-        {/* Используем клиентский компонент вместо dangerouslySetInnerHTML */}
-        <PaginationVisibilityHandler />
       </Container>
+    </>
+  )
+}
+
+export default async function BlogPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  // Получаем номер текущей страницы из query параметров, если есть
+  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1
+
+  return (
+    <PageWrapper>
+      <Suspense fallback={<BlogSkeleton />}>
+        <BlogContent page={currentPage} />
+      </Suspense>
+      
+      {/* Используем клиентский компонент вместо dangerouslySetInnerHTML */}
+      <PaginationVisibilityHandler />
     </PageWrapper>
   )
 }

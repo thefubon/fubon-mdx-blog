@@ -1,15 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import {
-  Pagination as PaginationRoot,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MoreHorizontalIcon,
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 
 interface PaginationProps {
   currentPage: number
@@ -22,6 +22,7 @@ export default function Pagination({
   totalPages,
   basePath,
 }: PaginationProps) {
+  const router = useRouter()
   const [isVisible, setIsVisible] = useState(true)
   const [isMounted, setIsMounted] = useState(false)
   
@@ -107,55 +108,107 @@ export default function Pagination({
     return `${basePath}${pageNumber === 1 ? '' : `?page=${pageNumber}`}`;
   };
 
+  // Функция для клиентской навигации
+  const handleNavigate = (pageNumber: number, e: React.MouseEvent) => {
+    e.preventDefault()
+    const url = getPageHref(pageNumber)
+    router.push(url)
+  }
+
   return (
-    <PaginationRoot className="mt-10">
-      <PaginationContent>
+    <nav className="mx-auto flex w-full justify-center mt-10">
+      <ul className="flex flex-row items-center gap-1">
         {/* Кнопка "Предыдущая страница" */}
-        {currentPage > 1 ? (
-          <PaginationItem>
-            <PaginationPrevious href={getPageHref(currentPage - 1)} />
-          </PaginationItem>
-        ) : (
-          <PaginationItem>
-            <PaginationPrevious aria-disabled className="pointer-events-none opacity-50" />
-          </PaginationItem>
-        )}
+        <li>
+          {currentPage > 1 ? (
+            <button
+              onClick={(e) => handleNavigate(currentPage - 1, e)}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "default" }),
+                "gap-1 px-2.5 sm:pl-2.5"
+              )}
+              aria-label="Предыдущая страница"
+            >
+              <ChevronLeftIcon />
+              <span className="hidden sm:block">Назад</span>
+            </button>
+          ) : (
+            <button
+              disabled
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "default" }),
+                "gap-1 px-2.5 sm:pl-2.5 pointer-events-none opacity-50"
+              )}
+              aria-label="Предыдущая страница"
+            >
+              <ChevronLeftIcon />
+              <span className="hidden sm:block">Назад</span>
+            </button>
+          )}
+        </li>
 
         {/* Номера страниц с эллипсисами */}
         {pageNumbers.map((pageNumber, index) => {
           // Если это маркер эллипсиса
           if (pageNumber < 0) {
             return (
-              <PaginationItem key={`ellipsis-${index}`}>
-                <PaginationEllipsis />
-              </PaginationItem>
+              <li key={`ellipsis-${index}`}>
+                <span className="flex size-9 items-center justify-center" aria-hidden>
+                  <MoreHorizontalIcon className="size-4" />
+                  <span className="sr-only">Ещё страницы</span>
+                </span>
+              </li>
             );
           }
           
           // Если это обычная страница
           return (
-            <PaginationItem key={pageNumber}>
-              <PaginationLink 
-                href={getPageHref(pageNumber)} 
-                isActive={pageNumber === currentPage}
+            <li key={pageNumber}>
+              <button
+                className={cn(
+                  buttonVariants({
+                    variant: pageNumber === currentPage ? "outline" : "ghost",
+                    size: "icon",
+                  })
+                )}
+                aria-current={pageNumber === currentPage ? "page" : undefined}
+                onClick={(e) => handleNavigate(pageNumber, e)}
               >
                 {pageNumber}
-              </PaginationLink>
-            </PaginationItem>
+              </button>
+            </li>
           );
         })}
 
         {/* Кнопка "Следующая страница" */}
-        {currentPage < totalPages ? (
-          <PaginationItem>
-            <PaginationNext href={getPageHref(currentPage + 1)} />
-          </PaginationItem>
-        ) : (
-          <PaginationItem>
-            <PaginationNext aria-disabled className="pointer-events-none opacity-50" />
-          </PaginationItem>
-        )}
-      </PaginationContent>
-    </PaginationRoot>
+        <li>
+          {currentPage < totalPages ? (
+            <button
+              onClick={(e) => handleNavigate(currentPage + 1, e)}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "default" }),
+                "gap-1 px-2.5 sm:pr-2.5"
+              )}
+              aria-label="Следующая страница"
+            >
+              <span className="hidden sm:block">Далее</span>
+              <ChevronRightIcon />
+            </button>
+          ) : (
+            <button
+              disabled
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "default" }),
+                "gap-1 px-2.5 sm:pr-2.5 pointer-events-none opacity-50"
+              )}
+              aria-label="Следующая страница"
+            >
+              <span className="hidden sm:block">Далее</span>
+              <ChevronRightIcon />
+            </button>
+          )}
+        </li>
+      </ul>
+    </nav>
   )
 } 
