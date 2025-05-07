@@ -1,0 +1,44 @@
+{
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "headers": [
+    {
+      "source": "/(fonts|images)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/_next/(image|third-party|static)(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).(jpe?g|png|webp|avif|svg|ico)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+} 
