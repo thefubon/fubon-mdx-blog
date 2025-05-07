@@ -2,31 +2,37 @@
 
 import { useEffect, useState } from 'react'
 
+/**
+ * Custom hook to handle media queries with proper hydration
+ * @param query Media query string
+ * @returns boolean indicating if the media query matches
+ */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  // Initialize matches as undefined to prevent hydration mismatch
+  const [matches, setMatches] = useState<boolean | undefined>(undefined)
   
   useEffect(() => {
-    setIsMounted(true)
+    // Only run on the client side
     const media = window.matchMedia(query)
     
-    // Задаем начальное значение
+    // Update matches state with current value
     setMatches(media.matches)
     
-    // Создаем обработчик изменений
-    const listener = (e: MediaQueryListEvent) => {
-      setMatches(e.matches)
+    // Create event listener function
+    const listener = (event: MediaQueryListEvent) => {
+      setMatches(event.matches)
     }
     
-    // Добавляем обработчик
+    // Modern approach using addEventListener
     media.addEventListener('change', listener)
     
-    // Убираем обработчик при размонтировании
+    // Cleanup listener on component unmount
     return () => {
       media.removeEventListener('change', listener)
     }
   }, [query])
   
-  // Во время серверного рендеринга или до монтирования возвращаем false
-  return isMounted && matches
+  // Return false during SSR to prevent hydration mismatch
+  // Return actual value only on client-side
+  return typeof matches === 'undefined' ? false : matches
 } 

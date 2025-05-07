@@ -9,6 +9,7 @@ import Container from '@/components/ui/Container'
 import { ChevronRight, Home, ArrowRight, Star } from 'lucide-react'
 import BlogSkeleton from '@/components/blog/skeletons/BlogSkeleton'
 import BlogComponents from '@/components/blog/BlogComponents'
+import PaginationVisibilityHandler from '@/components/blog/PaginationVisibilityHandler'
 
 // Константа для количества постов на странице
 const POSTS_PER_PAGE = 12
@@ -166,54 +167,8 @@ export default async function BlogPage(props: PageProps) {
           />
         </div>
         
-        {/* Добавляем скрипт для скрытия серверной пагинации при активации клиентских фильтров */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Функция для проверки и скрытия пагинации
-              function checkAndHidePagination() {
-                if (localStorage.getItem('blogShowFavorites') === 'true') {
-                  const paginationElement = document.getElementById('server-pagination');
-                  if (paginationElement) paginationElement.style.display = 'none';
-                }
-              }
-              
-              // Скрываем пагинацию немедленно, до загрузки DOM
-              checkAndHidePagination();
-              
-              document.addEventListener('DOMContentLoaded', function() {
-                // Проверяем еще раз после загрузки DOM
-                checkAndHidePagination();
-
-                // Проверяем изменения в localStorage
-                window.addEventListener('storage', function(e) {
-                  if (e.key === 'blogShowFavorites') {
-                    const paginationElement = document.getElementById('server-pagination');
-                    if (!paginationElement) return;
-                    
-                    if (e.newValue === 'true') {
-                      paginationElement.style.display = 'none';
-                    } else {
-                      paginationElement.style.display = 'block';
-                    }
-                  }
-                });
-                
-                // Мониторим изменения в DOM, которые могут происходить при клике на переключатель
-                const observer = new MutationObserver(function() {
-                  // Проверяем состояние после любых изменений
-                  checkAndHidePagination();
-                });
-                
-                // Начинаем наблюдение за всем документом
-                observer.observe(document.body, { 
-                  childList: true, 
-                  subtree: true 
-                });
-              });
-            `
-          }}
-        />
+        {/* Используем клиентский компонент вместо dangerouslySetInnerHTML */}
+        <PaginationVisibilityHandler />
       </Container>
     </PageWrapper>
   )
