@@ -11,7 +11,7 @@ export default function PaginationVisibilityHandler() {
           const paginationElement = document.getElementById('server-pagination')
           if (paginationElement) paginationElement.style.display = 'none'
         }
-      } catch (error) {
+      } catch {
         // Silent catch for environments without localStorage
       }
     }

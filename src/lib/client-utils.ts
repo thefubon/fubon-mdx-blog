@@ -14,7 +14,7 @@ export function getSavedSortMode(): SortMode {
     const saved = localStorage.getItem('blogSortMode');
     // Use nullish coalescing to handle null value
     return (saved === 'popular' || saved === 'date') ? saved as SortMode : 'date';
-  } catch (error) {
+  } catch {
     // Silent catch - return default value on error
     return 'date';
   }
