@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function BlogListSkeleton() {
   return (
     <div className="space-y-6">
-      {Array.from({ length: 5 }).map((_, index) => (
+      {Array.from({ length: 12 }).map((_, index) => (
         <div 
           key={index} 
           className="flex flex-col sm:flex-row border dark:border-gray-800 rounded-lg overflow-hidden shadow-sm"

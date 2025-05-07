@@ -1,13 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Suspense } from 'react'
 import { getAllPosts, getPaginatedPosts, getAllCategories } from '@/lib/mdx'
 import FormattedDate from '@/components/blog/FormattedDate'
 import Pagination from '@/components/blog/Pagination'
 import PageWrapper from '@/components/PageWrapper'
 import Container from '@/components/ui/Container'
 import { ChevronRight, Home, ArrowRight, Star } from 'lucide-react'
-import BlogSkeleton from '@/components/blog/skeletons/BlogSkeleton'
 import BlogComponents from '@/components/blog/BlogComponents'
 import PaginationVisibilityHandler from '@/components/blog/PaginationVisibilityHandler'
 
@@ -182,11 +180,10 @@ export default async function BlogPage(props: PageProps) {
 
   return (
     <PageWrapper>
-      <Suspense fallback={<BlogSkeleton />}>
-        <BlogContent page={currentPage} />
-      </Suspense>
+      {/* Рендерим контент напрямую, без Suspense и скелетонов */}
+      <BlogContent page={currentPage} />
       
-      {/* Используем клиентский компонент вместо dangerouslySetInnerHTML */}
+      {/* Используем клиентский компонент для управления видимостью пагинации */}
       <PaginationVisibilityHandler />
     </PageWrapper>
   )

@@ -16,59 +16,26 @@ interface BlogComponentsProps {
   tags: string[]
 }
 
-// Компонент скелетона для заголовка и фильтров
-function HeaderSkeleton() {
-  return (
-    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-      <div className="flex items-center justify-between w-full sm:w-auto">
-        <div className="h-8 w-40 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-        <div className="sm:hidden w-24 h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-      </div>
-      <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
-        <div className="h-10 w-40 bg-gray-200 dark:bg-gray-800 rounded-full animate-pulse"></div>
-        <div className="hidden sm:block w-28 h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-        <div className="hidden sm:block w-24 h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-      </div>
-    </div>
-  )
-}
-
 // Клиентский компонент для синхронизации между фильтрами и сеткой постов
 export default function BlogComponents({ posts, categories, tags }: BlogComponentsProps) {
   const [showFavorites, setShowFavorites] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('grid3')
-  const [isSettingsLoaded, setIsSettingsLoaded] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
   const POSTS_PER_PAGE = 12
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
 
-  // Отмечаем, что компонент смонтирован (и мы на клиенте)
+  // Загружаем настройки при монтировании компонента
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  // Загрузка сохраненного режима отображения
-  useEffect(() => {
-    if (isMounted) {
-      // Небольшая задержка для предотвращения мигания
-      const timer = setTimeout(() => {
-        const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode
-        const savedShowFavorites = localStorage.getItem('blogShowFavorites') === 'true'
-        
-        if (savedViewMode) {
-          setViewMode(savedViewMode)
-        }
-        if (savedShowFavorites) {
-          setShowFavorites(true)
-        }
-        
-        // Отмечаем, что настройки загружены
-        setIsSettingsLoaded(true)
-      }, 200)
-      
-      return () => clearTimeout(timer)
+    // Загружаем сохраненные настройки сразу при монтировании
+    const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode | null
+    const savedShowFavorites = localStorage.getItem('blogShowFavorites') === 'true'
+    
+    if (savedViewMode) {
+      setViewMode(savedViewMode)
     }
-  }, [isMounted])
+    if (savedShowFavorites) {
+      setShowFavorites(true)
+    }
+  }, [])
 
   // Получаем отфильтрованные посты (все, без пагинации)
   const allFilteredPosts = filterPosts(posts, {
@@ -86,44 +53,26 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
 
   // Функция для обновления режима отображения
   const updateViewMode = (mode: ViewMode) => {
-    if (isMounted) {
-      setViewMode(mode)
-      localStorage.setItem('blogViewMode', mode)
-    }
+    setViewMode(mode)
+    localStorage.setItem('blogViewMode', mode)
   }
 
   // Функция для переключения режима избранного
   const toggleFavorites = (value: boolean) => {
-    if (isMounted) {
-      setShowFavorites(value)
-      // Используем dispatchEvent для корректной работы слушателей
-      const oldValue = localStorage.getItem('blogShowFavorites')
-      localStorage.setItem('blogShowFavorites', String(value))
-      
-      // Dispatch event для обработки в других компонентах
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: 'blogShowFavorites',
-        oldValue,
-        newValue: String(value),
-        storageArea: localStorage
-      }))
-      
-      setVisibleCount(POSTS_PER_PAGE)
-    }
-  }
-
-  // Если настройки еще не загружены, показываем скелетон
-  if (!isMounted || !isSettingsLoaded) {
-    // На сервере или до загрузки настроек на клиенте
-    return (
-      <div>
-        <HeaderSkeleton />
-        <BlogPostGrid 
-          posts={[]} 
-          viewMode={viewMode}
-        />
-      </div>
-    )
+    setShowFavorites(value)
+    // Используем dispatchEvent для корректной работы слушателей
+    const oldValue = localStorage.getItem('blogShowFavorites')
+    localStorage.setItem('blogShowFavorites', String(value))
+    
+    // Dispatch event для обработки в других компонентах
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'blogShowFavorites',
+      oldValue,
+      newValue: String(value),
+      storageArea: localStorage
+    }))
+    
+    setVisibleCount(POSTS_PER_PAGE)
   }
 
   return (

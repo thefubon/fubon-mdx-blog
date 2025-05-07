@@ -1,11 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Star } from 'lucide-react'
 import FormattedDate from '@/components/blog/FormattedDate'
-import { Skeleton } from '@/components/ui/skeleton'
 import type { Post } from '@/lib/types'
 import type { ViewMode } from './BlogFilters'
 
@@ -14,81 +12,7 @@ interface BlogPostGridProps {
   viewMode: ViewMode
 }
 
-function PostSkeleton({ type }: { type: 'grid' | 'list' }) {
-  if (type === 'list') {
-    return (
-      <div className="flex flex-col sm:flex-row rounded-lg overflow-hidden shadow-sm">
-        <Skeleton className="sm:w-[280px] shrink-0 aspect-video sm:aspect-[4/3]" />
-        <div className="flex flex-col flex-grow p-4 space-y-4">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-7 w-3/4" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-          </div>
-          <Skeleton className="h-4 w-32 mt-auto" />
-        </div>
-      </div>
-    )
-  }
-  
-  return (
-    <div className="flex flex-col rounded-lg overflow-hidden shadow-sm h-full">
-      <Skeleton className="aspect-video" />
-      <div className="flex flex-col flex-grow p-4 space-y-4">
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="h-6 w-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-        </div>
-        <Skeleton className="h-4 w-28 mt-auto" />
-      </div>
-    </div>
-  )
-}
-
 export default function BlogPostGrid({ posts, viewMode }: BlogPostGridProps) {
-  const [isMounted, setIsMounted] = useState(false);
-  
-  useEffect(() => {
-    // Небольшая задержка для загрузки правильного вида
-    const timer = setTimeout(() => {
-      setIsMounted(true);
-    }, 300);
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
-  // Отображаем скелетон до монтирования компонента
-  if (!isMounted) {
-    if (viewMode === 'list') {
-      return (
-        <div className="space-y-6">
-          {[...Array(3)].map((_, i) => (
-            <PostSkeleton key={i} type="list" />
-          ))}
-        </div>
-      );
-    }
-    
-    // Для сетки имитируем соответствующее количество колонок
-    const gridClass = viewMode === 'grid3'
-      ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-      : viewMode === 'grid2' 
-        ? 'grid-cols-1 sm:grid-cols-2' 
-        : 'grid-cols-1';
-    
-    return (
-      <div className={`grid ${gridClass} gap-6`}>
-        {[...Array(6)].map((_, i) => (
-          <PostSkeleton key={i} type="grid" />
-        ))}
-      </div>
-    );
-  }
-  
   // Рендер поста в виде карточки
   const renderPostCard = (post: Post) => {
     const {
@@ -258,44 +182,46 @@ export default function BlogPostGrid({ posts, viewMode }: BlogPostGridProps) {
                       <span className="text-gray-500 dark:text-gray-400 text-sm font-medium">Нет изображения</span>
                     </div>
                   )}
+                  
+                  {favorite && (
+                    <div className="absolute top-2 right-2 text-yellow-500 bg-black/30 p-1.5 rounded-full">
+                      <Star size={16} fill="currentColor" />
+                    </div>
+                  )}
                 </Link>
-                
-                {favorite && (
-                  <div className="absolute top-2 right-2 text-yellow-500 bg-black/30 p-1.5 rounded-full">
-                    <Star size={16} fill="currentColor" />
-                  </div>
-                )}
               </div>
 
               <div className="flex flex-col flex-grow p-4">
-                <div className="mb-2">
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                    <FormattedDate date={publishedAt} /> • {readingTime}
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                      <FormattedDate date={publishedAt} /> • {readingTime}
+                    </div>
                   </div>
                   
                   {/* Категория */}
                   {category && (
                     <Link
                       href={`/blog/categories/${encodeURIComponent(category)}`}
-                      className="inline-block bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full transition-colors mr-1">
+                      className="inline-block bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full transition-colors">
                       {category}
                     </Link>
                   )}
                 </div>
-
+                
                 <Link href={`/blog/${slug}`} className="block mb-2">
                   <h3 className="text-xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     {title}
                   </h3>
                 </Link>
-
+                
                 {description && (
-                  <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">
+                  <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
                     {description}
                   </p>
                 )}
-
-                <div className="flex items-center justify-between mt-auto">
+                
+                <div className="flex justify-between items-center mt-auto">
                   {/* Теги */}
                   {tags && tags.length > 0 && (
                     <div className="flex flex-wrap gap-1">
@@ -314,10 +240,10 @@ export default function BlogPostGrid({ posts, viewMode }: BlogPostGridProps) {
                       )}
                     </div>
                   )}
-
+                  
                   <Link
                     href={`/blog/${slug}`}
-                    className="text-blue-600 dark:text-blue-400 hover:underline text-sm inline-block ml-auto">
+                    className="text-blue-600 dark:text-blue-400 hover:underline text-sm ml-auto inline-block">
                     Читать далее →
                   </Link>
                 </div>
@@ -327,18 +253,19 @@ export default function BlogPostGrid({ posts, viewMode }: BlogPostGridProps) {
         })}
       </div>
     )
-  }
+  } 
   
-  // Определяем количество колонок в зависимости от viewMode
-  const gridClass = viewMode === 'grid3' 
-    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
-    : viewMode === 'grid2'
-      ? 'grid-cols-1 sm:grid-cols-2'
+  // Для сетки определяем класс в зависимости от количества колонок
+  const gridClass = viewMode === 'grid3'
+    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+    : viewMode === 'grid2' 
+      ? 'grid-cols-1 sm:grid-cols-2' 
       : 'grid-cols-1';
-
+  
+  // Отображение в виде сетки
   return (
     <div className={`grid ${gridClass} gap-6`}>
-      {posts.map((post) => renderPostCard(post))}
+      {posts.map(renderPostCard)}
     </div>
   )
 } 

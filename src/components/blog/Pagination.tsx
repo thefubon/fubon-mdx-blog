@@ -6,13 +6,6 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react"
-import {
-  Pagination as UIPagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationEllipsis,
-} from "@/components/ui/pagination"
 import { useMusicPlayer } from '@/contexts/MusicPlayerProvider'
 import { useMusicPlayerStore } from '@/store/use-music-player-store'
 
@@ -134,68 +127,77 @@ export default function Pagination({
   }
 
   return (
-    <UIPagination className="mt-10">
-      <PaginationContent>
+    <nav className="flex justify-center mt-10" aria-label="Pagination">
+      <ul className="flex items-center gap-1">
         {/* Кнопка "Предыдущая страница" */}
-        <PaginationItem>
+        <li>
           {currentPage > 1 ? (
-            <PaginationLink
+            <button
               onClick={(e) => handleNavigate(currentPage - 1, e)}
-              className="gap-1 px-2.5 sm:pl-2.5"
+              className="flex items-center gap-1 px-3 py-2 border rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Перейти к предыдущей странице"
             >
-              <ChevronLeftIcon />
-              <span className="hidden sm:block">Назад</span>
-            </PaginationLink>
+              <ChevronLeftIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">Назад</span>
+            </button>
           ) : (
-            <span className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 gap-1 sm:pl-2.5 pointer-events-none opacity-50">
-              <ChevronLeftIcon />
-              <span className="hidden sm:block">Назад</span>
+            <span className="flex items-center gap-1 px-3 py-2 border rounded-md opacity-50 cursor-not-allowed">
+              <ChevronLeftIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">Назад</span>
             </span>
           )}
-        </PaginationItem>
+        </li>
 
         {/* Номера страниц с эллипсисами */}
         {pageNumbers.map((pageNumber, index) => {
           // Если это маркер эллипсиса
           if (pageNumber < 0) {
             return (
-              <PaginationItem key={`ellipsis-${index}`}>
-                <PaginationEllipsis />
-              </PaginationItem>
+              <li key={`ellipsis-${index}`}>
+                <span className="flex h-10 w-10 items-center justify-center" aria-hidden="true">
+                  &hellip;
+                </span>
+              </li>
             );
           }
           
           // Если это обычная страница
           return (
-            <PaginationItem key={pageNumber}>
-              <PaginationLink
-                isActive={pageNumber === currentPage}
+            <li key={pageNumber}>
+              <button
                 onClick={(e) => handleNavigate(pageNumber, e)}
+                className={`flex h-10 w-10 items-center justify-center rounded-md ${
+                  pageNumber === currentPage 
+                    ? 'bg-primary text-primary-foreground font-medium' 
+                    : 'hover:bg-muted transition-colors'
+                }`}
+                aria-current={pageNumber === currentPage ? 'page' : undefined}
               >
                 {pageNumber}
-              </PaginationLink>
-            </PaginationItem>
+              </button>
+            </li>
           );
         })}
 
         {/* Кнопка "Следующая страница" */}
-        <PaginationItem>
+        <li>
           {currentPage < totalPages ? (
-            <PaginationLink
+            <button
               onClick={(e) => handleNavigate(currentPage + 1, e)}
-              className="gap-1 px-2.5 sm:pr-2.5"
+              className="flex items-center gap-1 px-3 py-2 border rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Перейти к следующей странице"
             >
-              <span className="hidden sm:block">Далее</span>
-              <ChevronRightIcon />
-            </PaginationLink>
+              <span className="hidden sm:inline">Далее</span>
+              <ChevronRightIcon className="h-4 w-4" />
+            </button>
           ) : (
-            <span className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 gap-1 sm:pr-2.5 pointer-events-none opacity-50">
-              <span className="hidden sm:block">Далее</span>
-              <ChevronRightIcon />
+            <span className="flex items-center gap-1 px-3 py-2 border rounded-md opacity-50 cursor-not-allowed">
+              <span className="hidden sm:inline">Далее</span>
+              <ChevronRightIcon className="h-4 w-4" />
             </span>
           )}
-        </PaginationItem>
-      </PaginationContent>
-    </UIPagination>
+        </li>
+      </ul>
+    </nav>
   )
 } 

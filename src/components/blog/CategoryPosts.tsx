@@ -21,23 +21,6 @@ interface CategoryPostsProps {
   allTags?: string[]
 }
 
-// Компонент скелетона для заголовка и фильтров
-function HeaderSkeleton() {
-  return (
-    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-      <div className="flex items-center justify-between w-full sm:w-auto">
-        <div className="h-8 w-40 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-        <div className="sm:hidden w-24 h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-      </div>
-      <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
-        <div className="h-10 w-40 bg-gray-200 dark:bg-gray-800 rounded-full animate-pulse"></div>
-        <div className="hidden sm:block w-28 h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-        <div className="hidden sm:block w-24 h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse"></div>
-      </div>
-    </div>
-  )
-}
-
 export default function CategoryPosts({ 
   posts, 
   category, 
@@ -49,41 +32,28 @@ export default function CategoryPosts({
 }: CategoryPostsProps) {
   const [showFavorites, setShowFavorites] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('grid3')
-  const [isSettingsLoaded, setIsSettingsLoaded] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts)
   const POSTS_PER_PAGE = 12
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
   
-  // Отмечаем, что компонент смонтирован (и мы на клиенте)
+  // Загружаем настройки при монтировании компонента
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
-  
-  // Загружаем настройки из localStorage только на клиенте
-  useEffect(() => {
-    if (isMounted) {
-      const timer = setTimeout(() => {
-        const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode
-        const savedShowFavorites = localStorage.getItem('blogShowFavorites') === 'true'
-        
-        if (savedViewMode) {
-          setViewMode(savedViewMode)
-        }
-        
-        setShowFavorites(savedShowFavorites)
-        setIsSettingsLoaded(true)
-        
-        if (savedShowFavorites) {
-          setFilteredPosts(posts.filter(post => post.frontmatter.favorite))
-        } else {
-          setFilteredPosts(posts)
-        }
-      }, 200)
-      
-      return () => clearTimeout(timer)
+    // Загружаем настройки из localStorage
+    const savedViewMode = localStorage.getItem('blogViewMode') as ViewMode | null
+    const savedShowFavorites = localStorage.getItem('blogShowFavorites') === 'true'
+    
+    if (savedViewMode) {
+      setViewMode(savedViewMode)
     }
-  }, [isMounted, posts])
+    
+    setShowFavorites(savedShowFavorites)
+    
+    if (savedShowFavorites) {
+      setFilteredPosts(posts.filter(post => post.frontmatter.favorite))
+    } else {
+      setFilteredPosts(posts)
+    }
+  }, [posts])
   
   // Обработчик для переключения режима избранного
   const handleToggleFavorites = (value: boolean) => {
@@ -120,20 +90,6 @@ export default function CategoryPosts({
   
   // Получаем видимые посты
   const visiblePosts = filteredPosts.slice(0, visibleCount)
-  
-  // Показываем скелетон до загрузки настроек
-  if (!isMounted || !isSettingsLoaded) {
-    // На сервере или до загрузки настроек на клиенте
-    return (
-      <div>
-        <HeaderSkeleton />
-        <BlogPostGrid 
-          posts={[]} 
-          viewMode={viewMode}
-        />
-      </div>
-    )
-  }
   
   return (
     <div>
@@ -217,40 +173,31 @@ export default function CategoryPosts({
         </div>
       </div>
 
-      {filteredPosts.length > 0 ? (
-        <>
-          <BlogPostGrid 
-            posts={visiblePosts} 
-            viewMode={viewMode}
+      {/* Блок с постами */}
+      <BlogPostGrid 
+        posts={visiblePosts} 
+        viewMode={viewMode}
+      />
+      
+      {visibleCount < filteredPosts.length && (
+        <div className="mt-12 flex justify-center">
+          <Button
+            className="px-6 py-3"
+            onClick={() => setVisibleCount((c) => c + POSTS_PER_PAGE)}
+          >
+            Показать ещё
+          </Button>
+        </div>
+      )}
+      
+      {/* Пагинация, когда нет фильтра по избранному и есть несколько страниц */}
+      {!showFavorites && totalPages > 1 && (
+        <div id="server-pagination">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            basePath={basePath}
           />
-          
-          {visibleCount < filteredPosts.length && (
-            <div className="mt-12 flex justify-center">
-              <Button
-                className="px-6 py-3"
-                onClick={() => setVisibleCount((c) => c + POSTS_PER_PAGE)}
-              >
-                Показать ещё
-              </Button>
-            </div>
-          )}
-          
-          {/* Серверная пагинация */}
-          {!showFavorites && totalPages > 1 && (
-            <div className="mt-12" id="server-pagination">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                basePath={basePath}
-              />
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="py-20 text-center">
-          <p className="text-xl text-gray-500 dark:text-gray-400">
-            Нет избранных постов в этой категории
-          </p>
         </div>
       )}
     </div>

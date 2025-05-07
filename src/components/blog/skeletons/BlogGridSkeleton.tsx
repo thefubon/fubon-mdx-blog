@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function BlogGridSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {Array.from({ length: 8 }).map((_, index) => (
+      {Array.from({ length: 12 }).map((_, index) => (
         <div 
           key={index} 
           className="flex flex-col border dark:border-gray-800 rounded-lg overflow-hidden shadow-sm h-full"
