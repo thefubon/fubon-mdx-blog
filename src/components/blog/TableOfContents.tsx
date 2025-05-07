@@ -34,7 +34,7 @@ export default function TableOfContents({ readingTime }: TableOfContentsProps) {
   const [readingProgress, setReadingProgress] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const observer = useRef<IntersectionObserver | null>(null)
-  const tocRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Extract headings from the article
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function TableOfContents({ readingTime }: TableOfContentsProps) {
 
       setHeadings(headingItems)
       setIsLoading(false)
-    }, 200); // Slightly longer delay to ensure DOM is ready
+    }, 500); // Longer delay to ensure DOM is ready
 
     return () => clearTimeout(timer);
   }, [])
@@ -130,103 +130,181 @@ export default function TableOfContents({ readingTime }: TableOfContentsProps) {
     return () => window.removeEventListener('scroll', updateReadingProgress)
   }, [])
 
-  // Base component structure to ensure consistent height/layout
-  const renderToc = () => {
+  // Absolute inline styles to avoid any style conflicts
+  const containerStyle: React.CSSProperties = {
+    display: 'none', // Hidden by default
+    position: 'sticky',
+    top: 'clamp(80px,15vw,150px)',
+    zIndex: 20,
+    maxHeight: '80vh',
+    overflowY: 'auto',
+    paddingRight: '16px',
+    width: '16rem',
+  };
+
+  // Media query via JavaScript
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        if (window.innerWidth >= 1024) { // lg breakpoint
+          containerRef.current.style.display = 'block';
+        } else {
+          containerRef.current.style.display = 'none';
+        }
+      }
+    };
+
+    // Initial call
+    handleResize();
+
+    // Setup listener
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Styles for other elements
+  const headingStyle: React.CSSProperties = {
+    fontSize: '1.125rem',
+    fontWeight: 500,
+    marginBottom: '1rem',
+  };
+  
+  const navStyle: React.CSSProperties = {
+    marginBottom: '1.5rem',
+    minHeight: isLoading ? '120px' : 'auto',
+  };
+  
+  const progressContainerStyle: React.CSSProperties = {
+    height: '0.25rem',
+    backgroundColor: '#E5E7EB', // gray-200
+    borderRadius: '9999px',
+    width: '100%',
+    marginBottom: '1rem',
+  };
+  
+  const progressBarStyle: React.CSSProperties = {
+    height: '0.25rem',
+    backgroundColor: '#3B82F6', // blue-500
+    borderRadius: '9999px',
+    width: `${readingProgress}%`,
+    transition: 'width 200ms ease-out',
+  };
+  
+  const readingTimeStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '0.875rem',
+    color: '#6B7280', // gray-500
+  };
+
+  // Content rendering
+  const renderHeadings = () => {
+    if (headings.length === 0) return null;
+    
     return (
-      <div 
-        className="sticky top-[clamp(80px,15vw,150px)] z-20" 
-        ref={tocRef} 
-        style={{position: 'sticky', top: 'clamp(80px,15vw,150px)'}}
-      >
-        <div className="font-medium text-lg mb-4">Contents</div>
-        <nav className="mb-6 min-h-[120px]">
-          {isLoading ? (
-            // Skeleton loading state
-            <ul className="space-y-2 text-sm">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <li key={i} className="animate-pulse">
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                </li>
-              ))}
-              {[1, 2].map((i) => (
-                <li key={`sub-${i}`} className="pl-4 animate-pulse">
-                  <div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
-                </li>
-              ))}
-            </ul>
-          ) : headings.length > 0 ? (
-            // Actual headings
-            <ul className="space-y-2 text-sm">
-              {headings.map((heading) => (
-                <li
-                  key={heading.id}
-                  className={`
-                    ${heading.level === 3 ? 'pl-4' : ''} 
-                    ${
-                      activeId === heading.id
-                        ? 'font-medium text-black border-l-2 border-blue-500 pl-2'
-                        : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
-                    }
-                    transition-all duration-200
-                  `}>
-                  <Link
-                    href={`#${heading.id}`}
-                    className="block py-1"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      document.getElementById(heading.id)?.scrollIntoView({
-                        behavior: 'smooth',
-                      })
-                    }}>
-                    {heading.text}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            // Empty placeholder when no headings found
-            <div className="text-sm text-gray-500 italic">No sections found</div>
-          )}
-        </nav>
-
-        {/* Reading progress indicator */}
-        <div className="h-1 bg-gray-200 rounded-full w-full mb-4">
-          <div
-            className="h-1 bg-blue-500 rounded-full transition-all duration-200 ease-out"
-            style={{ width: `${readingProgress}%` }}
-          />
-        </div>
-
-        {/* Reading time */}
-        <div className="flex items-center text-sm text-gray-500">
-          <svg
-            className="w-4 h-4 mr-2"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <circle
-              cx="12"
-              cy="12"
-              r="9"
-              stroke="currentColor"
-              strokeWidth="2"
+      <ul style={{ marginTop: 0, paddingLeft: 0, listStyle: 'none' }}>
+        {headings.map((heading) => {
+          const isActive = activeId === heading.id;
+          
+          const itemStyle: React.CSSProperties = {
+            paddingLeft: heading.level === 3 ? '1rem' : 0,
+            borderLeft: isActive ? '2px solid #3B82F6' : 'none',
+            paddingTop: '0.25rem',
+            paddingBottom: '0.25rem',
+            transition: 'all 200ms',
+            marginBottom: '0.5rem',
+          };
+          
+          const linkStyle: React.CSSProperties = {
+            display: 'block',
+            color: isActive ? '#000' : '#6B7280',
+            fontWeight: isActive ? 500 : 400,
+            paddingLeft: isActive ? '0.5rem' : 0,
+            textDecoration: 'none',
+            fontSize: '0.875rem',
+          };
+          
+          return (
+            <li key={heading.id} style={itemStyle}>
+              <a
+                href={`#${heading.id}`}
+                style={linkStyle}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(heading.id)?.scrollIntoView({
+                    behavior: 'smooth',
+                  });
+                }}
+              >
+                {heading.text}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+  
+  // Loading skeleton
+  const renderSkeleton = () => {
+    return (
+      <ul style={{ marginTop: 0, paddingLeft: 0, listStyle: 'none' }}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <li key={i} style={{ marginBottom: '0.5rem' }}>
+            <div 
+              style={{ 
+                height: '1rem', 
+                backgroundColor: '#E5E7EB', 
+                borderRadius: '0.25rem', 
+                width: '75%', 
+                animation: 'pulse 2s cubic-bezier(.4,0,.6,1) infinite'
+              }} 
             />
-            <path
-              d="M12 7V12L15 15"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
+          </li>
+        ))}
+        {[1, 2].map((i) => (
+          <li key={`sub-${i}`} style={{ marginBottom: '0.5rem', paddingLeft: '1rem' }}>
+            <div 
+              style={{ 
+                height: '1rem', 
+                backgroundColor: '#E5E7EB', 
+                borderRadius: '0.25rem', 
+                width: '66%', 
+                animation: 'pulse 2s cubic-bezier(.4,0,.6,1) infinite'
+              }} 
             />
-          </svg>
-          {readingTime}
-        </div>
-      </div>
+          </li>
+        ))}
+      </ul>
     );
   };
 
   return (
-    <div className="hidden lg:block h-full">
-      {renderToc()}
+    <div ref={containerRef} style={containerStyle}>
+      <div style={headingStyle}>Contents</div>
+      
+      <nav style={navStyle}>
+        {isLoading ? renderSkeleton() : renderHeadings()}
+      </nav>
+      
+      <div style={progressContainerStyle}>
+        <div style={progressBarStyle} />
+      </div>
+      
+      <div style={readingTimeStyle}>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ marginRight: '0.5rem' }}
+        >
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+          <path d="M12 7V12L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+        {readingTime}
+      </div>
     </div>
   );
 } 

@@ -171,17 +171,17 @@ const MDXComponents = {
     )
   },
   code: ({ children }: { children: React.ReactNode }) => (
-    <code className="bg-gray-100 dark:bg-gray-800 rounded px-1 py-0.5">
+    <code className="bg-gray-100 dark:bg-gray-800 rounded px-1 py-0.5 whitespace-normal break-words">
       {children}
     </code>
   ),
   pre: ({ children }: { children: React.ReactNode }) => (
-    <pre className="bg-gray-100 dark:bg-gray-800 overflow-x-auto p-4 rounded-lg my-4">
+    <pre className="bg-gray-100 dark:bg-gray-800 overflow-x-auto p-4 rounded-lg my-4 w-full max-w-full">
       {children}
     </pre>
   ),
   blockquote: ({ children }: { children: React.ReactNode }) => (
-    <blockquote className="border-l-4 border-gray-200 dark:border-gray-700 pl-4 italic my-6">
+    <blockquote className="border-l-4 border-gray-200 dark:border-gray-700 pl-4 italic my-6 max-w-full overflow-hidden">
       {children}
     </blockquote>
   ),
