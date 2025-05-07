@@ -66,6 +66,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "theme_color": "#FFFFFF",
@@ -84,5 +90,17 @@
   "launch_handler": {
     "client_mode": "focus-existing"
   },
-  "capture_links": "existing-client-navigate"
+  "capture_links": "existing-client-navigate",
+  "shortcuts": [
+    {
+      "name": "Блог",
+      "url": "/blog",
+      "description": "Просмотр блога"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "screenshots": [],
+  "id": "/"
 }
