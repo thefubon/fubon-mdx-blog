@@ -55,8 +55,8 @@ const baseConfig = {
   
   // Конфигурация для улучшения метрик Core Web Vitals
   experimental: {
-    // Включаем оптимизации для лучшего PageSpeed
-    optimizeCss: true, // Минимизация CSS
+    // Отключаем оптимизацию CSS, которая требует пакет critters
+    optimizeCss: false,
     optimizePackageImports: ['lucide-react', '@headlessui/react'],
     serverActions: {
       allowedOrigins: ['localhost:3000', 'yourdomain.com'],
