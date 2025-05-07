@@ -1,6 +1,7 @@
 import { getAllPosts, getAllCategories } from '@/lib/mdx'
 import Container from '@/components/ui/Container'
 import TagPosts from '@/components/blog/TagPosts'
+import { Suspense } from 'react'
 
 export async function generateStaticParams() {
   const posts = getAllPosts()
@@ -43,12 +44,14 @@ export default async function TagPage(props: {
 
   return (
     <Container className="py-10">
-      <TagPosts 
-        posts={filteredPosts}
-        tag={tag}
-        allTags={allTags}
-        categories={allCategories}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <TagPosts 
+          posts={filteredPosts}
+          tag={tag}
+          allTags={allTags}
+          categories={allCategories}
+        />
+      </Suspense>
     </Container>
   )
 }

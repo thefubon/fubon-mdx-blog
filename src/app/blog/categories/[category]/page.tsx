@@ -1,6 +1,7 @@
 import { getPostsByCategory, getAllCategories, getAllPosts } from '@/lib/mdx'
 import Container from '@/components/ui/Container'
 import CategoryPosts from '@/components/blog/CategoryPosts'
+import { Suspense } from 'react'
 
 interface PageProps {
   params: Promise<{ category: string }>
@@ -41,15 +42,17 @@ export default async function CategoryPage(props: PageProps) {
 
   return (
     <Container className="py-10">
-      <CategoryPosts 
-        posts={posts}
-        category={category}
-        totalPages={totalPages}
-        currentPage={validatedPage}
-        basePath={`/blog/categories/${encodeURIComponent(category)}`}
-        categories={allCategories}
-        allTags={allTags}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <CategoryPosts 
+          posts={posts}
+          category={category}
+          totalPages={totalPages}
+          currentPage={validatedPage}
+          basePath={`/blog/categories/${encodeURIComponent(category)}`}
+          categories={allCategories}
+          allTags={allTags}
+        />
+      </Suspense>
     </Container>
   )
 }

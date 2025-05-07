@@ -8,6 +8,7 @@ import Container from '@/components/ui/Container'
 import { ChevronRight, Home, ArrowRight, Star } from 'lucide-react'
 import BlogComponents from '@/components/blog/BlogComponents'
 import PaginationVisibilityHandler from '@/components/blog/PaginationVisibilityHandler'
+import { Suspense } from 'react'
 
 // Константа для количества постов на странице
 const POSTS_PER_PAGE = 12
@@ -154,11 +155,13 @@ async function BlogContent({ page }: { page: number }) {
         )}
         
         {/* Компоненты фильтров и постов */}
-        <BlogComponents 
-          posts={posts}
-          categories={allCategories}
-          tags={allTags}
-        />
+        <Suspense fallback={<div>Loading blog content...</div>}>
+          <BlogComponents 
+            posts={posts}
+            categories={allCategories}
+            tags={allTags}
+          />
+        </Suspense>
 
         {/* Компонент пагинации */}
         <div id="server-pagination" className="mt-12">
@@ -184,7 +187,9 @@ export default async function BlogPage(props: PageProps) {
       <BlogContent page={currentPage} />
       
       {/* Используем клиентский компонент для управления видимостью пагинации */}
-      <PaginationVisibilityHandler />
+      <Suspense fallback={null}>
+        <PaginationVisibilityHandler />
+      </Suspense>
     </PageWrapper>
   )
 }
