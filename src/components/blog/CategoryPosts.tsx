@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import FavoriteToggle from './FavoriteToggle'
 import { Post } from '@/lib/types'
 import Pagination from '@/components/blog/Pagination'
@@ -30,6 +31,9 @@ export default function CategoryPosts({
   categories,
   allTags = []
 }: CategoryPostsProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [showFavorites, setShowFavorites] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('grid3')
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts)
@@ -74,6 +78,14 @@ export default function CategoryPosts({
     // Фильтруем посты
     if (value) {
       setFilteredPosts(posts.filter(post => post.frontmatter.favorite))
+      
+      // Если включили режим "Избранное" и находимся не на первой странице,
+      // перенаправляем на первую страницу категории
+      const page = searchParams.get('page')
+      if (page) {
+        const basePath = pathname.split('?')[0]
+        router.push(basePath)
+      }
     } else {
       setFilteredPosts(posts)
     }

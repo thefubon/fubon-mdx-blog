@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import BlogPostGrid from './BlogPostGrid'
 import type { Post } from '@/lib/types'
 import { ViewMode } from '@/components/blog/BlogFilters'
@@ -18,6 +19,9 @@ interface BlogComponentsProps {
 
 // Клиентский компонент для синхронизации между фильтрами и сеткой постов
 export default function BlogComponents({ posts, categories, tags }: BlogComponentsProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [showFavorites, setShowFavorites] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('grid3')
   const POSTS_PER_PAGE = 12
@@ -60,6 +64,7 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
   // Функция для переключения режима избранного
   const toggleFavorites = (value: boolean) => {
     setShowFavorites(value)
+    
     // Используем dispatchEvent для корректной работы слушателей
     const oldValue = localStorage.getItem('blogShowFavorites')
     localStorage.setItem('blogShowFavorites', String(value))
@@ -71,6 +76,16 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
       newValue: String(value),
       storageArea: localStorage
     }))
+    
+    // Если включили режим "Избранное" и находимся не на первой странице,
+    // перенаправляем на первую страницу блога
+    if (value) {
+      const page = searchParams.get('page')
+      if (page) {
+        const basePath = pathname.split('?')[0]
+        router.push(basePath)
+      }
+    }
     
     setVisibleCount(POSTS_PER_PAGE)
   }
@@ -165,4 +180,4 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
       )}
     </div>
   )
-} 
+}

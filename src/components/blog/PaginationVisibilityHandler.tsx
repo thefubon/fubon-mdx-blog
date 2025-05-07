@@ -1,8 +1,13 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 
 export default function PaginationVisibilityHandler() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
   useEffect(() => {
     // Function to check and hide pagination
     const checkAndHidePagination = () => {
@@ -27,6 +32,15 @@ export default function PaginationVisibilityHandler() {
         
         if (e.newValue === 'true') {
           paginationElement.style.display = 'none'
+          
+          // Если включили режим "Избранное" и мы не на первой странице,
+          // перенаправляем на первую страницу
+          const page = searchParams.get('page')
+          if (page && pathname.startsWith('/blog')) {
+            // Убираем параметр page из URL и перенаправляем на базовый путь
+            const basePath = pathname.split('?')[0]
+            router.push(basePath)
+          }
         } else {
           paginationElement.style.display = 'block'
         }
@@ -35,12 +49,10 @@ export default function PaginationVisibilityHandler() {
     
     window.addEventListener('storage', handleStorageChange)
     
-    // No need for MutationObserver as React will handle DOM updates properly
-    
     return () => {
       window.removeEventListener('storage', handleStorageChange)
     }
-  }, [])
+  }, [pathname, router, searchParams])
 
   // This component doesn't render anything
   return null
