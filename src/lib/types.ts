@@ -8,6 +8,14 @@ export interface PostMetadata {
   category?: string;
   cover?: string;
   favorite?: boolean;
+  grid?: {
+    col?: number;
+    row?: number;
+  };
+  catGrid?: {
+    col?: number;
+    row?: number;
+  };
 }
 
 export interface Post {

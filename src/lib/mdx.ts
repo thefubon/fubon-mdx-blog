@@ -264,3 +264,92 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return newArray;
 }
+// Functions for the Work section
+export function getAllWorkSlugs() {
+  const workDir = path.join(contentDirectory, 'work');
+  
+  if (!fs.existsSync(workDir)) {
+    fs.mkdirSync(workDir, { recursive: true });
+    return [];
+  }
+  
+  const files = fs.readdirSync(workDir);
+  return files
+    .filter(file => file.endsWith('.mdx'))
+    .map(file => file.replace(/\.mdx$/, ''));
+}
+
+export function getWorkBySlug(slug: string): Post {
+  const filePath = path.join(contentDirectory, 'work', `${slug}.mdx`);
+  const fileContent = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContent);
+
+  let publishedAt = new Date().toISOString();
+  if (data.publishedAt) {
+    if (typeof data.publishedAt === 'string') {
+      publishedAt = data.publishedAt;
+    }
+    else if (data.publishedAt instanceof Date) {
+      publishedAt = data.publishedAt.toISOString();
+    }
+    else {
+      publishedAt = new Date(data.publishedAt).toISOString();
+    }
+  }
+
+  const frontmatter: PostMetadata = {
+    title: data.title || 'Без заголовка',
+    publishedAt: publishedAt,
+    description: data.description,
+    slug: slug,
+    readingTime: readingTime(content).text,
+    ...Object.entries(data)
+      .filter(([key]) => !['title', 'publishedAt', 'description'].includes(key))
+      .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
+  };
+
+  return {
+    frontmatter,
+    content,
+  };
+}
+
+export function getAllWorks(): Post[] {
+  const slugs = getAllWorkSlugs();
+  const works = slugs.map(slug => getWorkBySlug(slug))
+    .sort((a, b) => new Date(b.frontmatter.publishedAt).getTime() - new Date(a.frontmatter.publishedAt).getTime());
+
+  return works;
+}
+
+export function getPaginatedWorks(page: number = 1, limit: number = 5, excludeSlugs: string[] = []): PaginationResult {
+  const allWorks = getAllWorks().filter(work => !excludeSlugs.includes(work.frontmatter.slug));
+  const totalWorks = allWorks.length;
+  const totalPages = Math.ceil(totalWorks / limit);
+  const currentPage = Math.max(1, Math.min(page, totalPages || 1));
+  const startIndex = (currentPage - 1) * limit;
+  const endIndex = Math.min(startIndex + limit, totalWorks);
+
+  const works = allWorks.slice(startIndex, endIndex);
+
+  return {
+    posts: works,
+    totalPages: totalPages || 1,
+    currentPage,
+    hasNextPage: currentPage < totalPages,
+    hasPrevPage: currentPage > 1
+  };
+}
+
+// Получить все уникальные категории работ
+export function getAllWorkCategories(): string[] {
+  try {
+    const categories = new Set(
+      getAllWorks().map(work => work.frontmatter.category || 'Без категории')
+    );
+    return Array.from(categories).sort();
+  } catch (error) {
+    console.error("Error getting all work categories:", error);
+    return [];
+  }
+}

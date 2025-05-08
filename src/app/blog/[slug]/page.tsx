@@ -56,19 +56,19 @@ export default async function BlogPost(props: {
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/40 to-transparent" />
-            </div>
+          </div>
 
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 lg:p-10">
               <div className="mx-auto max-w-full">
                 {/* Category badge */}
-                {frontmatter.category && (
-                  <Link
-                    href={`/blog/categories/${encodeURIComponent(
-                      frontmatter.category
-                    )}`}
+          {frontmatter.category && (
+              <Link
+                href={`/blog/categories/${encodeURIComponent(
+                  frontmatter.category
+                )}`}
                     className="inline-block bg-blue-600 text-white text-sm px-4 py-1.5 rounded-full transition-colors mb-4 font-medium">
-                    {frontmatter.category}
-                  </Link>
+                {frontmatter.category}
+              </Link>
                 )}
 
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 drop-shadow-sm">
@@ -121,7 +121,7 @@ export default async function BlogPost(props: {
               </div>
             </div>
           </div>
-        )}
+          )}
 
         {/* Standard header without cover */}
         {!frontmatter.cover && (
@@ -169,7 +169,7 @@ export default async function BlogPost(props: {
               </div>
 
               {/* Tags */}
-              {frontmatter.tags && frontmatter.tags.length > 0 && (
+          {frontmatter.tags && frontmatter.tags.length > 0 && (
                 <div className="flex flex-wrap justify-center gap-2 mb-6">
                   {frontmatter.tags.map((tag) => (
                     <Link
@@ -183,12 +183,12 @@ export default async function BlogPost(props: {
               )}
             </div>
 
-            {frontmatter.description && (
+          {frontmatter.description && (
               <p className="text-xl text-gray-700 mt-6 text-center">
-                {frontmatter.description}
-              </p>
-            )}
-          </header>
+              {frontmatter.description}
+            </p>
+          )}
+        </header>
         )}
 
         <div className="flex flex-col lg:flex-row lg:gap-8 relative w-full">
@@ -205,21 +205,21 @@ export default async function BlogPost(props: {
               </p>
             )}
 
-            <MDXRemote
-              source={content}
-              components={MDXComponents}
-            />
-          </article>
+          <MDXRemote
+            source={content}
+            components={MDXComponents}
+          />
+        </article>
         </div>
 
         <div className="w-full mx-auto mt-12 max-w-3xl">
-          <RelatedPosts
-            posts={relatedPosts}
-            currentSlug={slug}
-            allPosts={allPosts}
-            currentTags={frontmatter.tags}
-          />
-        </div>
+        <RelatedPosts 
+          posts={relatedPosts} 
+          currentSlug={slug}
+          allPosts={allPosts}
+          currentTags={frontmatter.tags}
+        />
+      </div>
       </Container>
     )
   } catch (error) {
