@@ -66,6 +66,34 @@ async function WorkContent({
             {works.map((work, index) => {
               const { frontmatter } = work || {};
               
+              // Если это главная страница и первые три элемента, применяем специальную разметку
+              if (isMainPage && currentPage === 1) {
+                // Первый элемент занимает 6 колонок и 2 строки
+                if (index === 0) {
+                  return (
+                    <div 
+                      key={frontmatter?.slug || index} 
+                      className="col-span-12 md:col-span-6 row-span-2 h-full"
+                    >
+                      <WorkCard work={work} />
+                    </div>
+                  );
+                }
+                
+                // Второй и третий элементы занимают по 6 колонок и 1 строку каждый
+                if (index === 1 || index === 2) {
+                  return (
+                    <div 
+                      key={frontmatter?.slug || index} 
+                      className="col-span-12 md:col-span-6 row-span-1 aspect-video"
+                    >
+                      <WorkCard work={work} />
+                    </div>
+                  );
+                }
+              }
+              
+              // Для остальных элементов или страницы категорий применяем стандартную или кастомную сетку
               // Выбираем настройки сетки в зависимости от страницы
               const gridConfig = isMainPage 
                 ? frontmatter?.grid 
@@ -135,25 +163,29 @@ function Pagination({
   };
 
   return (
-    <div className="mt-12 flex items-center justify-center space-x-2">
+    <div className="mt-16 flex items-center justify-center space-x-3">
       {currentPage > 1 && (
         <Link 
           href={getPageUrl(currentPage - 1)}
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 
+            rounded-lg transition-colors flex items-center font-medium"
         >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
           Назад
         </Link>
       )}
       
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center space-x-2">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => (
           <Link
             key={pageNum}
             href={getPageUrl(pageNum)}
-            className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${
+            className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors font-medium ${
               pageNum === currentPage
-                ? 'bg-black text-white'
-                : 'bg-gray-100 hover:bg-gray-200'
+                ? 'bg-black text-white dark:bg-white dark:text-black'
+                : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700'
             }`}
           >
             {pageNum}
@@ -164,9 +196,13 @@ function Pagination({
       {currentPage < totalPages && (
         <Link 
           href={getPageUrl(currentPage + 1)}
-          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 
+            rounded-lg transition-colors flex items-center font-medium"
         >
           Вперед
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </Link>
       )}
     </div>
@@ -188,30 +224,30 @@ function WorkCard({ work }: { work: Post }) {
       href={slug ? `/work/${slug}` : "#"}
       className="group relative block overflow-hidden rounded-lg w-full h-full"
     >
-      <div className="absolute inset-0 w-full h-full bg-black/10 transition-opacity group-hover:bg-black/30 z-10" />
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/80 via-black/30 to-black/10 opacity-70 transition-opacity group-hover:opacity-90 z-10" />
       
       {cover ? (
         <Image
           src={cover}
           alt={title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       ) : (
         <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900" />
       )}
       
-      <div className="absolute bottom-0 left-0 right-0 p-4 z-20 flex flex-col transition-transform duration-300">
+      <div className="absolute bottom-0 left-0 right-0 p-5 z-20 flex flex-col transition-transform duration-300">
         {category && (
-          <span className="text-xs font-medium text-white/80 mb-2">
+          <span className="text-xs font-medium text-white/90 mb-2 uppercase tracking-wider">
             {category}
           </span>
         )}
         <h3 className="font-bold text-white text-xl md:text-2xl">{title}</h3>
         
-        <div className="translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 mt-2">
-          <span className="inline-block text-white text-sm px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm">
+        <div className="translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 mt-3">
+          <span className="inline-block text-white text-sm font-medium px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm">
             Подробнее
           </span>
         </div>

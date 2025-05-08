@@ -25,7 +25,7 @@ export default function CategoryFilters({ categories = [] }: CategoryFiltersProp
   
   // If not mounted yet, show a loading placeholder
   if (!mounted) {
-    return <div className="h-12 bg-gray-100 animate-pulse rounded-md mb-8" />
+    return <div className="h-12 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg mb-8" />
   }
   
   // Handle category change
@@ -44,14 +44,14 @@ export default function CategoryFilters({ categories = [] }: CategoryFiltersProp
   if (!categories.length) return null
   
   return (
-    <div className="flex flex-wrap gap-2 py-4 mb-8">
+    <div className="flex flex-wrap gap-2 py-4 mb-8 justify-center md:justify-start">
       <button
         onClick={() => handleCategoryClick('')}
         className={cn(
-          "px-4 py-2 text-sm font-medium rounded-md transition-colors",
+          "px-4 py-2.5 text-sm font-medium rounded-lg transition-colors",
           !activeCategory 
-            ? "bg-black text-white" 
-            : "bg-gray-100 hover:bg-gray-200"
+            ? "bg-black text-white dark:bg-white dark:text-black shadow-sm" 
+            : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
         )}
       >
         Все работы
@@ -62,10 +62,10 @@ export default function CategoryFilters({ categories = [] }: CategoryFiltersProp
           key={category}
           onClick={() => handleCategoryClick(category)}
           className={cn(
-            "px-4 py-2 text-sm font-medium rounded-md transition-colors",
+            "px-4 py-2.5 text-sm font-medium rounded-lg transition-colors",
             activeCategory === category
-              ? "bg-black text-white"
-              : "bg-gray-100 hover:bg-gray-200"
+              ? "bg-black text-white dark:bg-white dark:text-black shadow-sm"
+              : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
           )}
         >
           {category}

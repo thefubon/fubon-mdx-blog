@@ -4,6 +4,7 @@ import { getAllPosts, getAllWorks } from '@/lib/mdx'
 import PageWrapper from '@/components/PageWrapper'
 import Container from '@/components/ui/Container'
 import { ArrowRight } from 'lucide-react'
+import GsapDemoSection from '@/components/GsapDemoSection'
 
 export default function Home() {
   const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста
@@ -33,6 +34,9 @@ export default function Home() {
             </Link>
           </div>
         </section>
+        
+        {/* GSAP демонстрационная секция */}
+        <GsapDemoSection />
 
         {/* Секция последних работ */}
         {works.length > 0 && (

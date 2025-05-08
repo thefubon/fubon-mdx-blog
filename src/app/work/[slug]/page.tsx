@@ -1,8 +1,8 @@
-import { getWorkBySlug, getAllWorkSlugs } from '@/lib/mdx'
+import { getWorkBySlug, getAllWorkSlugs, getAllWorks } from '@/lib/mdx'
 import { notFound } from 'next/navigation'
 import Container from '@/components/ui/Container'
 import Link from 'next/link'
-import { ArrowLeft, ChevronRight, Home, Calendar, Clock } from 'lucide-react'
+import { ArrowLeft, ChevronRight, Home, Calendar, Clock, ArrowLeftCircle, ArrowRightCircle } from 'lucide-react'
 import FormattedDate from '@/components/blog/FormattedDate'
 import { translateReadingTime } from '@/lib/utils'
 import { MDXRemote } from 'next-mdx-remote/rsc'
@@ -48,6 +48,16 @@ export default async function WorkPage(props: { params: Promise<{ slug: string }
   if (!work) {
     notFound()
   }
+
+  // Получаем все работы для навигации между постами
+  const allWorks = getAllWorks();
+  
+  // Находим индекс текущей работы
+  const currentIndex = allWorks.findIndex(w => w.frontmatter.slug === params.slug);
+  
+  // Определяем предыдущую и следующую работы
+  const prevWork = currentIndex > 0 ? allWorks[currentIndex - 1] : null;
+  const nextWork = currentIndex < allWorks.length - 1 ? allWorks[currentIndex + 1] : null;
 
   const { title, description, publishedAt, readingTime, cover } = work.frontmatter
 
@@ -132,6 +142,77 @@ export default async function WorkPage(props: { params: Promise<{ slug: string }
               source={work.content}
               components={MDXComponents as ComponentProps<typeof MDXRemote>['components']}
             />
+          </div>
+          
+          {/* Навигация между постами */}
+          <div className="mt-16 border-t pt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {prevWork ? (
+              <Link 
+                href={`/work/${prevWork.frontmatter.slug}`}
+                className="group flex flex-col p-5 border border-gray-200 dark:border-gray-800 rounded-xl hover:border-blue-300 dark:hover:border-blue-600 transition-colors relative overflow-hidden shadow-sm hover:shadow-md"
+              >
+                {prevWork.frontmatter.cover && (
+                  <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity z-0">
+                    <Image
+                      src={prevWork.frontmatter.cover}
+                      alt={prevWork.frontmatter.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="relative z-10">
+                  <div className="flex items-center text-blue-600 mb-3">
+                    <ArrowLeftCircle className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
+                    <span className="font-medium">Предыдущий проект</span>
+                  </div>
+                  <h3 className="font-semibold text-xl text-gray-900 dark:text-white mb-1">
+                    {prevWork.frontmatter.title}
+                  </h3>
+                  {prevWork.frontmatter.category && (
+                    <p className="text-sm text-gray-500 dark:text-gray-300">
+                      {prevWork.frontmatter.category}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ) : (
+              <div className="col-span-1"></div>
+            )}
+            
+            {nextWork ? (
+              <Link 
+                href={`/work/${nextWork.frontmatter.slug}`}
+                className="group flex flex-col p-5 border border-gray-200 dark:border-gray-800 rounded-xl hover:border-blue-300 dark:hover:border-blue-600 transition-colors text-right relative overflow-hidden shadow-sm hover:shadow-md"
+              >
+                {nextWork.frontmatter.cover && (
+                  <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity z-0">
+                    <Image
+                      src={nextWork.frontmatter.cover}
+                      alt={nextWork.frontmatter.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="relative z-10">
+                  <div className="flex items-center justify-end text-blue-600 mb-3">
+                    <span className="font-medium">Следующий проект</span>
+                    <ArrowRightCircle className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                  </div>
+                  <h3 className="font-semibold text-xl text-gray-900 dark:text-white mb-1">
+                    {nextWork.frontmatter.title}
+                  </h3>
+                  {nextWork.frontmatter.category && (
+                    <p className="text-sm text-gray-500 dark:text-gray-300">
+                      {nextWork.frontmatter.category}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ) : (
+              <div className="col-span-1"></div>
+            )}
           </div>
         </article>
       </Container>

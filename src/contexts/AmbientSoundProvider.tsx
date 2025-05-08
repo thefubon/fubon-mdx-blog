@@ -28,7 +28,7 @@ const AmbientSoundContext = createContext<AmbientSoundContextType>({
 export const useAmbientSound = () => useContext(AmbientSoundContext)
 
 const FADE_DURATION = 1200 // Увеличиваем длительность плавного перехода
-const VOLUME = 1 // Уменьшаем громкость, чтобы минимизировать щелчки
+const VOLUME = 0.5 // Уменьшаем громкость, чтобы минимизировать щелчки
 
 export function AmbientSoundProvider({ children }: { children: React.ReactNode }) {
   const [isAmbientPlaying, setIsAmbientPlaying] = useState(true)
@@ -165,7 +165,7 @@ export function AmbientSoundProvider({ children }: { children: React.ReactNode }
   
   // Инициализация аудио один раз при монтировании
   useEffect(() => {
-    const audio = new Audio('/sounds/generic.mp3')
+    const audio = new Audio('/sounds/lofi-loop.mp3')
     audio.loop = true
     audio.volume = 0  // Начинаем с нулевой громкости
     
