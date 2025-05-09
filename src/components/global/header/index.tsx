@@ -79,7 +79,7 @@ const HeaderContent = () => {
       }
       
       // Hide header when scrolling down past 600px
-      if (currentScrollY > 600) {
+      if (currentScrollY > 480) {
         if (currentScrollY > lastScrollY) {
           setIsHidden(true) // Scrolling down
         } else {
