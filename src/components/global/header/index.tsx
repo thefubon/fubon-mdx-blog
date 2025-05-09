@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <MenuProvider>
       <header className="px-[var(--padding-x)] sticky top-0 z-50">
-        <div className="flex justify-between items-center gap-x-4 h-[clamp(80px,10vw,140px)]">
+        <div className="flex justify-between items-center gap-x-4 h-[clamp(80px,10vw,160px)]">
           <div>
             <Logo />
           </div>

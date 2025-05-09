@@ -5,6 +5,7 @@ import PageWrapper from '@/components/PageWrapper'
 import Container from '@/components/ui/Container'
 import { ArrowRight } from 'lucide-react'
 import GsapDemoSection from '@/components/GsapDemoSection'
+import { Velustro } from 'uvcanvas'
 
 export default function Home() {
   const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста
@@ -12,7 +13,13 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <Container padding={true} space={true}>
+      <Container
+        padding={true}
+        space={true}>
+        <div className="w-full h-[480px] md:h-[580px] rounded-2xl overflow-hidden">
+          <Velustro />
+        </div>
+
         <section className="text-center">
           <h1 className="text-h1 font-bold mb-4">Добро пожаловать!</h1>
 
@@ -34,7 +41,7 @@ export default function Home() {
             </Link>
           </div>
         </section>
-        
+
         {/* GSAP демонстрационная секция */}
         <GsapDemoSection />
 
@@ -42,13 +49,15 @@ export default function Home() {
         {works.length > 0 && (
           <section className="mt-16 mb-20">
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-bold">
-                Последние работы
-              </h2>
+              <h2 className="text-3xl font-bold">Последние работы</h2>
               <Link
                 href="/work"
                 className="text-blue-600 hover:text-blue-700 flex items-center transition-colors">
-                Все работы <ArrowRight size={16} className="ml-1" />
+                Все работы{' '}
+                <ArrowRight
+                  size={16}
+                  className="ml-1"
+                />
               </Link>
             </div>
 
@@ -98,13 +107,15 @@ export default function Home() {
         {posts.length > 0 && (
           <section>
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-bold">
-                Последние публикации
-              </h2>
+              <h2 className="text-3xl font-bold">Последние публикации</h2>
               <Link
                 href="/blog"
                 className="text-blue-600 hover:text-blue-700 flex items-center transition-colors">
-                Все статьи <ArrowRight size={16} className="ml-1" />
+                Все статьи{' '}
+                <ArrowRight
+                  size={16}
+                  className="ml-1"
+                />
               </Link>
             </div>
 
