@@ -216,7 +216,7 @@ export function WaveButton({
   const sizeClasses = {
     sm: 'h-8',
     md: 'h-10',
-    lg: 'h-12'
+    lg: 'h-[var(--button-height)]',
   }
   
   // For server-side rendering and first render on client:

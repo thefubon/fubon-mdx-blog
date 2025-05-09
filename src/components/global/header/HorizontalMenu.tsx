@@ -10,7 +10,7 @@ const HorizontalMenuComponent = () => {
   const currentUrl = usePathname()
 
   return (
-    <nav className="hidden lg:flex items-center">
+    <nav className="hidden lg:flex items-center relative -mb-1.5">
       <ul className="flex items-center space-x-8">
         {menuItems.map((item) =>
           currentUrl === item.link ? (
