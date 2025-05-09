@@ -184,7 +184,7 @@ const ButtonDropdownComponent = () => {
 
       <div
         ref={menuElement}
-        className={`absolute inset-x-0 space-y-4 mt-6 px-6 md:px-0 z-50 ${
+        className={`absolute md:right-0 inset-x-0 md:inset-x-auto md:min-w-[380px] lg:min-w-[440px] space-y-4 mt-6 px-6 md:px-0 z-50 ${
           isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         data-lenis-prevent>
