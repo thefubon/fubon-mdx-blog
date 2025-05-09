@@ -30,7 +30,6 @@ const ButtonDropdownComponent = () => {
   const menuButton = 'Меню'
   const currentUrl = usePathname()
 
-  const FADE_IN_DURATION = 300
   const FADE_OUT_DURATION = 300
   const VISIBLE_DURATION = 500
   const HIDE_DELAY = 500
@@ -131,26 +130,6 @@ const ButtonDropdownComponent = () => {
 
   return (
     <div>
-      {showBackground && isMobile && (
-        <div
-          className="bg-foreground dark:bg-background fixed inset-0"
-          style={{
-            animation: isFading
-              ? `fade-out ${FADE_OUT_DURATION}ms ease`
-              : `fade-in ${FADE_IN_DURATION}ms ease`,
-          }}></div>
-      )}
-
-      {showBackground && !isMobile && (
-        <div
-          className="bg-linear-to-l from-foreground/20 from-0% to-transparent to-20% fixed inset-0"
-          style={{
-            animation: isFading
-              ? `fade-out ${FADE_OUT_DURATION}ms ease`
-              : `fade-in ${FADE_IN_DURATION}ms ease`,
-          }}></div>
-      )}
-
       <SoundWrapper>
         <button
           ref={buttonElement}
@@ -186,7 +165,7 @@ const ButtonDropdownComponent = () => {
 
       <div
         ref={menuElement}
-        className={`absolute inset-x-0 space-y-4 mt-6 px-6 md:px-0 ${
+        className={`absolute inset-x-0 space-y-4 mt-6 px-6 md:px-0 z-50 ${
           isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         data-lenis-prevent>
