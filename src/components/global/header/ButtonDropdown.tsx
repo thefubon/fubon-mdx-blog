@@ -20,6 +20,7 @@ const ButtonDropdownComponent = () => {
   const { updateMenuState } = useContext(MenuContext)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isLargeScreen, setIsLargeScreen] = useState(false)
   const [showBackground, setShowBackground] = useState(false)
   const [isFading, setIsFading] = useState(false)
 
@@ -36,6 +37,10 @@ const ButtonDropdownComponent = () => {
 
   const checkIsMobile = useCallback(() => {
     return window.innerWidth < 768
+  }, [])
+  
+  const checkIsLargeScreen = useCallback(() => {
+    return window.innerWidth >= 1024
   }, [])
 
   const toggleBodyScroll = useCallback((disable: boolean) => {
@@ -99,15 +104,22 @@ const ButtonDropdownComponent = () => {
   useEffect(() => {
     const handleResize = () => {
       const mobileStatus = checkIsMobile()
+      const largeScreenStatus = checkIsLargeScreen()
+      
       if (mobileStatus !== isMobile) {
         setIsMobile(mobileStatus)
+      }
+      
+      if (largeScreenStatus !== isLargeScreen) {
+        setIsLargeScreen(largeScreenStatus)
       }
     }
 
     setIsMobile(checkIsMobile())
+    setIsLargeScreen(checkIsLargeScreen())
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [checkIsMobile, isMobile])
+  }, [checkIsMobile, isMobile, checkIsLargeScreen, isLargeScreen])
 
   // Обработка кликов вне меню
   useEffect(() => {
@@ -127,6 +139,13 @@ const ButtonDropdownComponent = () => {
   useEffect(() => {
     updateMenuState?.({ isMenuOpen, showBackground, isFading, isMobile })
   }, [isMenuOpen, showBackground, isFading, isMobile, updateMenuState])
+
+  // Общие классы для контейнера меню
+  const menuContainerClasses = `bg-card text-card-foreground mt-2 py-6 space-y-0.5 rounded-2xl transition-all duration-300 uppercase ${
+    isMenuOpen
+      ? 'opacity-100 translate-z-0'
+      : 'opacity-0 translate-y-[5.5em] rotate-[3.5deg] delay-150'
+  }`
 
   return (
     <div>
@@ -169,59 +188,60 @@ const ButtonDropdownComponent = () => {
           isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         data-lenis-prevent>
-        <ul
-          className={`bg-card text-card-foreground md:mt-4 py-6 space-y-0.5 rounded-2xl transition-all duration-300 uppercase ${
-            isMenuOpen
-              ? 'opacity-100 translate-z-0'
-              : 'opacity-0 translate-y-[5.5em] rotate-[3.5deg] delay-150'
-          }`}>
-          {menuItems.map((item) =>
-            currentUrl === item.link ? (
-              <li
-                key={item.link}
-                className="py-2 px-6 relative flex justify-between items-center hover:bg-transparent text-[length:var(--dropdown-text)]">
-                <span>{item.name}</span>
-                <span className="size-3 bg-primary rounded-full block"></span>
-              </li>
-            ) : (
-              <li
-                key={item.link}
-                className="group py-2 px-6 relative hover:bg-muted transition-all duration-300 flex justify-between items-center text-[length:var(--dropdown-text)]">
-                <Link
-                  href={item.link}
-                  aria-label={item.name}
-                  onClick={toggleMenu}
-                  className="absolute z-10 inset-0"
-                />
-                <div className="relative w-full overflow-hidden md:inline-flex cursor-pointer">
-                  <span className="whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
-                    {item.name}
-                  </span>
-                  <span className="whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out hidden md:block absolute top-full group-hover:-translate-y-full">
-                    {item.name}
-                  </span>
-                </div>
+        {isLargeScreen ? (
+          // Для больших экранов (LG и выше) - только контейнер без пунктов меню
+          <div className={`${menuContainerClasses} h-64`}></div>
+        ) : (
+          // Для маленьких экранов (меньше LG) - полный список меню
+          <ul className={menuContainerClasses}>
+            {menuItems.map((item) =>
+              currentUrl === item.link ? (
+                <li
+                  key={item.link}
+                  className="py-2 px-6 relative flex justify-between items-center hover:bg-transparent text-[length:var(--dropdown-text)]">
+                  <span>{item.name}</span>
+                  <span className="size-3 bg-primary rounded-full block"></span>
+                </li>
+              ) : (
+                <li
+                  key={item.link}
+                  className="group py-2 px-6 relative hover:bg-muted transition-all duration-300 flex justify-between items-center text-[length:var(--dropdown-text)]">
+                  <Link
+                    href={item.link}
+                    aria-label={item.name}
+                    onClick={toggleMenu}
+                    className="absolute z-10 inset-0"
+                  />
+                  <div className="relative w-full overflow-hidden md:inline-flex cursor-pointer">
+                    <span className="whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
+                      {item.name}
+                    </span>
+                    <span className="whitespace-nowrap transition-transform duration-500 delay-75 ease-in-out hidden md:block absolute top-full group-hover:-translate-y-full">
+                      {item.name}
+                    </span>
+                  </div>
 
-                <span className="opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none -translate-x-4 group-hover:translate-x-0 text-primary">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    viewBox="0 0 16 16"
-                    className="w-6 h-6">
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      d="M2.343 8h11.314m0 0-4.984 4.984M13.657 8 8.673 3.016"></path>
-                  </svg>
-                </span>
-              </li>
-            )
-          )}
-        </ul>
+                  <span className="opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none -translate-x-4 group-hover:translate-x-0 text-primary">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="none"
+                      viewBox="0 0 16 16"
+                      className="w-6 h-6">
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M2.343 8h11.314m0 0-4.984 4.984M13.657 8 8.673 3.016"></path>
+                    </svg>
+                  </span>
+                </li>
+              )
+            )}
+          </ul>
+        )}
 
         <div
           className={`bg-card text-card-foreground p-6 rounded-2xl transition duration-[400ms] flex flex-col gap-4 ${
