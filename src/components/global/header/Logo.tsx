@@ -17,7 +17,7 @@ export default function Logo() {
         viewBox="0 0 97 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={`w-[clamp(140px,15vw,256px)] h-auto relative z-50 transition-colors duration-300 ease-in-out ${
+        className={`w-[clamp(140px,15vw,180px)] h-auto relative z-50 transition-colors duration-300 ease-in-out ${
           isMobile && showBackground && !isFading
             ? 'text-white'
             : 'text-black dark:text-white'

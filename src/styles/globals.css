@@ -66,7 +66,7 @@
   --color-fubon-text: var(--fubon-text);
 
   /* PADDING */
-  --padding-x: max(5vw, 16px);
+  --padding-x: max(4vw, 16px);
 
   /* FONT SIZE */
   --font-size-h1: clamp(32px, 3.2vw + 16px, 64px);

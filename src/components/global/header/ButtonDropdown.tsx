@@ -143,7 +143,7 @@ const ButtonDropdownComponent = () => {
 
       {showBackground && !isMobile && (
         <div
-          className="bg-muted/80 backdrop-blur-sm fixed inset-0"
+          className="bg-linear-to-l from-foreground/20 from-0% to-transparent to-20% fixed inset-0"
           style={{
             animation: isFading
               ? `fade-out ${FADE_OUT_DURATION}ms ease`
@@ -186,12 +186,12 @@ const ButtonDropdownComponent = () => {
 
       <div
         ref={menuElement}
-        className={`absolute inset-x-0 space-y-4 mt-6 md:mt-4 px-6 md:px-0 ${
+        className={`absolute inset-x-0 space-y-4 mt-6 px-6 md:px-0 ${
           isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         data-lenis-prevent>
         <ul
-          className={`bg-card text-card-foreground md:mt-4 py-6 space-y-0.5 rounded-lg transition-all duration-300 uppercase shadow-md ${
+          className={`bg-card text-card-foreground md:mt-4 py-6 space-y-0.5 rounded-2xl transition-all duration-300 uppercase ${
             isMenuOpen
               ? 'opacity-100 translate-z-0'
               : 'opacity-0 translate-y-[5.5em] rotate-[3.5deg] delay-150'
@@ -245,7 +245,7 @@ const ButtonDropdownComponent = () => {
         </ul>
 
         <div
-          className={`bg-card text-card-foreground p-6 rounded-lg shadow-md transition duration-[400ms] flex flex-col gap-4 ${
+          className={`bg-card text-card-foreground p-6 rounded-2xl transition duration-[400ms] flex flex-col gap-4 ${
             isMenuOpen
               ? 'opacity-100 translate-z-0'
               : 'opacity-0 translate-y-[8em] rotate-[-3.5deg] delay-100'
@@ -254,7 +254,7 @@ const ButtonDropdownComponent = () => {
         </div>
 
         <div
-          className={`bg-card text-card-foreground p-6 rounded-lg shadow-md transition duration-500 ${
+          className={`bg-card text-card-foreground p-6 rounded-2xl transition duration-500 ${
             isMenuOpen
               ? 'opacity-100 translate-z-0'
               : 'opacity-0 translate-y-[9em] rotate-[-3.5deg] delay-75'
