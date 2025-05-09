@@ -101,6 +101,11 @@
       "name": "Блог",
       "url": "/blog",
       "description": "Просмотр блога"
+    },
+    {
+      "name": "Муызка",
+      "url": "/music",
+      "description": "Просмотр музыки"
     }
   ],
   "edge_side_panel": {
