@@ -93,6 +93,11 @@
   "capture_links": "existing-client-navigate",
   "shortcuts": [
     {
+      "name": "Работа",
+      "url": "/work",
+      "description": "Просмотр работ"
+    },
+    {
       "name": "Блог",
       "url": "/blog",
       "description": "Просмотр блога"
