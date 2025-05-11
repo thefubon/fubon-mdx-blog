@@ -353,3 +353,116 @@ export function getAllWorkCategories(): string[] {
     return [];
   }
 }
+
+// Market Items Functions
+export function getAllMarketSlugs() {
+  const files = fs.readdirSync(path.join(contentDirectory, 'market'));
+  return files
+    .filter(file => file.endsWith('.mdx'))
+    .map(file => file.replace(/\.mdx$/, ''));
+}
+
+export function getMarketItemBySlug(slug: string): Post {
+  const filePath = path.join(contentDirectory, 'market', `${slug}.mdx`);
+  const fileContent = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContent);
+
+  let publishedAt = new Date().toISOString();
+  if (data.publishedAt) {
+    if (typeof data.publishedAt === 'string') {
+      publishedAt = data.publishedAt;
+    }
+    else if (data.publishedAt instanceof Date) {
+      publishedAt = data.publishedAt.toISOString();
+    }
+    else {
+      publishedAt = new Date(data.publishedAt).toISOString();
+    }
+  }
+
+  const frontmatter: PostMetadata = {
+    title: data.title || 'Без заголовка',
+    publishedAt: publishedAt,
+    description: data.description,
+    slug: slug,
+    readingTime: readingTime(content).text,
+    category: data.category,
+    price: data.price,
+    images: data.images || [],
+    ...Object.entries(data)
+      .filter(([key]) => !['title', 'publishedAt', 'description', 'category', 'price', 'images'].includes(key))
+      .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
+  };
+
+  return {
+    frontmatter,
+    content,
+  };
+}
+
+export function getAllMarketItems(): Post[] {
+  const slugs = getAllMarketSlugs();
+  const items = slugs.map(slug => getMarketItemBySlug(slug))
+    .sort((a, b) => new Date(b.frontmatter.publishedAt).getTime() - new Date(a.frontmatter.publishedAt).getTime());
+
+  return items;
+}
+
+export function searchMarketItems(query: string): Post[] {
+  if (!query || query.trim() === '') {
+    return getAllMarketItems();
+  }
+
+  const searchQuery = query.toLowerCase().trim();
+  
+  // Если запрос короче 3 символов, возвращаем все товары
+  if (searchQuery.length < 3) {
+    return getAllMarketItems();
+  }
+  
+  return getAllMarketItems().filter(item => {
+    const { title, description, category } = item.frontmatter;
+    
+    // Проверяем совпадение в заголовке с более высоким приоритетом
+    if (title.toLowerCase().includes(searchQuery)) {
+      return true;
+    }
+    
+    // Проверяем совпадение в описании
+    if (description && description.toLowerCase().includes(searchQuery)) {
+      return true;
+    }
+    
+    // Проверяем совпадение в категории
+    if (category && category.toLowerCase().includes(searchQuery)) {
+      return true;
+    }
+    
+    // Проверяем совпадение в содержимом
+    return item.content.toLowerCase().includes(searchQuery);
+  });
+}
+
+export function getMarketItemsByCategory(category: string): Post[] {
+  if (!category || category.trim() === '') {
+    return getAllMarketItems();
+  }
+  
+  return getAllMarketItems().filter(item => {
+    const itemCategory = item.frontmatter.category || '';
+    return itemCategory.toLowerCase() === category.toLowerCase();
+  });
+}
+
+export function getAllMarketCategories(): string[] {
+  const items = getAllMarketItems();
+  const categories = new Set<string>();
+
+  items.forEach(item => {
+    if (item.frontmatter.category) {
+      categories.add(item.frontmatter.category);
+    }
+  });
+
+  return Array.from(categories).sort();
+}

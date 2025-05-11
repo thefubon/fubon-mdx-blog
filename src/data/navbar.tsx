@@ -1,5 +1,5 @@
 import React from 'react'
-import { BriefcaseBusiness, FileText, Music } from 'lucide-react'
+import { BriefcaseBusiness, FileText, Music, Store } from 'lucide-react'
 
 export type MenuItem = {
   name: string
@@ -21,6 +21,11 @@ export const menuItems: MenuItem[] = [
   { 
     name: 'Музыка', 
     link: '/music',
-    icon: <Music className="w-full h-full" />
+    icon: <Music className="w-full h-full" /> 
+  },
+  { 
+    name: 'Маркет', 
+    link: '/market',
+    icon: <Store className="w-full h-full" /> 
   },
 ]

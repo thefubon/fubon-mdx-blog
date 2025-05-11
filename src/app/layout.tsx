@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/contexts/ThemeProvider'
 import { SoundProvider } from '@/contexts/SoundProvider'
 import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
 import { AmbientSoundProvider } from '@/contexts/AmbientSoundProvider'
+import { CartProvider } from '@/contexts/CartContext'
 import AuthProvider from '@/components/auth/AuthProvider'
 
 export const viewport: Viewport = {
@@ -107,13 +108,15 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange>
-            <MusicPlayerProvider>
-              <AmbientSoundProvider>
-                <SoundProvider>
-                  {children}
-                </SoundProvider>
-              </AmbientSoundProvider>
-            </MusicPlayerProvider>
+            <CartProvider>
+              <MusicPlayerProvider>
+                <AmbientSoundProvider>
+                  <SoundProvider>
+                    {children}
+                  </SoundProvider>
+                </AmbientSoundProvider>
+              </MusicPlayerProvider>
+            </CartProvider>
           </ThemeProvider>
         </AuthProvider>
       </body>

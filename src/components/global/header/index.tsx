@@ -5,11 +5,11 @@
 import SoundWrapper from '@/components/SoundWrapper'
 import { MenuProvider, useMenuContext } from '@/contexts/LogoProvider'
 import Logo from './Logo'
-import ButtonContact from './ButtonContact'
 import { ButtonDropdown } from './ButtonDropdown'
 import { WaveButton } from '@/components/wave-button'
 import { useEffect, useState, useRef } from 'react'
 import { HorizontalMenu } from './HorizontalMenu'
+import CartButton from '@/components/market/CartButton'
 
 // Константы анимации, такие же как в LogoProvider
 const FADE_OUT_DURATION = 300
@@ -111,26 +111,17 @@ const HeaderContent = () => {
         </div>
 
         <div className="inline-flex justify-end items-center gap-x-2 md:gap-x-4 static md:relative flex-shrink-0">
-          <SoundWrapper>
-            <WaveButton
-              size="lg"
-              pulseWhenIdle={true}
-              showTrackName={true}
-            />
-          </SoundWrapper>
-
-          <div className="hidden lg:inline-block">
+          <div className="size-[var(--button-height)]">
             <SoundWrapper>
-              <ButtonContact
-                href="mailto:hello@fubon.ru"
-                aria-label="Отправить Email">
-                <div className="flex items-center gap-x-2">
-                  Начать<span className='hidden xl:inline-block'> проект</span>
-                </div>
-              </ButtonContact>
+              <WaveButton
+                size="lg"
+                pulseWhenIdle={true}
+                showTrackName={true}
+              />
             </SoundWrapper>
           </div>
-
+          
+          <CartButton />
           <ButtonDropdown />
         </div>
       </div>

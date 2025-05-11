@@ -16,6 +16,8 @@ export interface PostMetadata {
     col?: number;
     row?: number;
   };
+  price?: number | string;
+  images?: string[];
 }
 
 export interface Post {
