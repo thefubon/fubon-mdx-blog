@@ -3,6 +3,7 @@
 import { useCart, CartItem } from '@/contexts/CartContext';
 import { ShoppingCart, Check } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface AddToCartButtonProps {
   item: CartItem;
@@ -20,14 +21,11 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
   };
   
   return (
-    <button 
+    <Button 
       onClick={handleAddToCart}
       disabled={isAdded}
-      className={`inline-flex items-center px-6 py-3 font-medium rounded-lg transition-colors ${
-        isAdded 
-          ? 'bg-green-500 text-white hover:bg-green-600' 
-          : 'bg-primary text-black hover:bg-primary/90'
-      }`}
+      variant={isAdded ? "secondary" : "default"}
+      className={isAdded ? 'bg-green-500 text-white hover:bg-green-600' : ''}
     >
       {isAdded ? (
         <>
@@ -40,6 +38,6 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
           Купить
         </>
       )}
-    </button>
+    </Button>
   );
 } 

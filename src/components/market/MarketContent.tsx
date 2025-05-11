@@ -1,31 +1,45 @@
 import Link from 'next/link';
-import { getAllMarketItems, getAllMarketCategories, searchMarketItems, getMarketItemsByCategory } from '@/lib/mdx';
+import { getAllMarketCategories, searchMarketItems, getMarketItemsByPriceTypeAndCategory } from '@/lib/mdx';
 import Container from '@/components/ui/Container';
 import { ChevronRight, Home } from 'lucide-react';
 import { Post } from '@/lib/types';
 import SearchForm from '@/components/market/SearchForm';
 import MarketItemCard from '@/components/market/MarketItemCard';
+import PriceTypeFilter from '@/components/market/PriceTypeFilter';
 
 interface MarketContentProps {
   search?: string;
   category?: string;
+  isPaid?: string;
 }
 
 export default async function MarketContent({ 
   search = '',
-  category = ''
+  category = '',
+  isPaid = ''
 }: MarketContentProps) {
   // Получаем все товары
   let marketItems: Post[] = [];
   const allCategories = getAllMarketCategories();
   
-  // Фильтруем товары по поисковому запросу или категории
+  // Определяем тип цены (null - все, false - бесплатные)
+  // Теперь у нас только два варианта: все товары или только бесплатные
+  const showOnlyFree = isPaid === 'false';
+  const priceType = showOnlyFree ? false : null;
+  
+  // Фильтруем товары по поисковому запросу, категории и типу цены
   if (search) {
+    // При поиске сначала ищем по запросу, затем фильтруем по типу цены если указан
     marketItems = searchMarketItems(search);
-  } else if (category) {
-    marketItems = getMarketItemsByCategory(category);
+    if (showOnlyFree) {
+      marketItems = marketItems.filter(item => {
+        const price = item.frontmatter.price;
+        return price === undefined || price === null || price === "" || price === 0;
+      });
+    }
   } else {
-    marketItems = getAllMarketItems();
+    // Используем функцию для фильтрации по типу цены и категории
+    marketItems = getMarketItemsByPriceTypeAndCategory(priceType, category);
   }
 
   // Функция для создания URL с параметрами
@@ -33,6 +47,12 @@ export default async function MarketContent({
     const params = new URLSearchParams();
     if (cat) params.set('category', cat);
     if (search && search.length >= 3) params.set('search', search);
+    
+    // Сохраняем параметр isPaid, если показываем только бесплатные
+    if (showOnlyFree) {
+      params.set('isPaid', 'false');
+    }
+    
     const queryString = params.toString();
     return queryString ? `/market?${queryString}` : '/market';
   };
@@ -62,27 +82,32 @@ export default async function MarketContent({
         <div className="mb-10">
           <SearchForm initialSearchValue={search} />
           
-          {/* Фильтр по категориям */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            <Link 
-              href={createUrlWithParams()}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                !category ? 'bg-primary text-black' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
-              }`}
-            >
-              Все
-            </Link>
-            {allCategories.map((cat) => (
+          <div className="flex flex-wrap items-center justify-between gap-4 mt-4">
+            {/* Фильтр по типу цены */}
+            <PriceTypeFilter initialValue={showOnlyFree} />
+            
+            {/* Фильтр по категориям */}
+            <div className="flex flex-wrap gap-2">
               <Link 
-                key={cat}
-                href={createUrlWithParams(cat)}
+                href={createUrlWithParams()}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  category === cat ? 'bg-primary text-black' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  !category ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
                 }`}
               >
-                {cat}
+                Все
               </Link>
-            ))}
+              {allCategories.map((cat) => (
+                <Link 
+                  key={cat}
+                  href={createUrlWithParams(cat)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    category === cat ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {cat}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
         

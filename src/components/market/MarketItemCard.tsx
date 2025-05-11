@@ -61,7 +61,7 @@ export default function MarketItemCard({ item }: MarketItemCardProps) {
             {displayPrice()}
           </span>
           
-          <span className="inline-block text-sm font-medium px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:bg-primary group-hover:text-black transition-colors">
+          <span className="inline-block text-sm font-medium px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:bg-primary group-hover:text-white transition-colors">
             Подробнее
           </span>
         </div>

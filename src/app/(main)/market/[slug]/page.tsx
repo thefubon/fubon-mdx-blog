@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { ArrowLeft, ChevronRight, Home, Download } from 'lucide-react'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import PageWrapper from '@/components/PageWrapper'
-import Image from 'next/image'
 import MDXComponents from '@/components/MDXComponents'
 import { Post } from '@/lib/types'
 import { ComponentProps } from 'react'
@@ -13,6 +12,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import type { Metadata } from 'next'
 import AddToCartButton from '@/components/market/AddToCartButton'
+import ImageGallery from '@/components/market/ImageGallery'
 
 // Генерация метаданных на основе динамических данных
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -192,19 +192,7 @@ export default async function MarketItemPage(props: { params: Promise<{ slug: st
 
           {/* Галерея изображений */}
           {images && images.length > 0 && (
-            <div className="mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {images.map((image, index) => (
-                <div key={index} className="relative aspect-[4/3] rounded-xl overflow-hidden">
-                  <Image
-                    src={image}
-                    alt={`${title} - изображение ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                </div>
-              ))}
-            </div>
+            <ImageGallery images={images} title={title} />
           )}
 
           {/* Содержимое товара */}

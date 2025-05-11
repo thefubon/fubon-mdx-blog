@@ -29,11 +29,15 @@ export default async function MarketPage(
   const categoryParam = searchParams.category;
   const category = categoryParam && typeof categoryParam === 'string' ? categoryParam : '';
 
+  // Получаем параметр isPaid для фильтрации (теперь только false или не указан)
+  const isPaidParam = searchParams.isPaid;
+  const isPaid = isPaidParam && typeof isPaidParam === 'string' ? isPaidParam : '';
+
   return (
-    <PageWrapper title="Цифровые товары" description="Каталог цифровых товаров для скачивания">
+    <PageWrapper>
       {/* Рендерим контент */}
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Загрузка товаров...</div>}>
-        <MarketContent search={search} category={category} />
+        <MarketContent search={search} category={category} isPaid={isPaid} />
       </Suspense>
     </PageWrapper>
   )

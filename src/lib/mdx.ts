@@ -466,3 +466,43 @@ export function getAllMarketCategories(): string[] {
 
   return Array.from(categories).sort();
 }
+
+// Функция для получения бесплатных товаров
+export function getFreeMarketItems(): Post[] {
+  return getAllMarketItems().filter(item => {
+    const price = item.frontmatter.price;
+    return price === undefined || price === null || price === "" || price === 0;
+  });
+}
+
+// Функция для получения платных товаров
+export function getPaidMarketItems(): Post[] {
+  return getAllMarketItems().filter(item => {
+    const price = item.frontmatter.price;
+    return price !== undefined && price !== null && price !== "" && price !== 0;
+  });
+}
+
+// Функция для фильтрации товаров по типу цены и категории
+export function getMarketItemsByPriceTypeAndCategory(isPaid: boolean | null, category: string = ""): Post[] {
+  let items = getAllMarketItems();
+  
+  // Фильтрация по типу цены, если указан
+  if (isPaid !== null) {
+    items = items.filter(item => {
+      const price = item.frontmatter.price;
+      const itemIsPaid = !(price === undefined || price === null || price === "" || price === 0);
+      return itemIsPaid === isPaid;
+    });
+  }
+  
+  // Дополнительная фильтрация по категории, если указана
+  if (category && category.trim() !== "") {
+    items = items.filter(item => {
+      const itemCategory = item.frontmatter.category || "";
+      return itemCategory.toLowerCase() === category.toLowerCase();
+    });
+  }
+  
+  return items;
+}

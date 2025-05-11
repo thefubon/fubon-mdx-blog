@@ -20,8 +20,8 @@ const HorizontalMenuComponent = () => {
             <li
               key={item.link}
               className="group relative flex items-center">
-              <div className="relative inline-flex items-center gap-x-2 overflow-hidden text-[length:var(--font-size-h6)] uppercase text-primary">
-                <span className="size-6">{item.icon}</span>
+              <div className="relative inline-flex items-center gap-x-2 overflow-hidden text-[length:var(--font-size-h6)] text-primary">
+                <span className="size-6 hidden xl:block">{item.icon}</span>
                 <span>{item.name}</span>
               </div>
             </li>
@@ -33,13 +33,13 @@ const HorizontalMenuComponent = () => {
                 <Link
                   href={item.link}
                   aria-label={item.name}
-                  className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)] uppercase">
+                  className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)]">
                   <div className="relative flex items-center gap-x-2 transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
-                    <span className="size-6">{item.icon}</span>
+                    <span className="size-6 hidden xl:block">{item.icon}</span>
                     <span>{item.name}</span>
                   </div>
                   <div className="absolute top-full left-0 flex items-center gap-x-2 transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
-                    <span className="size-6">{item.icon}</span>
+                    <span className="size-6 hidden xl:block">{item.icon}</span>
                     <span>{item.name}</span>
                   </div>
                 </Link>
