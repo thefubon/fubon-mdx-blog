@@ -111,15 +111,13 @@ const HeaderContent = () => {
         </div>
 
         <div className="inline-flex justify-end items-center gap-x-2 md:gap-x-4 static md:relative flex-shrink-0">
-     
-            <SoundWrapper>
-              <WaveButton
-                size="lg"
-                pulseWhenIdle={true}
-                showTrackName={false}
-              />
-            </SoundWrapper>
-  
+          <SoundWrapper>
+            <WaveButton
+              size="lg"
+              pulseWhenIdle={true}
+              showTrackName={false}
+            />
+          </SoundWrapper>
           
           <CartButton />
           <ButtonDropdown />
