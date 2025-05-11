@@ -7,7 +7,7 @@ export default function Footer() {
     <>
       <footer className="mt-12 py-6">
         <div className="max-w-7xl mx-auto px-4 text-center text-foreground">
-          &copy; 2004-{new Date().getFullYear()} Fubon. <Link href="/login">Войти</Link>
+          &copy; 2004-{new Date().getFullYear()} Fubon. | <Link href="/login">Войти</Link> |<Link href="/dashboard">Профиль</Link>
         </div>
       </footer>
 
