@@ -26,7 +26,7 @@ export default function DashboardHeader() {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:hidden">
       <div className="font-semibold">Панель управления</div>
-      
+
       <div className="flex items-center gap-2">
         {/* Market Cart Sheet */}
         <Sheet>
@@ -44,19 +44,21 @@ export default function DashboardHeader() {
             <SheetHeader>
               <SheetTitle>Корзина</SheetTitle>
             </SheetHeader>
-            
+
             <div className="mt-6 flex flex-col gap-6">
               {items.length > 0 ? (
                 <>
                   <div className="flex flex-col gap-4">
                     {items.map((item) => (
-                      <div key={item.slug} className="flex items-center gap-4 border-b pb-4">
+                      <div
+                        key={item.slug}
+                        className="flex items-center gap-4 border-b pb-4">
                         {item.image && (
                           <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
-                            <Image 
-                              src={item.image} 
-                              alt={item.title} 
-                              fill 
+                            <Image
+                              src={item.image}
+                              alt={item.title}
+                              fill
                               className="object-cover"
                             />
                           </div>
@@ -65,25 +67,22 @@ export default function DashboardHeader() {
                           <h3 className="font-medium">{item.title}</h3>
                           <p className="text-primary font-bold">{item.price}</p>
                         </div>
-                        <button 
+                        <button
                           onClick={() => removeItem(item.slug)}
-                          className="text-gray-500 hover:text-red-500 transition-colors"
-                        >
+                          className="text-gray-500 hover:text-red-500 transition-colors">
                           Удалить
                         </button>
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="flex flex-col gap-4">
                     <div className="flex justify-between text-lg font-bold">
                       <span>Итого:</span>
                       <span>{totalPrice} ₽</span>
                     </div>
-                    
-                    <Button>
-                      Оформить заказ
-                    </Button>
+
+                    <Button>Оформить заказ</Button>
                   </div>
                 </>
               ) : (
@@ -97,7 +96,7 @@ export default function DashboardHeader() {
             </div>
           </SheetContent>
         </Sheet>
-        
+
         {/* Navigation Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -105,19 +104,27 @@ export default function DashboardHeader() {
               <Menu size={18} />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent
+            align="end"
+            className="w-56">
             <DropdownMenuItem asChild>
-              <Link href="/" className="flex w-full cursor-pointer">
+              <Link
+                href="/"
+                className="flex w-full cursor-pointer">
                 На сайт
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard" className="flex w-full cursor-pointer">
+              <Link
+                href="/dashboard"
+                className="flex w-full cursor-pointer">
                 Главная
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/market" className="flex w-full cursor-pointer items-center justify-between">
+              <Link
+                href="/dashboard/market"
+                className="flex w-full cursor-pointer items-center justify-between">
                 <span>Мои покупки</span>
                 {itemCount > 0 && (
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-black">
@@ -127,28 +134,22 @@ export default function DashboardHeader() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/settings" className="flex w-full cursor-pointer">
+              <Link
+                href="/dashboard/settings"
+                className="flex w-full cursor-pointer">
                 Настройки
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/profile" className="flex w-full cursor-pointer">
+              <Link
+                href="/dashboard/profile"
+                className="flex w-full cursor-pointer">
                 Профиль
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/market" className="flex w-full cursor-pointer items-center justify-between">
-                <span>Маркет</span>
-                {itemCount > 0 && (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-black">
-                    {itemCount}
-                  </span>
-                )}
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </header>
-  );
+  )
 } 

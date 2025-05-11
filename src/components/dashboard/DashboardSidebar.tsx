@@ -15,26 +15,23 @@ export default function DashboardSidebar() {
         <nav className="flex-1 p-4">
           <ul className="space-y-2">
             <li>
-              <Link 
-                href="/" 
-                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent"
-              >
+              <Link
+                href="/"
+                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent">
                 На сайт
               </Link>
             </li>
             <li>
-              <Link 
-                href="/dashboard" 
-                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent"
-              >
+              <Link
+                href="/dashboard"
+                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent">
                 Главная
               </Link>
             </li>
             <li>
-              <Link 
-                href="/dashboard/market" 
-                className="flex items-center justify-between rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent"
-              >
+              <Link
+                href="/dashboard/market"
+                className="flex items-center justify-between rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent">
                 <span>Мои покупки</span>
                 {itemCount > 0 && (
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-black">
@@ -44,37 +41,22 @@ export default function DashboardSidebar() {
               </Link>
             </li>
             <li>
-              <Link 
-                href="/dashboard/settings" 
-                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent"
-              >
+              <Link
+                href="/dashboard/settings"
+                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent">
                 Настройки
               </Link>
             </li>
             <li>
-              <Link 
-                href="/dashboard/profile" 
-                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent"
-              >
+              <Link
+                href="/dashboard/profile"
+                className="block rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent">
                 Профиль
-              </Link>
-            </li>
-            <li>
-              <Link 
-                href="/market" 
-                className="flex items-center justify-between rounded-lg px-4 py-2 text-sm font-medium hover:bg-accent"
-              >
-                <span>Маркет</span>
-                {itemCount > 0 && (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-black">
-                    {itemCount}
-                  </span>
-                )}
               </Link>
             </li>
           </ul>
         </nav>
       </div>
     </aside>
-  );
+  )
 } 
