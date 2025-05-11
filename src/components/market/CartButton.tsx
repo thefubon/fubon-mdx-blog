@@ -19,10 +19,10 @@ export default function CartButton() {
   
   if (!isMounted) {
     return (
-      <button className="relative p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+      <button className="relative size-[var(--button-height)] flex justify-center items-center rounded-full bg-secondary hover:bg-primary hover:text-white transition-colors">
         <ShoppingCart className="h-5 w-5" />
       </button>
-    );
+    )
   }
   
   const totalPrice = items.reduce((sum, item) => {
@@ -35,7 +35,7 @@ export default function CartButton() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="relative p-2 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+        <button className="relative size-[var(--button-height)] flex justify-center items-center rounded-full bg-secondary hover:bg-primary hover:text-white transition-colors">
           <ShoppingCart className="h-5 w-5" />
           {itemCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-primary text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
