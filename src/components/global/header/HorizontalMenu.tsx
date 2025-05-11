@@ -17,28 +17,29 @@ const HorizontalMenuComponent = () => {
                          (item.link !== '/' && currentUrl.startsWith(item.link))
           
           return isActive ? (
-            <li key={item.link} className="group relative flex items-center">
-              <div className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)] uppercase text-primary font-medium">
-                <span className="w-4 h-4 mr-1">{item.icon}</span>
-                <span>
-                  {item.name}
-                </span>
+            <li
+              key={item.link}
+              className="group relative flex items-center">
+              <div className="relative inline-flex items-center gap-x-2 overflow-hidden text-[length:var(--font-size-h6)] uppercase text-primary">
+                <span className="size-6">{item.icon}</span>
+                <span>{item.name}</span>
               </div>
             </li>
           ) : (
-            <li key={item.link} className="group relative flex items-center">
+            <li
+              key={item.link}
+              className="group relative flex items-center">
               <SoundWrapper>
                 <Link
                   href={item.link}
                   aria-label={item.name}
-                  className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)] uppercase"
-                >
-                  <div className="relative flex items-center transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
-                    <span className="w-4 h-4 mr-1">{item.icon}</span>
+                  className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)] uppercase">
+                  <div className="relative flex items-center gap-x-2 transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
+                    <span className="size-6">{item.icon}</span>
                     <span>{item.name}</span>
                   </div>
-                  <div className="absolute top-full left-0 flex items-center transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
-                    <span className="w-4 h-4 mr-1">{item.icon}</span>
+                  <div className="absolute top-full left-0 flex items-center gap-x-2 transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
+                    <span className="size-6">{item.icon}</span>
                     <span>{item.name}</span>
                   </div>
                 </Link>
