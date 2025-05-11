@@ -34,30 +34,31 @@ export default function Home() {
           <Velustro />
         </div>
 
-        <section className="text-center">
-          <h1 className="text-h1 font-bold mb-4">Добро пожаловать!</h1>
+        <div className="h-[500px] md:h-[750px]">
+          <section className="text-center">
+            <h1 className="text-h1 font-bold mb-4">Добро пожаловать!</h1>
 
-          <p className="description text-gray-600 mb-8 max-w-3xl mx-auto">
-            Современный блог, созданный на Next.js 15 с использованием MDX для
-            удобного написания контента
-          </p>
+            <p className="description text-gray-600 mb-8 max-w-3xl mx-auto">
+              Современный блог, созданный на Next.js 15 с использованием MDX для
+              удобного написания контента
+            </p>
 
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/work"
-              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
-              Портфолио
-            </Link>
-            <Link
-              href="/blog"
-              className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 transition">
-              Блог
-            </Link>
-          </div>
-        </section>
-
-        {/* GSAP демонстрационная секция */}
-        <GsapDemoSection />
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link
+                href="/work"
+                className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                Портфолио
+              </Link>
+              <Link
+                href="/blog"
+                className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 transition">
+                Блог
+              </Link>
+            </div>
+          </section>
+          
+          <GsapDemoSection />
+        </div>
 
         {/* Секция последних работ */}
         {works.length > 0 && (

@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic'
 const AnimationLine = dynamic(() => import('@/components/AnimationLine'), { 
   ssr: false,
   loading: () => (
-    <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-xl animate-pulse">
+    <div className="w-full flex items-center justify-center animate-pulse">
       <div className="text-gray-400">Загрузка анимации...</div>
     </div>
   )
@@ -18,7 +18,7 @@ export default function GsapDemoSection() {
     <>
       <Suspense
         fallback={
-          <div className="w-full h-[500px] flex items-center justify-center bg-gray-50 rounded-xl">
+          <div className="w-full flex items-center justify-center">
             <div className="text-gray-400">Загрузка анимации...</div>
           </div>
         }>

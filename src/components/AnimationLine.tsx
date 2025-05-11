@@ -97,16 +97,15 @@ export default function AnimationLine() {
   }, [isLoaded])
   
   return (
-    <div className="svg-container w-full overflow-hidden my-16 relative h-[500px] md:h-[700px]">
+    <div className="overflow-x-clip absolute left-0 w-full h-auto pointer-events-none -z-10">
       <svg
         ref={svgRef}
-        className="wave w-full h-full absolute top-0 left-0"
+        className="wave"
         preserveAspectRatio="xMidYMid meet"
         viewBox="0 0 2305 1420"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ opacity: isLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
-      >
+        style={{ opacity: isLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}>
         <path
           ref={pathRef}
           className="wave-path"
@@ -114,8 +113,7 @@ export default function AnimationLine() {
           stroke="url(#paint0_linear_29_1196)"
           strokeWidth="40"
           strokeLinecap="round"
-          fill="none"
-        ></path>
+          fill="none"></path>
         <defs>
           <linearGradient
             id="paint0_linear_29_1196"
@@ -123,13 +121,11 @@ export default function AnimationLine() {
             y1="80.6013"
             x2="2274.84"
             y2="1356.06"
-            gradientUnits="userSpaceOnUse"
-          >
+            gradientUnits="userSpaceOnUse">
             <stop stopColor="#303EE8"></stop>
             <stop
               offset="1"
-              stopColor="#6083F7"
-            ></stop>
+              stopColor="#6083F7"></stop>
           </linearGradient>
         </defs>
       </svg>

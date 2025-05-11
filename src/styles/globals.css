@@ -281,3 +281,29 @@
 .animate-progress {
   animation: progress 2s ease-in-out forwards;
 }
+
+/* SCROLL WAVE-LINE
+====================================*/
+
+/* Сам SVG */
+.wave {
+  width: calc(100% + 0.3 * var(--padding-x));
+  /* Учитываем отступы */
+  height: auto;
+  margin-left: calc(-0.3 * var(--padding-x));
+  /* Компенсируем отступы */
+}
+
+/* Закругление краев линии */
+.wave-path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+  .wave {
+    width: calc(100% + 10 * var(--padding-x));
+    margin-left: calc(-0.3* var(--padding-x));
+  }
+}
