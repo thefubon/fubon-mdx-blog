@@ -101,25 +101,25 @@ const HeaderContent = () => {
           transitionDuration: `${FADE_OUT_DURATION}ms`,
           transitionTimingFunction: 'ease',
         }}>
-        <div>
+        <div className="flex-shrink-0">
           <Logo />
         </div>
 
         {/* Горизонтальное меню */}
-        <div className="hidden md:flex justify-center">
+        <div className="hidden md:flex flex-1 justify-center">
           <HorizontalMenu />
         </div>
 
-        <div className="inline-flex justify-end items-center gap-x-2 md:gap-x-4 static md:relative">
-          <div className="size-[var(--button-height)]">
+        <div className="inline-flex justify-end items-center gap-x-2 md:gap-x-4 static md:relative flex-shrink-0">
+     
             <SoundWrapper>
               <WaveButton
                 size="lg"
                 pulseWhenIdle={true}
-                showTrackName={true}
+                showTrackName={false}
               />
             </SoundWrapper>
-          </div>
+  
           
           <CartButton />
           <ButtonDropdown />
