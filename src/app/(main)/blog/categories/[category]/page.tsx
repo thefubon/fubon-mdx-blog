@@ -2,6 +2,7 @@ import { getPostsByCategory, getAllCategories, getAllPosts } from '@/lib/mdx'
 import Container from '@/components/ui/Container'
 import CategoryPosts from '@/components/blog/CategoryPosts'
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
 
 interface PageProps {
   params: Promise<{ category: string }>
@@ -13,6 +14,25 @@ export async function generateStaticParams() {
   return categories.map(({ category }) => ({
     category: encodeURIComponent(category),
   }))
+}
+
+// Генерация метаданных на основе динамических данных
+export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
+  // Декодируем категорию из URL для отображения
+  const decodedCategory = decodeURIComponent(params.category)
+  
+  return {
+    title: `Категория: ${decodedCategory}`,
+    description: `Все статьи в категории ${decodedCategory} - Блог Fubon`,
+    alternates: {
+      canonical: `/blog/categories/${params.category}`,
+    },
+    openGraph: {
+      url: `/blog/categories/${params.category}`,
+      title: `Категория: ${decodedCategory} - Блог Fubon`,
+      description: `Все статьи и материалы в категории ${decodedCategory} от Fubon`,
+    },
+  }
 }
 
 export default async function CategoryPage(props: PageProps) {

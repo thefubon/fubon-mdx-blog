@@ -7,6 +7,20 @@ import { ChevronRight, Home } from 'lucide-react'
 import { Suspense } from 'react'
 import CategoryFilters from '@/components/work/CategoryFilters'
 import { Post } from '@/lib/types'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Портфолио',
+  description: 'Наши лучшие проекты в области дизайна и разработки цифровых продуктов',
+  alternates: {
+    canonical: '/work',
+  },
+  openGraph: {
+    url: '/work',
+    title: 'Портфолио - Креативное агентство Fubon',
+    description: 'Избранные кейсы и проекты, демонстрирующие наш подход к разработке цифровых продуктов и сервисов',
+  },
+}
 
 // Компонент для динамического контента
 async function WorkContent({ 

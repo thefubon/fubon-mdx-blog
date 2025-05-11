@@ -1,4 +1,4 @@
-import { getWorkBySlug, getAllWorkSlugs, getAllWorks } from '@/lib/mdx'
+import { getWorkBySlug, getAllWorks } from '@/lib/mdx'
 import { notFound } from 'next/navigation'
 import Container from '@/components/ui/Container'
 import Link from 'next/link'
@@ -11,33 +11,58 @@ import Image from 'next/image'
 import MDXComponents from '@/components/MDXComponents'
 import { Post } from '@/lib/types'
 import { ComponentProps } from 'react'
+import type { Metadata } from 'next'
 
-// Генерация статических параметров для всех доступных работ
-export async function generateStaticParams() {
-  const slugs = getAllWorkSlugs()
-  return slugs.map((slug) => ({ slug }))
-}
-
-// Функция получения метаданных для каждой работы
-export async function generateMetadata(
-  props: {
-    params: Promise<{ slug: string }>
-  }
-) {
-  const params = await props.params;
+// Генерация метаданных на основе динамических данных
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const work = getWorkBySlug(params.slug)
-
+  
   if (!work) {
     return {
-      title: 'Работа не найдена',
-      description: 'Запрашиваемая работа не существует',
+      title: 'Проект не найден',
+      description: 'Запрашиваемый проект не существует'
     }
   }
-
+  
+  const { title, description, cover, category, tags } = work.frontmatter
+  
   return {
-    title: work.frontmatter.title,
-    description: work.frontmatter.description,
+    title,
+    description: description || `Проект ${title} в портфолио Fubon`,
+    keywords: tags,
+    alternates: {
+      canonical: `/work/${params.slug}`,
+    },
+    openGraph: {
+      type: 'article',
+      url: `/work/${params.slug}`,
+      title,
+      description: description || `Проект ${title} в портфолио Fubon`,
+      images: cover ? [
+        {
+          url: cover,
+          width: 1200,
+          height: 630,
+          alt: title,
+        }
+      ] : undefined,
+      section: category || 'Portfolio',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description || `Проект ${title} в портфолио Fubon`,
+      images: cover ? [cover] : undefined,
+    },
   }
+}
+
+// Генерация статических параметров для SSG
+export async function generateStaticParams() {
+  const works = getAllWorks()
+  return works.map((work) => ({
+    slug: work.frontmatter.slug,
+  }))
 }
 
 // Компонент для отображения отдельной работы

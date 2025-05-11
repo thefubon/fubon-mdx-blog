@@ -1,25 +1,19 @@
-'use client'
+import type { Metadata } from 'next'
+import MusicContent from '@/components/MusicContent'
 
-import Container from '@/components/ui/Container'
-import Heading from '@/components/ui/Heading'
-import PageWrapper from '@/components/PageWrapper'
-import MusicPlayer from '@/components/music-player'
+export const metadata: Metadata = {
+  title: 'Музыка',
+  description: 'Музыкальные эксперименты и коллекции от Fubon',
+  alternates: {
+    canonical: '/music',
+  },
+  openGraph: {
+    url: '/music',
+    title: 'Музыка - Fubon',
+    description: 'Оригинальные музыкальные композиции и плейлисты для творческого вдохновения',
+  },
+}
 
 export default function MusicPage() {
-  return (
-    <PageWrapper>
-      <div className="container-space">
-        <Container
-          padding={true}
-          space={true}>
-          <Heading
-            title="PsySystem Records"
-            description="Российский лейбл звукозаписи, в основном выпускающий музыку в стиле пси-транс. Был основан в 2006 году, и является личным лейблом, где выпускаются только понравившиеся музыка, в основном это свои синглы и работы сторонних исполнителей, в большинстве своем в жанре «пси-транс»."
-          />
-
-          <MusicPlayer />
-        </Container>
-      </div>
-    </PageWrapper>
-  )
+  return <MusicContent />
 }

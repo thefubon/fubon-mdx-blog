@@ -9,6 +9,7 @@ import { ChevronRight, Home, ArrowRight, Star } from 'lucide-react'
 import BlogComponents from '@/components/blog/BlogComponents'
 import PaginationVisibilityHandler from '@/components/blog/PaginationVisibilityHandler'
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
 
 // Константа для количества постов на странице
 const POSTS_PER_PAGE = 12
@@ -192,4 +193,17 @@ export default async function BlogPage(props: PageProps) {
       </Suspense>
     </PageWrapper>
   )
+}
+
+export const metadata: Metadata = {
+  title: 'Блог',
+  description: 'Статьи и новости о дизайне, разработке и технологиях от команды Fubon',
+  alternates: {
+    canonical: '/blog',
+  },
+  openGraph: {
+    url: '/blog',
+    title: 'Блог Fubon - Статьи о дизайне и разработке',
+    description: 'Полезные материалы, обзоры технологий и практические советы от экспертов креативного агентства Fubon',
+  },
 }

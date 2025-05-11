@@ -2,6 +2,7 @@ import { getAllPosts, getAllCategories } from '@/lib/mdx'
 import Container from '@/components/ui/Container'
 import TagPosts from '@/components/blog/TagPosts'
 import { Suspense } from 'react'
+import type { Metadata } from 'next'
 
 export async function generateStaticParams() {
   const posts = getAllPosts()
@@ -16,6 +17,25 @@ export async function generateStaticParams() {
   return Array.from(tags).map((tag) => ({
     tag: encodeURIComponent(tag),
   }))
+}
+
+// Генерация метаданных на основе динамических данных
+export async function generateMetadata({ params }: { params: { tag: string } }): Promise<Metadata> {
+  // Декодируем тег из URL для отображения
+  const decodedTag = decodeURIComponent(params.tag)
+  
+  return {
+    title: `Тег: #${decodedTag}`,
+    description: `Все статьи с тегом #${decodedTag} - Блог Fubon`,
+    alternates: {
+      canonical: `/blog/tags/${params.tag}`,
+    },
+    openGraph: {
+      url: `/blog/tags/${params.tag}`,
+      title: `Тег: #${decodedTag} - Блог Fubon`,
+      description: `Все статьи и материалы с тегом #${decodedTag} от Fubon`,
+    },
+  }
 }
 
 export default async function TagPage(props: {

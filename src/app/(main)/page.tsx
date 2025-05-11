@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getAllPosts, getAllWorks } from '@/lib/mdx'
@@ -6,6 +7,19 @@ import Container from '@/components/ui/Container'
 import { ArrowRight } from 'lucide-react'
 import GsapDemoSection from '@/components/GsapDemoSection'
 import { Velustro } from 'uvcanvas'
+
+export const metadata: Metadata = {
+  title: 'Главная',
+  description: 'Fubon - креативное агентство по дизайну и разработке. Создаем современные цифровые продукты для бизнеса.',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    url: '/',
+    title: 'Fubon - Креативное агентство по дизайну и разработке',
+    description: 'Создаем современные цифровые продукты с использованием передовых технологий и лучших практик UX-дизайна.',
+  },
+}
 
 export default function Home() {
   const posts = getAllPosts().slice(0, 3) // Берем только 3 последних поста

@@ -1,7 +1,7 @@
 // src/app/blog/[slug]/page.tsx
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { notFound } from 'next/navigation'
-import { getAllPostSlugs, getPostBySlug, getRelatedPosts, getAllPosts } from '@/lib/mdx'
+import { getPostBySlug, getAllPosts, getRelatedPosts } from '@/lib/mdx'
 import MDXComponents from '@/components/MDXComponents'
 import FormattedDate from '@/components/blog/FormattedDate'
 import RelatedPosts from '@/components/blog/RelatedPosts'
@@ -10,24 +10,55 @@ import Link from 'next/link'
 import Container from '@/components/ui/Container'
 import Image from 'next/image'
 import { translateReadingTime } from '@/lib/utils'
+import type { Metadata } from 'next'
 
 export async function generateStaticParams() {
-  const posts = getAllPostSlugs()
-
-  return posts.map((slug) => ({
-    slug,
+  const posts = getAllPosts()
+  return posts.map((post) => ({
+    slug: post.frontmatter.slug,
   }))
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug: string }>
-}) {
-  const slug = (await props.params).slug
-  const { frontmatter } = getPostBySlug(slug)
-
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = getPostBySlug(params.slug)
+  
+  if (!post) {
+    return {
+      title: 'Статья не найдена',
+      description: 'Запрашиваемая статья не существует'
+    }
+  }
+  
+  const { title, description, cover, publishedAt, category } = post.frontmatter
+  
   return {
-    title: frontmatter.title,
-    description: frontmatter.description,
+    title,
+    description: description || `Статья ${title} в блоге Fubon`,
+    alternates: {
+      canonical: `/blog/${params.slug}`,
+    },
+    openGraph: {
+      type: 'article',
+      url: `/blog/${params.slug}`,
+      title,
+      description: description || `Статья ${title} в блоге Fubon`,
+      publishedTime: publishedAt,
+      images: cover ? [
+        {
+          url: cover,
+          width: 1200,
+          height: 630,
+          alt: title,
+        }
+      ] : undefined,
+      section: category || 'Blog',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description || `Статья ${title} в блоге Fubon`,
+      images: cover ? [cover] : undefined,
+    },
   }
 }
 
