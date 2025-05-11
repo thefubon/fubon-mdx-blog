@@ -14,18 +14,19 @@ import { ComponentProps } from 'react'
 import type { Metadata } from 'next'
 
 // Генерация метаданных на основе динамических данных
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const work = getWorkBySlug(params.slug)
-  
+
   if (!work) {
     return {
       title: 'Проект не найден',
       description: 'Запрашиваемый проект не существует'
     }
   }
-  
+
   const { title, description, cover, category, tags } = work.frontmatter
-  
+
   return {
     title,
     description: description || `Проект ${title} в портфолио Fubon`,

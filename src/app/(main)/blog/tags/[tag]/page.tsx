@@ -20,10 +20,11 @@ export async function generateStaticParams() {
 }
 
 // Генерация метаданных на основе динамических данных
-export async function generateMetadata({ params }: { params: { tag: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ tag: string }> }): Promise<Metadata> {
+  const params = await props.params;
   // Декодируем тег из URL для отображения
   const decodedTag = decodeURIComponent(params.tag)
-  
+
   return {
     title: `Тег: #${decodedTag}`,
     description: `Все статьи с тегом #${decodedTag} - Блог Fubon`,

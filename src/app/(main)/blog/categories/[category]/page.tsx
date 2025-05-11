@@ -17,10 +17,11 @@ export async function generateStaticParams() {
 }
 
 // Генерация метаданных на основе динамических данных
-export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ category: string }> }): Promise<Metadata> {
+  const params = await props.params;
   // Декодируем категорию из URL для отображения
   const decodedCategory = decodeURIComponent(params.category)
-  
+
   return {
     title: `Категория: ${decodedCategory}`,
     description: `Все статьи в категории ${decodedCategory} - Блог Fubon`,

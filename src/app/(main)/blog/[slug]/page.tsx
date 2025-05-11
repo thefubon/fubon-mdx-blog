@@ -19,18 +19,19 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const params = await props.params;
   const post = getPostBySlug(params.slug)
-  
+
   if (!post) {
     return {
       title: 'Статья не найдена',
       description: 'Запрашиваемая статья не существует'
     }
   }
-  
+
   const { title, description, cover, publishedAt, category } = post.frontmatter
-  
+
   return {
     title,
     description: description || `Статья ${title} в блоге Fubon`,
