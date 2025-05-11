@@ -3,8 +3,9 @@
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Suspense } from 'react'
 
-export default function ErrorPage() {
+function ErrorContent() {
   const searchParams = useSearchParams()
   const error = searchParams?.get('error')
   
@@ -63,5 +64,24 @@ export default function ErrorPage() {
         </CardFooter>
       </Card>
     </div>
+  )
+}
+
+export default function ErrorPage() {
+  return (
+    <Suspense fallback={
+      <div className="container flex flex-col items-center justify-center py-12">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl">Обработка запроса...</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>Пожалуйста, подождите...</p>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <ErrorContent />
+    </Suspense>
   )
 } 
