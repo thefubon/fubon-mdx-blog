@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/contexts/ThemeProvider'
 import { SoundProvider } from '@/contexts/SoundProvider'
 import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
 import { AmbientSoundProvider } from '@/contexts/AmbientSoundProvider'
+import AuthProvider from '@/components/auth/AuthProvider'
 
 export const viewport: Viewport = {
   themeColor: [
@@ -100,19 +101,21 @@ export default function RootLayout({
       lang="ru"
       suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange>
-          <MusicPlayerProvider>
-            <AmbientSoundProvider>
-              <SoundProvider>
-                {children}
-              </SoundProvider>
-            </AmbientSoundProvider>
-          </MusicPlayerProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange>
+            <MusicPlayerProvider>
+              <AmbientSoundProvider>
+                <SoundProvider>
+                  {children}
+                </SoundProvider>
+              </AmbientSoundProvider>
+            </MusicPlayerProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )

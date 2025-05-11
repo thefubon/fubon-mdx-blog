@@ -1,13 +1,19 @@
-
-
-import type { Metadata } from 'next'
+import { Metadata } from 'next'
+import { requireAuth } from '@/components/auth/requireAuth'
 
 export const metadata: Metadata = {
   title: 'Профиль',
   description: 'Управление личными данными',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  // This will redirect to login if user is not authenticated
+  const session = await requireAuth()
+  
   return (
     <div className="space-y-6">
       <div>
@@ -25,15 +31,15 @@ export default function ProfilePage() {
           <div className="space-y-4">
             <div>
               <p className="font-medium">Имя:</p>
-              <p>Антон Фубон</p>
+              <p>{session.user.name || 'Не указано'}</p>
             </div>
             <div>
               <p className="font-medium">Email:</p>
-              <p>user@example.com</p>
+              <p>{session.user.email || 'Не указано'}</p>
             </div>
             <div>
-              <p className="font-medium">Должность:</p>
-              <p>Креативный директор</p>
+              <p className="font-medium">ID пользователя:</p>
+              <p>{session.user.id || 'Не указано'}</p>
             </div>
           </div>
         </div>

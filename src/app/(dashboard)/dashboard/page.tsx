@@ -1,11 +1,20 @@
-import type { Metadata } from 'next'
+import { requireAuth } from '@/components/auth/requireAuth'
+import UserProfile from '@/components/auth/UserProfile'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Панель управления',
   description: 'Основная информация и статистика',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  // This will redirect to login if user is not authenticated
+  await requireAuth()
+  
   return (
     <div className="space-y-6">
       <div>
@@ -14,6 +23,8 @@ export default function DashboardPage() {
           Добро пожаловать в панель управления
         </p>
       </div>
+      
+      <UserProfile />
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="rounded-lg border bg-card p-6 shadow">

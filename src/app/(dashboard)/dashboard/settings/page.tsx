@@ -1,12 +1,19 @@
-
-import type { Metadata } from 'next'
+import { Metadata } from 'next'
+import { requireAuth } from '@/components/auth/requireAuth'
 
 export const metadata: Metadata = {
   title: 'Настройки',
   description: 'Управление настройками аккаунта',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  // This will redirect to login if user is not authenticated
+  await requireAuth()
+  
   return (
     <div className="space-y-6">
       <div>
