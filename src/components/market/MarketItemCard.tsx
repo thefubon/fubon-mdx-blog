@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Post } from '@/lib/types';
+import { useCart } from '@/contexts/CartContext';
+import { ShoppingCart, Check } from 'lucide-react';
 
 interface MarketItemCardProps {
   item: Post;
@@ -15,6 +19,10 @@ export default function MarketItemCard({ item }: MarketItemCardProps) {
     category = ""
   } = item?.frontmatter || {};
   
+  // Используем хук корзины для проверки, добавлен ли товар
+  const { isInCart } = useCart();
+  const inCart = slug ? isInCart(slug) : false;
+  
   // Используем первое изображение из массива или заглушку
   const coverImage = images && images.length > 0 ? images[0] : "";
   
@@ -25,6 +33,9 @@ export default function MarketItemCard({ item }: MarketItemCardProps) {
     }
     return typeof price === 'number' ? `${price} ₽` : price;
   };
+  
+  // Проверяем, является ли товар бесплатным
+  const isFree = price === undefined || price === null || price === "" || price === 0;
   
   return (
     <Link
@@ -45,6 +56,13 @@ export default function MarketItemCard({ item }: MarketItemCardProps) {
             <span className="text-gray-400 dark:text-gray-500">Нет изображения</span>
           </div>
         )}
+        
+        {/* Индикатор корзины */}
+        {inCart && !isFree && (
+          <div className="absolute top-2 right-2 bg-green-500 text-white p-1.5 rounded-full">
+            <ShoppingCart size={16} />
+          </div>
+        )}
       </div>
       
       <div className="p-4">
@@ -57,9 +75,17 @@ export default function MarketItemCard({ item }: MarketItemCardProps) {
         <h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">{title}</h3>
         
         <div className="flex justify-between items-center mt-3">
-          <span className="font-bold text-xl text-primary">
-            {displayPrice()}
-          </span>
+          <div className="flex items-center">
+            <span className="font-bold text-xl text-primary">
+              {displayPrice()}
+            </span>
+            {inCart && !isFree && (
+              <span className="ml-2 text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 px-2 py-0.5 rounded-full flex items-center">
+                <Check size={12} className="mr-1" />
+                В корзине
+              </span>
+            )}
+          </div>
           
           <span className="inline-block text-sm font-medium px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:bg-primary group-hover:text-white transition-colors">
             Подробнее
