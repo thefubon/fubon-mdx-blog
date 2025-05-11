@@ -35,15 +35,11 @@ const HorizontalMenuComponent = () => {
                 >
                   <div className="relative flex items-center transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
                     <span className="w-4 h-4 mr-1">{item.icon}</span>
-                    <span>
-                      {item.name}
-                    </span>
+                    <span>{item.name}</span>
                   </div>
                   <div className="absolute top-full left-0 flex items-center transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
                     <span className="w-4 h-4 mr-1">{item.icon}</span>
-                    <span>
-                      {item.name}
-                    </span>
+                    <span>{item.name}</span>
                   </div>
                 </Link>
               </SoundWrapper>

@@ -13,7 +13,6 @@ import { HorizontalMenu } from './HorizontalMenu'
 
 // Константы анимации, такие же как в LogoProvider
 const FADE_OUT_DURATION = 300
-const HIDE_DELAY = 200
 
 const HeaderContent = () => {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -21,34 +20,20 @@ const HeaderContent = () => {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
   const { isMenuOpen } = useMenuContext()
-  const [showHeaderBg, setShowHeaderBg] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   
   // Отслеживаем изменение состояния меню
   useEffect(() => {
-    // Если меню закрывается
-    if (!isMenuOpen) {
-      // Очищаем предыдущий таймер, если он был
-      if (timerRef.current) {
-        clearTimeout(timerRef.current)
-      }
-      
-      // Устанавливаем таймер для появления фона после закрытия меню
-      timerRef.current = setTimeout(() => {
-        setShowHeaderBg(true)
-      }, FADE_OUT_DURATION + HIDE_DELAY)
-    } else {
-      // Если меню открывается, сразу скрываем фон
-      setShowHeaderBg(false)
-    }
+    // Capture the current timer reference
+    const currentTimerRef = timerRef.current;
     
     // Очистка при размонтировании
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current)
+      if (currentTimerRef) {
+        clearTimeout(currentTimerRef)
       }
     }
-  }, [isMenuOpen])
+  }, [isMenuOpen, isMobile])
   
   useEffect(() => {
     // Определяем, является ли устройство мобильным
@@ -96,27 +81,18 @@ const HeaderContent = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [lastScrollY])
 
-  // Определяем, нужно ли показывать фон в мобильной версии
-  const shouldShowMobileBg = isMobile && isScrolled && !isMenuOpen && showHeaderBg
-
   return (
     <header
       className={`px-[var(--padding-x)] sticky top-0 z-50 md:py-4 transition-all ${
         isHidden ? '-translate-y-full' : 'translate-y-0'
-      } ${
-        // Для мобильных устройств стили header при прокрутке
-        // Не добавляем фон, если меню открыто в мобильной версии
-        shouldShowMobileBg
-          ? 'bg-background/80 backdrop-blur-sm'
-          : 'bg-transparent'
-      }`}
+      } bg-transparent`}
       style={{
         transitionDuration: `${FADE_OUT_DURATION}ms`,
         transitionTimingFunction: 'ease',
       }}>
       <div
         className={`h-[clamp(80px,8vw,100px)] rounded-full flex justify-between items-center gap-x-4 transition-all ${
-          // Для десктопа стили применяются к внутреннему div
+          // Только для десктопа применяем стили фона
           !isMobile && isScrolled
             ? 'bg-background/80 backdrop-blur-sm pl-8 pr-6 mx-4'
             : 'bg-transparent px-0 mx-0'

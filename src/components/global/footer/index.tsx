@@ -10,7 +10,7 @@ export default function Footer() {
         </div>
       </footer>
 
-      <div className="sticky bottom-0">
+      <div className="sticky bottom-0 z-30">
         <MiniPlayer />
         <BottomTabBar />
       </div>

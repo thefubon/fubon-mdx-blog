@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useRef, useEffect } from 'react'
-import { useMusicPlayerStore } from '@/store/use-music-player-store'
+import { useMusicPlayerStore } from '@/data/playlist'
 
 // Use RefObject with undefined type to allow null values
 type MusicPlayerContextType = {

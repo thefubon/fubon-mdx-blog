@@ -7,7 +7,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react"
 import { useMusicPlayer } from '@/contexts/MusicPlayerProvider'
-import { useMusicPlayerStore } from '@/store/use-music-player-store'
+import { useMusicPlayerStore } from '@/data/playlist'
 
 interface PaginationProps {
   currentPage: number

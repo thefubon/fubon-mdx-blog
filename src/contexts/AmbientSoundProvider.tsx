@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useRef, useEffect, useState, useCallback } from 'react'
-import { useMusicPlayerStore } from '@/store/use-music-player-store'
+import { useMusicPlayerStore } from '@/data/playlist'
 
 // Для поддержки webkitAudioContext в TypeScript
 interface WebAudioContext {

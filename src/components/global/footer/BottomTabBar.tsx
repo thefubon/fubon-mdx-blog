@@ -9,7 +9,7 @@ export default function BottomTabBar() {
   const currentUrl = usePathname()
 
   return (
-    <div className="bg-fubon-muted shadow-lg lg:hidden">
+    <div className="bg-background lg:hidden">
       <div className="flex justify-around items-center h-16 px-2">
         {menuItems.map((item) => {
           const isActive = currentUrl === item.link || (item.link !== '/' && currentUrl.startsWith(item.link))
