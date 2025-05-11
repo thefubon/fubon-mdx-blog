@@ -124,7 +124,7 @@ export function MiniPlayer() {
 
   return (
     <div className={cn(
-      "sticky bottom-0 inset-0 bg-background border-t p-2 z-10 shadow-lg transition-all duration-300",
+      "inset-0 bg-background border-t p-2 transition-all duration-300",
       "translate-y-0 opacity-100" // Всегда видимый, когда рендерится
     )}>
       <div className="max-w-screen-xl mx-auto">

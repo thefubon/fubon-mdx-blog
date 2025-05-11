@@ -12,10 +12,14 @@ const HorizontalMenuComponent = () => {
   return (
     <nav className="hidden lg:flex items-center relative -mb-1.5">
       <ul className="flex items-center space-x-8">
-        {menuItems.map((item) =>
-          currentUrl === item.link ? (
+        {menuItems.map((item) => {
+          const isActive = currentUrl === item.link || 
+                         (item.link !== '/' && currentUrl.startsWith(item.link))
+          
+          return isActive ? (
             <li key={item.link} className="group relative flex items-center">
               <div className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)] uppercase text-primary font-medium">
+                <span className="w-4 h-4 mr-1">{item.icon}</span>
                 <span>
                   {item.name}
                 </span>
@@ -29,17 +33,23 @@ const HorizontalMenuComponent = () => {
                   aria-label={item.name}
                   className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)] uppercase"
                 >
-                  <span className="relative transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
-                    {item.name}
-                  </span>
-                  <span className="absolute top-full left-0 transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
-                    {item.name}
-                  </span>
+                  <div className="relative flex items-center transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
+                    <span className="w-4 h-4 mr-1">{item.icon}</span>
+                    <span>
+                      {item.name}
+                    </span>
+                  </div>
+                  <div className="absolute top-full left-0 flex items-center transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">
+                    <span className="w-4 h-4 mr-1">{item.icon}</span>
+                    <span>
+                      {item.name}
+                    </span>
+                  </div>
                 </Link>
               </SoundWrapper>
             </li>
           )
-        )}
+        })}
       </ul>
     </nav>
   )

@@ -1,4 +1,5 @@
 import { MiniPlayer } from "@/components/mini-player";
+import BottomTabBar from "./BottomTabBar";
 
 export default function Footer() {
   return (
@@ -9,7 +10,10 @@ export default function Footer() {
         </div>
       </footer>
 
-      <MiniPlayer />
+      <div className="sticky bottom-0">
+        <MiniPlayer />
+        <BottomTabBar />
+      </div>
     </>
   )
 }
