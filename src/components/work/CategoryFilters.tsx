@@ -17,7 +17,7 @@ export default function CategoryFilters({ categories = [] }: CategoryFiltersProp
   // Set initial category from URL parameter
   useEffect(() => {
     setMounted(true)
-    const category = searchParams.get('category')
+    const category = searchParams?.get('category')
     if (category) {
       setActiveCategory(category)
     }

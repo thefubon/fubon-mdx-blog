@@ -80,9 +80,9 @@ export default function BlogComponents({ posts, categories, tags }: BlogComponen
     // Если включили режим "Избранное" и находимся не на первой странице,
     // перенаправляем на первую страницу блога
     if (value) {
-      const page = searchParams.get('page')
+      const page = searchParams?.get('page')
       if (page) {
-        const basePath = pathname.split('?')[0]
+        const basePath = pathname?.split('?')[0] || '/'
         router.push(basePath)
       }
     }

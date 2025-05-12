@@ -14,7 +14,7 @@ const HorizontalMenuComponent = () => {
       <ul className="flex items-center space-x-8">
         {menuItems.map((item) => {
           const isActive = currentUrl === item.link || 
-                         (item.link !== '/' && currentUrl.startsWith(item.link))
+                         (item.link !== '/' && currentUrl?.startsWith(item.link))
           
           return isActive ? (
             <li

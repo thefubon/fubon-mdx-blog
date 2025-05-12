@@ -6,13 +6,17 @@ import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
 import Image from "next/image"
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from "react"
 
-export default function LoginPage() {
+function LoginForm() {
   const { status } = useSession()
+  const searchParams = useSearchParams()
+  const returnToMarket = searchParams?.get('returnToMarket') === 'true'
 
-  // If the user is already logged in, redirect to dashboard
+  // If the user is already logged in, redirect to the appropriate page
   if (status === 'authenticated') {
-    redirect('/dashboard')
+    redirect(returnToMarket ? '/market' : '/dashboard')
   }
 
   return (
@@ -21,7 +25,9 @@ export default function LoginPage() {
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Вход в аккаунт</CardTitle>
           <CardDescription>
-            Выберите способ входа в панель управления
+            {returnToMarket 
+              ? 'Войдите, чтобы продолжить покупки' 
+              : 'Выберите способ входа в панель управления'}
           </CardDescription>
         </CardHeader>
         
@@ -29,6 +35,7 @@ export default function LoginPage() {
           <LoginButton 
             provider="google" 
             className="w-full flex items-center justify-center gap-2 bg-white text-gray-800 border hover:bg-gray-50"
+            returnToMarket={returnToMarket}
           >
             <Image src="/google-logo.svg" alt="Google" width={20} height={20} className="w-5 h-5" />
             Войти с Google
@@ -37,6 +44,7 @@ export default function LoginPage() {
           <LoginButton 
             provider="vk" 
             className="w-full flex items-center justify-center gap-2 bg-[#0077FF] hover:bg-[#0066CC] text-white"
+            returnToMarket={returnToMarket}
           >
             <Image src="/vk-logo.svg" alt="VK" width={20} height={20} className="w-5 h-5" />
             Войти через ВКонтакте
@@ -45,12 +53,20 @@ export default function LoginPage() {
         
         <CardFooter className="flex flex-col gap-4">
           <p className="text-sm text-center text-muted-foreground">
-            <Link href="/" className="underline underline-offset-4 hover:text-primary">
-              Вернуться на главную
+            <Link href={returnToMarket ? "/market" : "/"} className="underline underline-offset-4 hover:text-primary">
+              {returnToMarket ? "Вернуться в магазин" : "Вернуться на главную"}
             </Link>
           </p>
         </CardFooter>
       </Card>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="container py-12 text-center">Загрузка...</div>}>
+      <LoginForm />
+    </Suspense>
   )
 } 

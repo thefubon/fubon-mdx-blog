@@ -170,7 +170,9 @@ export default async function MarketItemPage(props: { params: Promise<{ slug: st
                       price: item.frontmatter.price || 0,
                       image: item.frontmatter.images && item.frontmatter.images.length > 0 
                         ? item.frontmatter.images[0] 
-                        : undefined
+                        : undefined,
+                      quantity: 1,
+                      maxQuantity: item.frontmatter.maxQuantity
                     }} 
                   />
                 )

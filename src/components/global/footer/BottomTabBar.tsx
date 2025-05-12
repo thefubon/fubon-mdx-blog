@@ -12,7 +12,7 @@ export default function BottomTabBar() {
     <div className="bg-background lg:hidden">
       <div className="flex justify-around items-center h-16 px-2">
         {menuItems.map((item) => {
-          const isActive = currentUrl === item.link || (item.link !== '/' && currentUrl.startsWith(item.link))
+          const isActive = currentUrl === item.link || (item.link !== '/' && currentUrl?.startsWith(item.link))
           return (
             <Link
               key={item.link}

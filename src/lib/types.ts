@@ -18,6 +18,7 @@ export interface PostMetadata {
   };
   price?: number | string;
   images?: string[];
+  maxQuantity?: number;
 }
 
 export interface Post {

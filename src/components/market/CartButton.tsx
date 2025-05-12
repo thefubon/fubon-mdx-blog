@@ -9,7 +9,19 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export default function CartButton() {
-  const { items, itemCount, removeItem, clearCart } = useCart();
+  const { 
+    items, 
+    itemCount, 
+    totalQuantity,
+    removeItem, 
+    updateItemQuantity,
+    clearCart,
+    subtotal,
+    total,
+    discount,
+    activePromoCode
+  } = useCart();
+  
   const [isMounted, setIsMounted] = useState(false);
   
   // Prevent hydration mismatch by only rendering after mount
@@ -25,12 +37,14 @@ export default function CartButton() {
     )
   }
   
-  const totalPrice = items.reduce((sum, item) => {
-    const itemPrice = typeof item.price === 'number' 
-      ? item.price 
-      : parseFloat(item.price.replace(/[^\d.]/g, '')) || 0;
-    return sum + itemPrice;
-  }, 0);
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'RUB',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price);
+  };
   
   return (
     <Sheet>
@@ -39,7 +53,7 @@ export default function CartButton() {
           <ShoppingCart className="!h-6 !w-6" />
           {itemCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-              {itemCount}
+              {totalQuantity}
             </span>
           )}
         </Button>
@@ -69,7 +83,31 @@ export default function CartButton() {
                     )}
                     <div className="flex-grow">
                       <h3 className="font-medium text-base">{item.title}</h3>
-                      <p className="text-primary font-bold">{item.price}</p>
+                      <div className="flex gap-2 items-center mt-1">
+                        {item.price !== "" && item.maxQuantity !== undefined && (
+                          <>
+                            <button 
+                              onClick={() => updateItemQuantity(item.slug, Math.max(1, item.quantity - 1))}
+                              className="w-6 h-6 flex items-center justify-center bg-gray-100 rounded text-gray-700">
+                              -
+                            </button>
+                            <span className="text-sm font-medium">{item.quantity}</span>
+                            <button 
+                              onClick={() => updateItemQuantity(item.slug, item.quantity + 1)}
+                              disabled={item.maxQuantity !== undefined && item.quantity >= item.maxQuantity}
+                              className={`w-6 h-6 flex items-center justify-center rounded text-gray-700 ${
+                                item.maxQuantity !== undefined && item.quantity >= item.maxQuantity 
+                                  ? 'bg-gray-200 cursor-not-allowed'
+                                  : 'bg-gray-100'
+                              }`}>
+                              +
+                            </button>
+                          </>
+                        )}
+                        <p className="text-primary font-bold ml-auto">
+                          {typeof item.price === 'string' ? item.price : formatPrice(item.price)}
+                        </p>
+                      </div>
                     </div>
                     <Button
                       variant="ghost"
@@ -82,22 +120,38 @@ export default function CartButton() {
                 ))}
               </div>
 
-              <div className="flex flex-col gap-4">
-                <div className="flex justify-between text-lg font-bold">
+              <div className="flex flex-col gap-2 pt-2">
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>Подытог:</span>
+                  <span>{formatPrice(subtotal)}</span>
+                </div>
+                
+                {discount > 0 && activePromoCode && (
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>Скидка ({activePromoCode}):</span>
+                    <span>-{formatPrice(discount)}</span>
+                  </div>
+                )}
+                
+                <div className="flex justify-between text-lg font-bold mt-2 pt-2 border-t">
                   <span>Итого:</span>
-                  <span>{totalPrice} ₽</span>
+                  <span>{formatPrice(total)}</span>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-4">
                   <Button
                     variant="outline"
                     className="flex-1"
                     onClick={() => clearCart()}>
                     Очистить
                   </Button>
-                  <Button className="flex-1">
-                    Оформить заказ
-                  </Button>
+                  <SheetClose asChild>
+                    <Link href="/market/checkout" className="flex-1">
+                      <Button className="w-full">
+                        Оформить заказ
+                      </Button>
+                    </Link>
+                  </SheetClose>
                 </div>
               </div>
             </>

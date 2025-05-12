@@ -35,10 +35,10 @@ export default function PaginationVisibilityHandler() {
           
           // Если включили режим "Избранное" и мы не на первой странице,
           // перенаправляем на первую страницу
-          const page = searchParams.get('page')
-          if (page && pathname.startsWith('/blog')) {
+          const page = searchParams?.get('page')
+          if (page && pathname?.startsWith('/blog')) {
             // Убираем параметр page из URL и перенаправляем на базовый путь
-            const basePath = pathname.split('?')[0]
+            const basePath = pathname?.split('?')[0] || '/'
             router.push(basePath)
           }
         } else {

@@ -1,11 +1,14 @@
 import Link from 'next/link';
 import { getAllMarketCategories, searchMarketItems, getMarketItemsByPriceTypeAndCategory } from '@/lib/mdx';
 import Container from '@/components/ui/Container';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRight, Home, LogIn } from 'lucide-react';
 import { Post } from '@/lib/types';
 import SearchForm from '@/components/market/SearchForm';
 import MarketItemCard from '@/components/market/MarketItemCard';
 import PriceTypeFilter from '@/components/market/PriceTypeFilter';
+import { Button } from '@/components/ui/button';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 interface MarketContentProps {
   search?: string;
@@ -18,6 +21,9 @@ export default async function MarketContent({
   category = '',
   isPaid = ''
 }: MarketContentProps) {
+  // Get session
+  const session = await getServerSession(authOptions);
+  
   // Получаем все товары
   let marketItems: Post[] = [];
   const allCategories = getAllMarketCategories();
@@ -60,15 +66,26 @@ export default async function MarketContent({
   return (
     <>
       <Container padding space className="py-16">
-        {/* Хлебные крошки */}
-        <nav className="flex items-center text-sm mb-10 text-gray-500 dark:text-gray-400">
-          <Link href="/" className="flex items-center hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-            <Home className="w-4 h-4 mr-1" />
-            <span>Главная</span>
-          </Link>
-          <ChevronRight className="w-4 h-4 mx-1" />
-          <span className="text-gray-900 dark:text-gray-200 font-medium">Цифровые товары</span>
-        </nav>
+        {/* Хлебные крошки и пользовательские действия */}
+        <div className="flex items-center justify-between mb-10">
+          <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+            <Link href="/" className="flex items-center hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+              <Home className="w-4 h-4 mr-1" />
+              <span>Главная</span>
+            </Link>
+            <ChevronRight className="w-4 h-4 mx-1" />
+            <span className="text-gray-900 dark:text-gray-200 font-medium">Цифровые товары</span>
+          </nav>
+          
+          {!session && (
+            <Link href="/login?returnToMarket=true">
+              <Button size="sm" variant="outline" className="flex items-center gap-1">
+                <LogIn className="w-4 h-4" />
+                <span>Войти</span>
+              </Button>
+            </Link>
+          )}
+        </div>
         
         {/* Заголовок раздела */}
         <div className="text-center mb-10">

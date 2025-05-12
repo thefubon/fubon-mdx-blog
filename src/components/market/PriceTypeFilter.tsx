@@ -19,7 +19,7 @@ export default function PriceTypeFilter({ initialValue = false }: PriceTypeFilte
     setShowOnlyFree(checked);
     
     // Создаем новый объект URLSearchParams на основе текущих параметров
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() || "");
     
     // Если checked=true, показываем только бесплатные (isPaid=false)
     // Если checked=false, показываем все товары (параметр isPaid отсутствует)

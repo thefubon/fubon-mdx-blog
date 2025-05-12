@@ -12,7 +12,7 @@ function SearchForm() {
 
   // Инициализируем поле поиска текущим запросом из URL
   useEffect(() => {
-    const currentQuery = searchParams.get('q') || ''
+    const currentQuery = searchParams?.get('q') || ''
     setSearchQuery(currentQuery)
   }, [searchParams])
 

@@ -81,9 +81,9 @@ export default function CategoryPosts({
       
       // Если включили режим "Избранное" и находимся не на первой странице,
       // перенаправляем на первую страницу категории
-      const page = searchParams.get('page')
+      const page = searchParams?.get('page')
       if (page) {
-        const basePath = pathname.split('?')[0]
+        const basePath = pathname?.split('?')[0] || '/'
         router.push(basePath)
       }
     } else {
