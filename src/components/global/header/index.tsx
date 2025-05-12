@@ -5,7 +5,7 @@
 import { MenuProvider, useMenuContext } from '@/contexts/LogoProvider'
 import Logo from './Logo'
 import { ButtonDropdown } from './ButtonDropdown'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, memo } from 'react'
 import { HorizontalMenu } from './HorizontalMenu'
 import CartButton from '@/components/market/CartButton'
 
@@ -45,12 +45,27 @@ const HeaderContent = () => {
     
     // Инициализация и добавление слушателя изменения размера окна
     setIsMobile(checkIsMobile())
-    window.addEventListener('resize', handleResize)
     
-    return () => window.removeEventListener('resize', handleResize)
+    // Добавляем debounce для обработчика resize
+    let resizeTimer: NodeJS.Timeout | null = null;
+    
+    const debouncedResize = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleResize, 100);
+    };
+    
+    window.addEventListener('resize', debouncedResize)
+    
+    return () => {
+      window.removeEventListener('resize', debouncedResize)
+      if (resizeTimer) clearTimeout(resizeTimer);
+    }
   }, [])
   
   useEffect(() => {
+    // Используем requestAnimationFrame для оптимизации обработчика прокрутки
+    let ticking = false;
+    
     const handleScroll = () => {
       const currentScrollY = window.scrollY
       
@@ -73,10 +88,21 @@ const HeaderContent = () => {
       }
       
       setLastScrollY(currentScrollY)
+      ticking = false;
     }
     
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => {
+      if (!ticking) {
+        // Используем requestAnimationFrame для оптимизации
+        window.requestAnimationFrame(() => {
+          handleScroll();
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [lastScrollY])
 
   return (
@@ -117,10 +143,13 @@ const HeaderContent = () => {
   )
 }
 
+// Используем memo для предотвращения ненужных перерендеров
+const MemoizedHeaderContent = memo(HeaderContent)
+
 export default function Header() {
   return (
     <MenuProvider>
-      <HeaderContent />
+      <MemoizedHeaderContent />
     </MenuProvider>
   )
 }

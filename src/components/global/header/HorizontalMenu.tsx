@@ -32,6 +32,7 @@ const HorizontalMenuComponent = () => {
               <SoundWrapper>
                 <Link
                   href={item.link}
+                  prefetch={true}
                   aria-label={item.name}
                   className="relative inline-flex items-center overflow-hidden text-[length:var(--font-size-h6)]">
                   <div className="relative flex items-center gap-x-2 transition-transform duration-500 delay-75 ease-in-out group-hover:-translate-y-full">

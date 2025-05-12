@@ -1,7 +1,7 @@
 // components/SimpleSoundWrapper.tsx
 'use client'
 
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useState, memo } from 'react'
 import { useSoundContext } from '@/contexts/SoundProvider' // Используем ваш путь импорта
 
 interface SoundWrapperProps {
@@ -11,7 +11,7 @@ interface SoundWrapperProps {
   disableSound?: boolean
 }
 
-export default function SoundWrapper({
+function SoundWrapperComponent({
   children,
   className = '',
   style,
@@ -67,3 +67,7 @@ export default function SoundWrapper({
     </span>
   )
 }
+
+// Мемоизированный компонент для предотвращения лишних перерендеров
+const SoundWrapper = memo(SoundWrapperComponent);
+export default SoundWrapper;

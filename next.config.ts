@@ -44,16 +44,7 @@ const baseConfig = {
   // Расширения страниц
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   
-  // Улучшение производительности изображений
-  images: {
-    formats: ['image/avif', 'image/webp'],
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 дней
-  },
-  
-  // Конфигурация для улучшения метрик Core Web Vitals
+  // Включаем улучшенную навигацию между страницами
   experimental: {
     // Отключаем оптимизацию CSS, которая требует пакет critters
     optimizeCss: false,
@@ -61,6 +52,9 @@ const baseConfig = {
     serverActions: {
       allowedOrigins: ['localhost:3000', 'yourdomain.com'],
     },
+    // Улучшение скорости навигации (совместимые опции)
+    scrollRestoration: true, // Восстановление позиции скролла
+    webVitalsAttribution: ['CLS', 'LCP'], // Измеряем веб-метрики для оптимизации
   },
   
   // Улучшение кэширования для статических ресурсов
@@ -84,7 +78,38 @@ const baseConfig = {
           },
         ],
       },
+      // Добавляем заголовки кэширования для повышения производительности
+      {
+        source: '/_next/image(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=60, s-maxage=60, stale-while-revalidate=300',
+          },
+        ],
+      },
+      {
+        source: '/api/(.*)',
+        headers: [
+          { 
+            key: 'Cache-Control', 
+            value: 'no-store, max-age=0' 
+          },
+        ],
+      },
     ];
+  },
+  
+  // Улучшение производительности изображений
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 дней
+    // Увеличиваем размер кэша для изображений
+    deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 };
 
@@ -179,6 +204,19 @@ const withPWAConfig = withPWA({
           maxEntries: 32,
           maxAgeSeconds: 60 * 60 * 24 * 7,
         },
+      },
+    },
+    // Добавляем кэширование навигационных запросов для улучшения скорости переходов
+    {
+      urlPattern: /^https:\/\/(?!api\.).*$/i, // Все URL, кроме API
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'navigation-cache',
+        expiration: {
+          maxEntries: 32,
+          maxAgeSeconds: 60 * 5, // 5 минут
+        },
+        networkTimeoutSeconds: 3, // Таймаут для сети, чтобы использовать кэш
       },
     },
   ],
