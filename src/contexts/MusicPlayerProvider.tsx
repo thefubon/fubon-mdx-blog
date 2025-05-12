@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useRef, useEffect } from 'react'
 import { useMusicPlayerStore } from '@/data/playlist'
+import { usePathname } from 'next/navigation'
 
 // Use RefObject with undefined type to allow null values
 type MusicPlayerContextType = {
@@ -17,10 +18,23 @@ export const useMusicPlayer = () => useContext(MusicPlayerContext)
 export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const isPlayingRef = useRef(false)
+  const pathname = usePathname()
+  
+  // Check if we're in the dashboard or auth area
+  const isInDashboardOrAuth = pathname && (
+    pathname.startsWith('/dashboard') || 
+    pathname.startsWith('/auth') || 
+    pathname === '/login' || 
+    pathname === '/register'
+  )
+  
+  // If not in dashboard or auth, we're in the main app
+  const isInMainApp = !isInDashboardOrAuth
   
   const {
     currentTrack,
     isPlaying,
+    setIsPlaying,
     volume,
     repeat,
     nextTrack
@@ -70,6 +84,13 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     }
   }, [currentTrack])
   
+  // Automatically pause music when navigating out of main app sections
+  useEffect(() => {
+    if (!isInMainApp && isPlaying) {
+      setIsPlaying(false)
+    }
+  }, [isInMainApp, isPlaying, setIsPlaying])
+  
   // Восстанавливать состояние при монтировании
   useEffect(() => {
     try {
@@ -82,9 +103,9 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
           // Восстанавливаем позицию
           audioRef.current.currentTime = state.currentTime || 0
           
-          // Восстанавливаем состояние воспроизведения
-          if (state.isPlaying && isPlaying) {
-            // Если музыка должна играть, явно запускаем воспроизведение
+          // Восстанавливаем состояние воспроизведения только в main layout
+          if (state.isPlaying && isPlaying && isInMainApp) {
+            // Если музыка должна играть и мы находимся в основном разделе, явно запускаем воспроизведение
             const playPromise = audioRef.current.play().catch(e => console.error("Не удалось восстановить воспроизведение:", e))
             if (playPromise !== undefined) {
               playPromise.then(() => {
@@ -97,7 +118,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     } catch (error) {
       console.error('Error restoring playback state:', error)
     }
-  }, [currentTrack, isPlaying])
+  }, [currentTrack, isPlaying, isInMainApp])
 
   // Handle play/pause without fading
   useEffect(() => {
@@ -105,6 +126,9 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     
     const playDirectly = async () => {
       if (!audioRef.current) return
+      
+      // Only allow playback in main app sections
+      if (!isInMainApp) return
       
       try {
         // Если элемент уже воспроизводится, не делаем ничего
@@ -133,11 +157,16 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     }
     
     if (isPlaying) {
-      playDirectly()
+      // Only play if we're in main app sections
+      if (isInMainApp) {
+        playDirectly()
+      } else {
+        pauseDirectly()
+      }
     } else {
       pauseDirectly()
     }
-  }, [isPlaying, currentTrack, volume])
+  }, [isPlaying, currentTrack, volume, isInMainApp])
 
   // Handle volume change directly
   useEffect(() => {

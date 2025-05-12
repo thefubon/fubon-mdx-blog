@@ -2,11 +2,9 @@
 
 "use client"
 
-import SoundWrapper from '@/components/SoundWrapper'
 import { MenuProvider, useMenuContext } from '@/contexts/LogoProvider'
 import Logo from './Logo'
 import { ButtonDropdown } from './ButtonDropdown'
-import { WaveButton } from '@/components/wave-button'
 import { useEffect, useState, useRef } from 'react'
 import { HorizontalMenu } from './HorizontalMenu'
 import CartButton from '@/components/market/CartButton'
@@ -111,14 +109,6 @@ const HeaderContent = () => {
         </div>
 
         <div className="inline-flex justify-end items-center gap-x-2 md:gap-x-4 static md:relative flex-shrink-0">
-          <SoundWrapper>
-            <WaveButton
-              size="lg"
-              pulseWhenIdle={true}
-              showTrackName={false}
-            />
-          </SoundWrapper>
-          
           <CartButton />
           <ButtonDropdown />
         </div>

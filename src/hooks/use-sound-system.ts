@@ -1,9 +1,9 @@
 'use client'
 
 import { useMusicPlayerStore } from "@/data/playlist"
-import { useAmbientSound } from "@/contexts/AmbientSoundProvider"
 import { useMusicPlayer } from "@/contexts/MusicPlayerProvider"
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 export function useSoundSystem() {
   const {
@@ -23,30 +23,22 @@ export function useSoundSystem() {
     stopPlayback
   } = useMusicPlayerStore()
   
-  const { isAmbientPlaying, toggleAmbientSound, isMusicActive, userInteracted, attemptPlayAmbientSound } = useAmbientSound()
   const { audioRef } = useMusicPlayer()
+  const pathname = usePathname()
   
-  // Get the active sound source
-  const activeSoundSource = isMusicActive ? 'music' : isAmbientPlaying ? 'ambient' : 'none'
+  // Check if we're in the dashboard or auth area
+  const isInDashboardOrAuth = pathname && (
+    pathname.startsWith('/dashboard') || 
+    pathname.startsWith('/auth') || 
+    pathname === '/login' || 
+    pathname === '/register'
+  )
   
-  // Check if any sound is currently playing
-  const isSoundPlaying = isMusicActive || (isAmbientPlaying && userInteracted)
-  
-  // Check if ambient sound is waiting for user interaction
-  const isAmbientWaiting = isAmbientPlaying && !userInteracted && !isMusicActive
-  
+  // If not in dashboard or auth, we're in the main app
+  const isInMainApp = !isInDashboardOrAuth
+
   // Check if a track is loaded (regardless of play state)
   const isTrackLoaded = !!currentTrack
-  
-  // Toggle только ambient sound, не влияя на плеер музыки
-  const toggleSound = useCallback(() => {
-    // Если играет музыка из плейлиста, не меняем её состояние через эту функцию
-    if (!isMusicActive) {
-      toggleAmbientSound()
-    }
-    // Если мы здесь, и играет музыка - просто ничего не делаем
-    // Музыкой из плейлиста управляет только мини-плеер и музыкальный плеер
-  }, [isMusicActive, toggleAmbientSound])
   
   // Переключение только состояния музыки (для мини-плеера и основного плеера)
   // Без плавных переходов
@@ -62,6 +54,13 @@ export function useSoundSystem() {
     // Немедленно останавливаем без плавных переходов
     stopPlayback()
   }, [stopPlayback])
+  
+  // Auto-pause when navigating away from main app sections
+  useEffect(() => {
+    if (!isInMainApp && isPlaying) {
+      setIsPlaying(false)
+    }
+  }, [isInMainApp, isPlaying, setIsPlaying])
   
   return {
     // Music player state and functions
@@ -80,23 +79,13 @@ export function useSoundSystem() {
     prevTrack,
     stopPlayback,
     
-    // Ambient sound state and functions
-    isAmbientPlaying,
-    toggleAmbientSound,
-    isMusicActive,
-    userInteracted,
-    isAmbientWaiting,
-    attemptPlayAmbientSound,
-    
     // Audio reference
     audioRef,
     
     // Combined utilities
-    activeSoundSource,
-    isSoundPlaying,
     isTrackLoaded,
-    toggleSound,
     toggleMusicPlayback,
-    closeAndStopMusic
+    closeAndStopMusic,
+    isInMainApp
   }
 } 

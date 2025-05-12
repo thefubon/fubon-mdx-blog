@@ -4,7 +4,6 @@ import '@/styles/globals.css'
 import { ThemeProvider } from '@/contexts/ThemeProvider'
 import { SoundProvider } from '@/contexts/SoundProvider'
 import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
-import { AmbientSoundProvider } from '@/contexts/AmbientSoundProvider'
 import { CartProvider } from '@/contexts/CartContext'
 import AuthProvider from '@/components/auth/AuthProvider'
 
@@ -110,11 +109,9 @@ export default function RootLayout({
             disableTransitionOnChange>
             <CartProvider>
               <MusicPlayerProvider>
-                <AmbientSoundProvider>
-                  <SoundProvider>
-                    {children}
-                  </SoundProvider>
-                </AmbientSoundProvider>
+                <SoundProvider>
+                  {children}
+                </SoundProvider>
               </MusicPlayerProvider>
             </CartProvider>
           </ThemeProvider>
