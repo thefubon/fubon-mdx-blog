@@ -49,7 +49,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "Fubon",
       date: "18 января 2025 г.",
       audio: "/music/fubon-sirenhead.mp3",
-      cover: "/cover/Fubon-SirenHead.png",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -58,7 +58,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "Fubon",
       date: "14 января 2025 г.",
       audio: "/music/fubon-igraem-vmeste.mp3",
-      cover: "/cover/fubon-igraem-vmeste.png",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -67,7 +67,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "Hard & Pixel",
       date: "21 мая 2024 г.",
       audio: "/music/harda&pixel-dance-all-night.mp3",
-      cover: "/cover/dance-all-night.png",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -76,7 +76,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "28 февраля 2023 г.",
       audio: "/music/thefubon-ambient.mp3",
-      cover: "/cover/TheFubon-Ambient.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -85,7 +85,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon & Jazz Soul",
       date: "26 декабря 2022 г.",
       audio: "/music/thefubon&jazz-soul-sentimental-moods.mp3",
-      cover: "/cover/sentimental-moods.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -94,7 +94,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "25 ноября 2022 г.",
       audio: "/music/thefubon-flying-phoenix.mp3",
-      cover: "/cover/flying-pohenix.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -103,7 +103,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "25 ноября 2022 г.",
       audio: "/music/thefubon-time-for-freedom.mp3",
-      cover: "/cover/time-for-freedom.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -112,7 +112,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "11 ноября 2022 г.",
       audio: "/music/thefubon-fun-at-noise.mp3",
-      cover: "/cover/fun-at-noise.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -121,7 +121,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "11 ноября 2022 г.",
       audio: "/music/thefubon-soul-of-space.mp3",
-      cover: "/cover/soul-of-space.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -130,7 +130,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "24 сентября 2022 г.",
       audio: "/music/thefubon-quantum.mp3",
-      cover: "/cover/quantum.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -139,7 +139,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "24 сентября 2022 г.",
       audio: "/music/thefubon-under-the-stars.mp3",
-      cover: "/cover/under-the-stars.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -148,7 +148,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "16 сентября 2022 г.",
       audio: "/music/thefubon-deeper-house.mp3",
-      cover: "/cover/deeper-house.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -157,7 +157,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "16 сентября 2022 г.",
       audio: "/music/thefubon-retrospective.mp3",
-      cover: "/cover/retrospective.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -166,7 +166,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "16 сентября 2022 г.",
       audio: "/music/thefubon-until.mp3",
-      cover: "/cover/until.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -175,7 +175,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "11 июля 2022 г.",
       audio: "/music/thefubon-your-love.mp3",
-      cover: "/cover/your-love.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -184,7 +184,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "8 июля 2022 г.",
       audio: "/music/thefubon-where-did-you-go.mp3",
-      cover: "/cover/where-did-you-go.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -193,7 +193,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "13 февраля 2021 г.",
       audio: "/music/thefubon-feelings-of-youth.mp3",
-      cover: "/cover/feelings-of-youth.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -202,7 +202,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "TheFubon",
       date: "9 февраля 2021 г.",
       audio: "/music/thefubon-sunset-extented-version.mp3",
-      cover: "/cover/sunset-extended-version.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -211,7 +211,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "5 мая 2020 г.",
       audio: "/music/yagelproject-by-my-side.mp3",
-      cover: "/cover/by-my-side.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -220,7 +220,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "25 сентября 2019 г.",
       audio: "/music/yagelproject-prey.mp3",
-      cover: "/cover/prey.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -229,7 +229,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "23 августа 2019 г.",
       audio: "/music/yagelproject-sunset.mp3",
-      cover: "/cover/sunset.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -238,7 +238,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "16 августа 2019 г.",
       audio: "/music/yagelproject-atmosphere.mp3",
-      cover: "/cover/atmosphere.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -247,7 +247,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "12 августа 2019 г.",
       audio: "/music/yagelproject-big-tree.mp3",
-      cover: "/cover/big-tree.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -256,7 +256,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "8 августа 2019 г.",
       audio: "/music/yagelproject-eximinds-trance.mp3",
-      cover: "/cover/eximinds-trance.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -265,7 +265,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "#2Маши & yagelProject",
       date: "17 июля 2019 г.",
       audio: "/music/yagelproject-mama-ya-tancuyu.mp3",
-      cover: "/cover/mama-ya-tancuyu.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -274,7 +274,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "28 декабря 2017 г.",
       audio: "/music/yagelproject-black-beach.mp3",
-      cover: "/cover/black-beach.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -283,7 +283,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "Перекати поле",
       date: "20 июля 2015 г.",
       audio: "/music/perekati-pole-tichaya-pravda.mp3",
-      cover: "/cover/tichaya-pravda.webp",
+      cover: "/demo.png",
       album: "Сингл",
     },
     {
@@ -292,7 +292,7 @@ export const useMusicPlayerStore = create<MusicPlayerStore>((set, get) => ({
       artist: "yagelProject",
       date: "11 июня 2013 г.",
       audio: "/music/yagelproject-teachers-preach.mp3",
-      cover: "/cover/teachers-preach.webp",
+      cover: "/demo.png",
       album: "Сингл",
     }
   ],
