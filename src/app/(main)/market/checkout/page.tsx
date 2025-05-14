@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCart } from '@/contexts/CartContext';
+import { useCart, OrderData } from '@/contexts/CartContext';
 import PageWrapper from '@/components/PageWrapper';
 import Container from '@/components/ui/Container';
 import { Button } from '@/components/ui/button';
@@ -172,14 +172,33 @@ export default function CheckoutPage() {
     }
   };
   
-  // Обработчик отправки формы
+  // Обработка отправки формы
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Простая валидация формы
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
+      alert('Пожалуйста, заполните все обязательные поля контактной информации');
+      return;
+    }
+    
+    if (!formData.address || !formData.city || !formData.zip) {
+      alert('Пожалуйста, заполните все обязательные поля адреса доставки');
+      return;
+    }
+    
+    if (formData.paymentMethod === 'card' && (!formData.cardNumber || !formData.cardExpiry || !formData.cardCvc || !formData.cardHolder)) {
+      alert('Пожалуйста, заполните все обязательные поля данных карты');
+      return;
+    }
+    
+    // Начинаем процесс оформления заказа
     setIsLoading(true);
     
-    // Имитация отправки заказа с задержкой
+    // Имитация процесса обработки заказа
     setTimeout(() => {
-      saveOrder({
+      // Формируем данные заказа
+      const orderData: OrderData = {
         customer: {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -193,18 +212,17 @@ export default function CheckoutPage() {
         },
         payment: {
           method: formData.paymentMethod,
-          // Храним только маскированные номера карт в целях безопасности
-          cardLastFour: formData.cardNumber ? formData.cardNumber.replace(/\s/g, '').slice(-4) : null
+          cardLastFour: formData.cardNumber ? formData.cardNumber.slice(-4) : null
         }
-      });
+      };
+      
+      // Сохраняем заказ и очищаем корзину
+      saveOrder(orderData);
       
       setIsLoading(false);
       
-      // Показываем уведомление об успешном заказе
-      alert('Заказ успешно оформлен!');
-      
       // Перенаправляем на страницу успешного оформления заказа
-      router.push('/dashboard/market');
+      router.push('/market/success');
     }, 1500);
   };
   

@@ -8,6 +8,7 @@ import { ButtonDropdown } from './ButtonDropdown'
 import { useEffect, useState, useRef, memo } from 'react'
 import { HorizontalMenu } from './HorizontalMenu'
 import CartButton from '@/components/market/CartButton'
+import UserButton from '@/components/auth/UserButton'
 
 // Константы анимации, такие же как в LogoProvider
 const FADE_OUT_DURATION = 300
@@ -136,6 +137,7 @@ const HeaderContent = () => {
 
         <div className="inline-flex justify-end items-center gap-x-2 md:gap-x-4 static md:relative flex-shrink-0">
           <CartButton />
+          <UserButton />
           <ButtonDropdown />
         </div>
       </div>
