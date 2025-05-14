@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { menuItems } from '@/data/navbar'
 import { memo } from 'react'
-import SoundWrapper from '@/components/SoundWrapper'
+import SoundWrapper from '@/components/audio/SoundWrapper'
 
 const HorizontalMenuComponent = () => {
   const currentUrl = usePathname()

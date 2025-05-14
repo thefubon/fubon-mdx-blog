@@ -1,4 +1,4 @@
-import { MiniPlayer } from "@/components/mini-player";
+import { MiniPlayer } from "@/components/audio/mini-player";
 import BottomTabBar from "./BottomTabBar";
 import Link from "next/link";
 

@@ -1,5 +1,5 @@
 import { DarkMode } from './DarkMode'
-import { SoundToggle } from '@/components/SoundToggle'
+import { SoundToggle } from '@/components/audio/SoundToggle'
 
 export default function ButtonDropdownSettings() {
   return (

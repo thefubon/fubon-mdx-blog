@@ -2,7 +2,7 @@
 'use client'
 
 import React, { ReactNode, useState, memo } from 'react'
-import { useSoundContext } from '@/contexts/SoundProvider' // Используем ваш путь импорта
+import { useSoundContext } from '@/contexts/SoundProvider' // Оставляем оригинальный импорт, т.к. это контекст
 
 interface SoundWrapperProps {
   children: ReactNode

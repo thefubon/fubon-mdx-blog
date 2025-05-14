@@ -284,7 +284,7 @@ export default async function WorkPage(
   const category = categoryParam && typeof categoryParam === 'string' ? categoryParam : '';
 
   return (
-    <PageWrapper title="Портфолио" description="Мои работы и проекты">
+    <PageWrapper>
       {/* Рендерим контент */}
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Загрузка портфолио...</div>}>
         <WorkContent page={page} category={category} />

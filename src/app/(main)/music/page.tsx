@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import MusicContent from '@/components/MusicContent'
+import MusicContent from '@/components/audio/MusicContent'
 
 export const metadata: Metadata = {
   title: 'Музыка',
-  description: 'Музыкальные эксперименты и коллекции от Fubon',
+  description: 'Коллекция моих музыкальных проектов и треков.',
   alternates: {
     canonical: '/music',
   },
