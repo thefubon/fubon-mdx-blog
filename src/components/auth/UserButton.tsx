@@ -55,7 +55,7 @@ export default function UserButton() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full p-0 overflow-hidden !size-[var(--button-height)] transition-all"
+          className="rounded-full p-0 overflow-hidden !size-[var(--button-height)] font-normal transition-all uppercase text-2xl"
           aria-label="Профиль пользователя">
           <Avatar className="!size-[var(--button-height)] outline-none">
             <AvatarImage
