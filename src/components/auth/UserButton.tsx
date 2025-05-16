@@ -23,7 +23,7 @@ export default function UserButton() {
   // Пользователь в процессе аутентификации
   if (status === 'loading') {
     return (
-      <div className="!size-[var(--button-height)] rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+      <div className="size-12 md:size-[var(--button-height)] rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
     )
   }
   
@@ -35,7 +35,7 @@ export default function UserButton() {
         size="icon"
         onClick={() => signIn()}
         aria-label="Войти"
-        className="rounded-full !size-[var(--button-height)] hover:bg-primary transition-all hover:text-white">
+        className="rounded-full size-12 md:size-[var(--button-height)] hover:bg-primary transition-all hover:text-white">
         <User className="size-6" />
       </Button>
     )
