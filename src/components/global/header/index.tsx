@@ -69,16 +69,16 @@ const HeaderContent = () => {
     
     const handleScroll = () => {
       const currentScrollY = window.scrollY
-      
+
       // Determine if scrolled past initial threshold
       if (currentScrollY > 10) {
         setIsScrolled(true)
       } else {
         setIsScrolled(false)
       }
-      
-      // Hide header when scrolling down past 600px
-      if (currentScrollY > 120) {
+
+      // Скрытие заголовка при прокрутке вниз
+      if (currentScrollY > 320) {
         if (currentScrollY > lastScrollY) {
           setIsHidden(true) // Scrolling down
         } else {
@@ -87,9 +87,9 @@ const HeaderContent = () => {
       } else {
         setIsHidden(false) // Always show when less than 600px
       }
-      
+
       setLastScrollY(currentScrollY)
-      ticking = false;
+      ticking = false
     }
     
     const onScroll = () => {
@@ -116,10 +116,10 @@ const HeaderContent = () => {
         transitionTimingFunction: 'ease',
       }}>
       <div
-        className={`h-[clamp(80px,8vw,100px)] rounded-full flex justify-between items-center gap-x-4 transition-all ${
+        className={`h-[clamp(80px,8vw,100px)] rounded-full flex items-center justify-between gap-x-4 transition-all ${
           // Только для десктопа применяем стили фона
           !isMobile && isScrolled
-            ? 'bg-background/80 backdrop-blur-sm pl-8 pr-6 mx-4'
+            ? 'bg-background/80 backdrop-blur-sm pl-8 pr-6 mx-24 lg:mx-4 2xl:mx-32'
             : 'bg-transparent px-0 mx-0'
         }`}
         style={{
@@ -131,7 +131,7 @@ const HeaderContent = () => {
         </div>
 
         {/* Горизонтальное меню */}
-        <div className="hidden md:flex flex-1 justify-center">
+        <div className="hidden md:flex justify-center">
           <HorizontalMenu />
         </div>
 

@@ -30,7 +30,8 @@ export default function Home() {
     <PageWrapper>
       <Container
         padding={true}
-        space={true}>
+        space={true}
+        className='pb-16'>
         <div className="w-full h-[480px] md:h-[580px] rounded-2xl overflow-hidden">
           <Velustro />
         </div>

@@ -6,7 +6,7 @@ import { SoundProvider } from '@/contexts/SoundProvider'
 import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
 import { CartProvider } from '@/contexts/CartContext'
 import AuthProvider from '@/components/auth/AuthProvider'
-import GsapInitializer from '@/components/GsapInitializer'
+import SmoothScrolling from '@/components/SmoothScrolling'
 
 export const viewport: Viewport = {
   themeColor: [
@@ -114,8 +114,7 @@ export default function RootLayout({
             <CartProvider>
               <MusicPlayerProvider>
                 <SoundProvider>
-                  <GsapInitializer />
-                  {children}
+                  <SmoothScrolling>{children}</SmoothScrolling>
                 </SoundProvider>
               </MusicPlayerProvider>
             </CartProvider>

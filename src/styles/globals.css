@@ -307,3 +307,79 @@
     margin-left: calc(-0.3* var(--padding-x));
   }
 }
+
+/* VIEW TRANSITIONS
+==================================== */
+
+/* Базовые стили для анимации перехода между страницами */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.7s;
+  animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Анимации входа/выхода для View Transitions API */
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-out-to-top {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Настройка анимации для разных состояний перехода */
+::view-transition-old(root) {
+  animation-name: slide-out-to-top;
+}
+
+::view-transition-new(root) {
+  animation-name: slide-in-from-bottom;
+}
+
+/* Отключаем view-transition при необходимости */
+.disable-view-transitions * {
+  view-transition-name: none !important;
+}
+
+/* Для изолированных элементов */
+.has-view-transition {
+  view-transition-name: unique-element;
+}
+
+/* Основная анимация для входа страницы */
+.page-enter {
+  animation: fade-in 0.7s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Основная анимация для выхода страницы */
+.page-exit {
+  animation: fade-out 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
