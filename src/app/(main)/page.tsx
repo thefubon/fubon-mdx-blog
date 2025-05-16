@@ -7,6 +7,7 @@ import Container from '@/components/ui/Container'
 import { ArrowRight } from 'lucide-react'
 import GsapDemoSection from '@/components/GsapDemoSection'
 import { Velustro } from 'uvcanvas'
+import ImageEffectSection from '@/components/ImageEffectSection'
 
 export const metadata: Metadata = {
   title: 'Главная',
@@ -59,6 +60,9 @@ export default function Home() {
           
           <GsapDemoSection />
         </div>
+
+        {/* Image Effect Section */}
+        <ImageEffectSection />
 
         {/* Секция последних работ */}
         {works.length > 0 && (

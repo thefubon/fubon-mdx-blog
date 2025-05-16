@@ -6,6 +6,7 @@ import { SoundProvider } from '@/contexts/SoundProvider'
 import { MusicPlayerProvider } from '@/contexts/MusicPlayerProvider'
 import { CartProvider } from '@/contexts/CartContext'
 import AuthProvider from '@/components/auth/AuthProvider'
+import GsapInitializer from '@/components/GsapInitializer'
 
 export const viewport: Viewport = {
   themeColor: [
@@ -16,8 +17,11 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
+// Set a default URL for the metadataBase if the environment variable is not available
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://fubon.ru'
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://fubon.ru'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Fubon | Креативное агентство по дизайну и разработке',
     template: '%s | Fubon'
@@ -28,6 +32,7 @@ export const metadata: Metadata = {
   publisher: 'Fubon Creative Agency',
   keywords: ['дизайн', 'разработка', 'веб-дизайн', 'ui/ux', 'креативное агентство', 'fubon'],
   alternates: {
+    canonical: '/',
     types: {
       'application/rss+xml': [
         {
@@ -36,7 +41,6 @@ export const metadata: Metadata = {
         },
       ],
     },
-    canonical: '/',
   },
   openGraph: {
     type: 'website',
@@ -110,6 +114,7 @@ export default function RootLayout({
             <CartProvider>
               <MusicPlayerProvider>
                 <SoundProvider>
+                  <GsapInitializer />
                   {children}
                 </SoundProvider>
               </MusicPlayerProvider>
