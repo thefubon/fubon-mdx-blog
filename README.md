@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Headless CMS - Open Source
 
-## Getting Started
+Этот проект представляет собой Headless CMS с открытым исходным кодом, построенный на современном стеке технологий для Next.js. Он предназначен для управления контентом и создания динамических веб-приложений с поддержкой MDX (Markdown + TSX), анимаций, каруселей, тем оформления и других интерактивных элементов.
 
-First, run the development server:
+### Основные возможности:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Работа с контентом (MDX, Markdown, синтаксис-подсветка)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Аутентификация (Next-Auth)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+PWA-поддержка (Next-PWA)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Анимации и плавный скролл (GSAP, Lenis)
 
-## Learn More
+UI-компоненты (Radix UI, Tailwind CSS)
 
-To learn more about Next.js, take a look at the following resources:
+Генерация RSS-ленты (Feed)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Темы оформления (Next-Themes)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Идеально подходит для разработчиков, которые хотят создать быстрый, гибкий и удобный блог, сайт-портфолио или корпоративный ресурс.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🔹 Стек: Next.js, React, Tailwind CSS, Zustand, Radix UI.
+🔹 Формат контента: MDX, Markdown.
+🔹 Деплой: Vercel, Netlify или любой другой хостинг для Next.js.
