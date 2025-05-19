@@ -188,7 +188,7 @@ const ButtonDropdownComponent = () => {
           isMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
         }`}
         data-lenis-prevent>
-        {isLargeScreen ? (
+        {!isLargeScreen ? (
           // Для больших экранов (LG и выше) - только контейнер без пунктов меню
           <div className={`${menuContainerClasses} h-64`}></div>
         ) : (
